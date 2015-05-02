@@ -10,6 +10,7 @@
 VERSION = (0, 0, 1) #release, major revision, minor revision
 
 import sys
+from parser import Parser
 
 
 def print_version():
@@ -24,6 +25,11 @@ def print_help():
 def main():
     if "--version" in sys.argv or "-v" in sys.argv: print_version()
     elif "--help" in sys.argv or "-h" in sys.argv: print_help()
+    elif "--world" in sys.argv:
+        world_file = sys.argv[sys.argv.index("--world")+1]
+        Parser(world_file)
+    else:
+        print("Interactive mode not yet available!")
 
 if __name__ == "__main__":
     main()
