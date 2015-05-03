@@ -18,11 +18,9 @@ class Server(object):
     necessary for a game.
     '''
 
-    def __init__(self, world_file=None):
+    def __init__(self, port, world_file):
         print("The server is still under construction!")
-        if not world_file:
-            print("ATLANTIS: which world file should be loaded?")
-            print("Please provide an absolute or relative path.")
-            world_file = input(">> ")
-        parser = Parser(world_file)
+        self.port = port
+        self.world_file = world_file
+        parser = Parser(self.world_file)
         self.world = parser.generate_world()

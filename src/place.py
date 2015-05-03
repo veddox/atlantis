@@ -64,14 +64,20 @@ class Place(object):
         self.items.remove(item)
 
 
+#
+# FIXME: conceptually a bit messed up, especially needs work on how the argument
+# gets passed to the OptionCommand
+#
+
 class NeighbourOption(OptionCommand):
     '''
     Add a new neighbour to the current place
     '''
 
-    def __init__(self, place):
+    def __init__(self, arg, place):
         OptionCommand.__init__("neighbour",
-                               "Add the place given in the argument as a neighbour")
+                               "Add the place given in the argument as a neighbour",
+                               arg)
         self.place = place
 
     def act(self, arg):
