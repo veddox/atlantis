@@ -9,7 +9,7 @@
 # date: 02/05/2015
 #
 
-from interpreter import DefineCommand, register_define_command
+from define import DefineCommand, register_define_command
 
 
 class Place(object):
@@ -38,6 +38,9 @@ class Place(object):
         self.monsters = monsters
         self.npc = npc
         self.items = items
+
+    def set_description(self, description):
+        self.description = description
 
     def add_neighbour(self, place_name):
         if place_name not in self.neighbours:

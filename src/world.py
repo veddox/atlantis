@@ -10,7 +10,7 @@
 
 import copy
 #import player
-#import place
+import place
 
 
 class World(object):
@@ -50,13 +50,13 @@ class World(object):
         game_object: the actual object
         '''
         if object_type == "place":
-            add_place(game_object)
+            self.add_place(game_object)
         elif object_type == "npc":
-            add_npc(game_object)
+            self.add_npc(game_object)
         elif object_type == "item":
-            add_item(game_object)
+            self.add_item(game_object)
         elif object_type == "monster":
-            add_monster(game_object)
+            self.add_monster(game_object)
             
     def add_place(self, place):
         self.places[place.name] = place

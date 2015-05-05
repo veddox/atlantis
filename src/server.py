@@ -32,4 +32,4 @@ class Server(object):
         places = self.world.places.keys()
         for p in places:
             print("Place: "+self.world.get_place(p).name)
-            print("Neighbours: "+self.world.get_place(p).neighbours+"\n")
+            print("Neighbours: "+str(self.world.get_place(p).neighbours)+"\n")
