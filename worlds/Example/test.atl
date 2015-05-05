@@ -9,4 +9,8 @@ define-place Nowhere
 #light \to the north.
 	neighbour Elysium
 
+define-place Elysium
+	description This is where you want to be when you are six feet under...
+	neighbour Nowhere
+
 start-place Nowhere

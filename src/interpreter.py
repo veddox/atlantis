@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 # 
 # Atlantis is a framework for creating multi-user dungeon worlds.
-# This module reads in a world file and parses it. The structure of 
-# the Atlantis language ATL is defined here.
+# This module reads in a world file and parses it, using the DefineCommands
+# defined in other modules.
 #
 # Licensed under the terms of the GPLv3
 # author: Daniel Vedder
@@ -52,7 +52,7 @@ class Parser(object):
     def interpret_atl(self, atl_source):
         '''
         This method interprets a list of ATL source lines, passing them
-        on to the relevant define commands.
+        on to the relevant commands.
         '''
         define_command = None # The define command currently being executed
         line_no = 0
@@ -62,6 +62,10 @@ class Parser(object):
             #     line = line + atl_source[line_no+1]
             #     line_no = line_no+1
             line_no = line_no + 1
+            if line[-1] != "\n":
+                # make sure each line ends with a line break, otherwise we run
+                # into trouble with the last line
+                line = line+"\n"
             if len(line) < 2 and define_command:
                 # Empty lines finish off define blocks
                 object_type, game_object = define_command.return_object()
@@ -71,7 +75,6 @@ class Parser(object):
                 pass #comments and empty lines are ignored
             else:
                 command = line.split()[0]
-                print("Line "+str(line_no)+": '"+line+"'\nCommand: '"+command+"'")
                 # execute a line command
                 if command in self.line_command_registry.keys():
                     self.line_command_registry[command](line[line.find(" ")+1:-1])
@@ -80,7 +83,6 @@ class Parser(object):
                     define_command = define_command_registry[command]
                     object_name = line[line.find(" ")+1:-1]
                     define_command.init_object(object_name)
-                    print("Found define command '"+define_command.name)
                 # parse an option command
                 elif line[0] == " " or line[0] == "\t":
                     while line[0] == " " or line[0] == "\t":

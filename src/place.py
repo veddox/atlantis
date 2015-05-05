@@ -32,7 +32,6 @@ class Place(object):
         items: a list of instances of items
         '''
         self.name = name
-        print("Creating place "+name)
         self.description = description
         self.neighbours = neighbours
         self.monsters = monsters
@@ -84,6 +83,7 @@ class DefinePlace(DefineCommand):
                         self.add_neighbour)
 
     def init_object(self, place_name):
+        self.place = None
         self.place = Place(name=place_name)
         
     def return_object(self):
