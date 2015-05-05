@@ -9,7 +9,7 @@
 # date: 02/05/2015
 #
 
-from parser import DefineCommand
+from interpreter import DefineCommand, register_define_command
 
 
 class Place(object):
@@ -18,13 +18,13 @@ class Place(object):
     players, monsters, items, NPCs, and links to other places.
     '''
 
-    def __init__(self, name, description,
+    def __init__(self, name, description="",
                  neighbours=[], monsters=[],
                  npc=[], items=[]):
         '''
         The constructor for a new place.
         Arguments:
-        name: the name of this place
+        name: the name of this place (compulsory)
         description: a description string
         neighbours: a list of place names of places bordering on this one
         monsters: a list of instances of monsters
@@ -64,34 +64,33 @@ class Place(object):
         self.items.remove(item)
 
 
-#
-# FIXME: conceptually a bit messed up, especially needs work on how the argument
-# gets passed to the OptionCommand
-#
-
-class NeighbourOption(OptionCommand):
-    '''
-    Add a new neighbour to the current place
-    '''
-
-    def __init__(self, arg, place):
-        OptionCommand.__init__("neighbour",
-                               "Add the place given in the argument as a neighbour",
-                               arg)
-        self.place = place
-
-    def act(self, arg):
-        self.place.add_neighbour(arg)
-
-
 class DefinePlace(DefineCommand):
     '''
     The Atlantis language construct to create a place.
     '''
 
-    def __init__(self, place):
+    def __init__(self):
         DefineCommand.__init__("define-place",
                                "Describe a new location in the game world")
-        self.place = place
-        self.add_option(NeighbourOption(self.place))
+        self.add_option("description",
+                        "Describe this place",
+                        set_description)
+        self.add_option("neighbour",
+                        "Add a neighbouring place to this place",
+                        add_neighbour)
+
+    def init_object(self, place_name):
+        self.place = Place(name=place_name)
         
+    def return_object(self):
+        return 'place', self.place
+
+    # This could probably be transformed into a lambda function
+    def add_neighbour(self, arg):
+        self.place.add_neighbour(arg)
+
+    # ...same with this one
+    def set_description(self, arg):
+        self.place.set_description(arg)
+
+register_define_command(DefinePlace())

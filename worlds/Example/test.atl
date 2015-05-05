@@ -1,0 +1,12 @@
+# This is a simple test ATL file to test whatever I have implemented so far.
+# @author Daniel Vedder
+# @date 04/05/2015
+
+define-place Nowhere
+	description Welcome to Nowhere! 
+#You are in the void, the space between \
+#the worlds. Around you is black. Black, except for one tiny pin-prick of 
+#light \to the north.
+	neighbour Elysium
+
+start-place Nowhere

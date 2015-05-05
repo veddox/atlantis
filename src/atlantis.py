@@ -7,7 +7,7 @@
 # date: 02/05/2015
 #
 
-VERSION = (0, 0, 3) #release, major revision, minor (git) revision
+VERSION = (0, 0, 5) #release, major revision, minor (git) revision
 
 import sys
 import os
@@ -48,7 +48,7 @@ def start_menu():
 #TODO!
 def act_on_choice(choice):
     if choice == "s" or choice == "S":
-        print("What port do you want to start the server on?") #indicate range!
+        print("What port do you want to start the server on?") #TODO indicate range!
         server_port = input(">> ")
         print("What world file do you want to load?")
         print("(Specify an absolute or relative path)")
@@ -72,7 +72,7 @@ def act_on_choice(choice):
     else:
         print("Invalid choice!")
         input("Please press ENTER")
-        startMenu()
+        start_menu()
 
 
 def print_version():
@@ -99,9 +99,9 @@ def main():
     if "--version" in sys.argv or "-v" in sys.argv: print_version()
     elif "--help" in sys.argv or "-h" in sys.argv: print_help()
     elif "--server" in sys.argv and "--world" in sys.argv:
-        server_port = sys.argv[sys.argv.find("--server")+1]
+        server_port = sys.argv[sys.argv.index("--server")+1]
         world_file = sys.argv[sys.argv.index("--world")+1]
-        Server(port, world_file)
+        Server(server_port, world_file)
     elif "--client" in sys.argv:
         server_address = sys.argv[sys.argv.index("--client")+1]
         server_ip = server_address[:server_address.find(":")]

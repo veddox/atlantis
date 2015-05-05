@@ -8,7 +8,7 @@
 # date: 02/05/2015
 #
 
-from parser import Parser
+from interpreter import Parser
 
 #TODO: lock file for the server!
 
@@ -22,5 +22,12 @@ class Server(object):
         print("The server is still under construction!")
         self.port = port
         self.world_file = world_file
-        parser = Parser(self.world_file)
-        self.world = parser.generate_world()
+        self.world = Parser(self.world_file)
+        test_parser()
+
+    def test_parser(self):
+        print("World loaded. Details:")
+        places = self.world.places.keys()
+        for p in places:
+            print("Place: "+self.world.get_place(p).name)
+            print("Neighbours: "+self.world.get_place(p).neighbours+"\n")
