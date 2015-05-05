@@ -32,6 +32,7 @@ class Place(object):
         items: a list of instances of items
         '''
         self.name = name
+        print("Creating place "+name)
         self.description = description
         self.neighbours = neighbours
         self.monsters = monsters
@@ -68,16 +69,16 @@ class DefinePlace(DefineCommand):
     '''
     The Atlantis language construct to create a place.
     '''
-
+    
     def __init__(self):
-        DefineCommand.__init__("define-place",
+        DefineCommand.__init__(self, "define-place",
                                "Describe a new location in the game world")
         self.add_option("description",
                         "Describe this place",
-                        set_description)
+                        self.set_description)
         self.add_option("neighbour",
                         "Add a neighbouring place to this place",
-                        add_neighbour)
+                        self.add_neighbour)
 
     def init_object(self, place_name):
         self.place = Place(name=place_name)

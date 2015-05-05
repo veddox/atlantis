@@ -9,6 +9,7 @@
 #
 
 from interpreter import Parser
+from world import World
 
 #TODO: lock file for the server!
 
@@ -22,8 +23,9 @@ class Server(object):
         print("The server is still under construction!")
         self.port = port
         self.world_file = world_file
-        self.world = Parser(self.world_file)
-        test_parser()
+        parser = Parser(self.world_file)
+        self.world = parser.load(self.world_file)
+        self.test_parser()
 
     def test_parser(self):
         print("World loaded. Details:")

@@ -9,6 +9,8 @@
 #
 
 import copy
+#import player
+#import place
 
 
 class World(object):
