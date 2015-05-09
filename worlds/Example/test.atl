@@ -13,4 +13,6 @@ define-place Elysium
 	description This is where you want to be when you are six feet under...
 	neighbour Nowhere
 
+load test2.atl
+
 start-place Nowhere

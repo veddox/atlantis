@@ -9,6 +9,7 @@
 # date: 02/05/2015
 #
 
+import os
 from world import World
 from define import DefineCommand, define_command_registry
 
@@ -23,13 +24,14 @@ class Parser(object):
         self.line_command_registry = dict()
         self.world = World()
         self.add_line_commands()
+        self.world_file_name = world_file_name
 
     def load(self, world_file_name):
         '''
         Load a world file and pass it on to the interpreter
         '''
         try:
-            world_file = open(world_file_name, 'r')
+            world_file = open(self.world_file_name, 'r')
             atl_text = world_file.readlines()
             world_file.close()
             print("Loaded "+world_file_name)
@@ -46,7 +48,7 @@ class Parser(object):
         their key-value to the method to be called when their key appears
         in an ATL source file.
         '''
-        self.line_command_registry["load"] = self.load
+        #self.line_command_registry["load"] = self.secondary_load
         self.line_command_registry["start-place"] = self.world.set_starting_place
 
     def interpret_atl(self, atl_source):
@@ -96,3 +98,15 @@ class Parser(object):
                         # syntax error, or something else?
                         print("Unrecognized syntax in line "+str(line_no)+"!")
 
+    def secondary_load(self, atl_file_name):
+        '''
+        --- DO NOT USE ---
+        
+        The function that prepares everything before loading in another ATL file
+        when the 'load' command is called.
+
+        Currently leads to an endless recursion loop.
+        '''
+        world_directory = os.path.split(self.world_file_name)[0]
+        load_file_name = os.path.join(world_directory, atl_file_name)
+        self.load(load_file_name)

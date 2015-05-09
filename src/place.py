@@ -18,12 +18,10 @@ class Place(object):
     players, monsters, items, NPCs, and links to other places.
     '''
 
-    def __init__(self, name, description="",
-                 neighbours=[], monsters=[],
-                 npc=[], items=[]):
+    def __init__(self, name):
         '''
         The constructor for a new place.
-        Arguments:
+        Instance variables:
         name: the name of this place (compulsory)
         description: a description string
         neighbours: a list of place names of places bordering on this one
@@ -32,11 +30,11 @@ class Place(object):
         items: a list of instances of items
         '''
         self.name = name
-        self.description = description
-        self.neighbours = neighbours
-        self.monsters = monsters
-        self.npc = npc
-        self.items = items
+        self.description = ""
+        self.neighbours = []
+        self.monsters = []
+        self.npc = []
+        self.items = []
 
     def set_description(self, description):
         self.description = description
@@ -57,6 +55,9 @@ class Place(object):
     def remove_neighbour(self, place_name):
         self.neighbours.remove(place_name)
 
+    # XXX The following methods might cause problems if one attempts to
+    # remove just one instance of a list that contains several similar
+    # instances.
     def remove_monster(self, monster):
         self.monsters.remove(monster)
 

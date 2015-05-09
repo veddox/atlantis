@@ -31,6 +31,7 @@ class Server(object):
         print("World loaded. Details:")
         places = self.world.places.keys()
         for p in places:
-            print("Place: "+self.world.get_place(p).name)
+            print("\nPlace: "+self.world.get_place(p).name)
+            print("Description: "+self.world.get_place(p).description)
             print("Neighbours: "+str(self.world.get_place(p).neighbours))
         print("Starting place: "+self.world.starting_place)

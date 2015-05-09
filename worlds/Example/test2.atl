@@ -1,0 +1,6 @@
+# This file is used to test the load command
+
+define-place Fields of Punishment
+	description You really, really don't want to be here!
+	neighbour Nowhere
+	neighbour Elysium
