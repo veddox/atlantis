@@ -7,7 +7,7 @@
 # date: 02/05/2015
 #
 
-VERSION = (0, 0, 6) #release, major revision, minor (git) revision
+VERSION = (0, 0, 7) #release, major revision, minor (git) revision
 
 import sys
 import os

@@ -33,3 +33,26 @@ class Player(object):
         self.weapons = []
         self.items = []
 
+    def change_location(self, new_place):
+        self.location = new_place
+
+    def change_health(self, difference):
+        self.health = self.health+difference
+
+    def increase_attribute(self, attribute, difference):
+        self.attributes[attribute] = self.attributes[attribute] + difference
+
+    def add_item(self, item):
+        self.items.append(item)
+
+    # Warning: might cause bugs!
+    def remove_item(self, item):
+        self.items.remove(item)
+
+    def add_weapon(self, weapon):
+        self.items.append(weapon)
+
+    # Warning: might cause bugs!
+    def remove_weapon(self, weapon):
+        self.items.remove(weapon)
+
