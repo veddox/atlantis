@@ -9,8 +9,8 @@
 #
 
 import copy
-#import player
 import place
+from character import Race, CharacterClass, Player
 
 
 class World(object):
