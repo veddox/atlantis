@@ -23,9 +23,17 @@
 		 ,@body))
 
 
-;TODO
-(defun count-instances (search-term search-vector)
-	"Count the number of instances of search-term in search-vector"
-	(let (n (find-if #'(lambda (a) (equalp a search-term)) search-vector))
-		(if (null n) 0
-			())))
+(defun count-instances (search-term search-list)
+	"Count the number of instances of search-term in search-list"
+	(do ((lst (cdr (member search-term search-list))
+			 (cdr (member search-term lst)))
+			(counter 0 (1+ counter)))
+		((null lst) counter)))
+
+; Probably quite inefficient, maybe remove this function later
+(defun to-list (vector)
+	"Turn the vector into a list"
+	(do* ((i 0 (1+ i))
+			 (e (aref vector i) (aref vector i))
+			 (lst (list e) (cons e lst)))
+		((= i (1- (length vector))) (reverse lst))))

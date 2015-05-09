@@ -14,13 +14,19 @@
 
 (defun start-server ()
 	"Start a new game on a server"
-	)
+	(format t "~&What world file do you want to load?")
+	;Gonna have a problem with Lisp smashing case on the file name
+	(input world-file) 
+    (format t "~&What port should the game run on?")
+	(while (not (numberp (input port)))
+		(format t "~&Not a number: ~A. Please reenter:" port))
+	(format t "~&Loading file ~A on port ~A" (string world-file) port))
 
 (defun join-game ()
 	"Join a running game on the server"
 	(format t "~&What is the IP address of the server you want to join?")
 	(input ip)
-	(while (not (= (count-instances "." (symbol-name ip)) 3))
+	(while (not (= (count-instances #\. (to-list (string ip))) 3))
 		(format t "~&Not an IP address: ~A. Please reenter:" ip)
 		(input ip))
 	(format t "~&What port does the game run on?")
