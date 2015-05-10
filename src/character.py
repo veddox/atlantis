@@ -9,16 +9,18 @@
 # date: 02/05/2015
 #
 
+import Item
 from define import DefineCommand, register_define_command
+
 
 class Race(object):
     '''
     A class to describe the races inhabiting the game world
     '''
 
-    def __init__(self, name, description,
-                 str_bonus, dex_bonus,
-                 int_bonus, const_bonus):
+    def __init__(self, name, description="",
+                 str_bonus=0, dex_bonus=0,
+                 int_bonus=0, const_bonus=0):
         '''
         Create a new race. Arguments:
         name, description: the name and description of the new race
@@ -30,8 +32,20 @@ class Race(object):
         self.bonuses = {'strength':str_bonus, 'dexterity':dex_bonus,
                         'intelligence':int_bonus, 'constitution':const_bonus}
 
-    # Do we need any methods here? I can't think of any at the moment...
-    # If not, we might be able to turn this class into a simple list.
+    def set_description(self, description):
+        self.description = description
+
+    def set_strength(self, str_bonus):
+        self.bonuses['strength'] = str_bonus
+
+    def set_dexterity(self, dex_bonus):
+        self.bonuses['dexterity'] = dex_bonus
+
+    def set_constitution(self, const_bonus):
+        self.bonuses['constitution'] = const_bonus
+
+    def set_intelligence(self, int_bonus):
+        self.bonuses['intelligence'] = int_bonus
 
 
 class DefineRace(DefineCommand):
@@ -41,7 +55,24 @@ class DefineRace(DefineCommand):
 
     def __init__(self):
         super.__init__("define-race", "Define and describe a race of beings")
-        #TODO
+        self.race = None
+        self.add_option("description", "A description of this race",
+                        self.race.set_description)
+        self.add_option("strength", "The strength bonus that this race gets",
+                        self.race.set_strength)
+        self.add_option("dexterity", "The dexterity bonus that this race gets",
+                        self.race.set_dexterity)
+        self.add_option("constitution", "The constitution bonus that this race gets",
+                        self.race.set_constitution)
+        self.add_option("intelligence", "The intelligence bonus that this race gets",
+                        self.race.set_intelligence)
+
+    def init_object(self, race_name):
+        self.race = None
+        self.race = Race(race_name)
+
+    def return_object(self):
+        return self.race
 
 register_define_command(DefineRace())
 
@@ -51,7 +82,7 @@ class CharacterClass(object):
     A class to describe all the character classes a player can assume
     '''
 
-    def __init__(self, name, description, special_items):
+    def __init__(self, name, description="", special_items=[]):
         '''
         Create a new character class. Arguments:
         name, description: the name and description of this character class
@@ -62,7 +93,13 @@ class CharacterClass(object):
         self.description = description
         self.items = special_items
 
-    # Again, do we need any methods here? If not, turn this class into a list.
+    def set_description(self, description):
+        self.description = description
+
+    def add_item(self, item_name):
+        item = Item.get_item(item_name)
+        self.items.append(item)
+
 
 class DefineClass(DefineCommand):
     '''
@@ -71,7 +108,18 @@ class DefineClass(DefineCommand):
 
     def __init__(self):
         super.__init__("define-class", "Define and describe a character class")
-        #TODO
+        self.char_class = None
+        self.add_option("description", "Describe this character class",
+                        self.char_class.set_description)
+        self.add_option("item", "An item that all members of this class carry",
+                        self.char_class.add_item)
+
+    def init_object(self, class_name):
+        self.char_class = None
+        self.char_class = CharacterClass(name)
+
+    def return_object(self):
+        return self.char_class
 
 register_define_command(DefineClass())
 

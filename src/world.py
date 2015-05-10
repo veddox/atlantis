@@ -18,6 +18,17 @@ class World(object):
     The World class saves and gives access to the current state
     of the game world.
     '''
+    
+    #   Originally it was intended that the world hold a copy of every game
+    # object defined, and thus act as a meta-registry. However, that will
+    # most likely lead to circular dependencies. (For example, CharacterClass
+    # requires access to the item registry. If the latter was located here in
+    # world.py, character.py would have to import world.py, which in turn
+    # imports character.py...)
+    #   Thus it seems better that each registry be moved to the module that
+    # deals with the relevant game object. The item registry has already been
+    # moved to item.py. The monster registry needs to follow suit. I am not
+    # yet sure what to do with the place and NPC registries.
 
     def __init__(self):
         '''
@@ -29,7 +40,6 @@ class World(object):
         self.players = dict()
         self.starting_place = None
         self.npc = dict()
-        self.items = dict()
         self.monsters = dict()
         
     def register_player(self, player):
@@ -53,8 +63,6 @@ class World(object):
             self.add_place(game_object)
         elif object_type == "npc":
             self.add_npc(game_object)
-        elif object_type == "item":
-            self.add_item(game_object)
         elif object_type == "monster":
             self.add_monster(game_object)
             
@@ -66,9 +74,6 @@ class World(object):
 
     def add_npc(self, npc):
         self.npc[npc.name] = npc
-
-    def add_item(self, item):
-        self.items[item.name] = item
 
     def get_player(self, name):
         return self.players[name]
@@ -82,17 +87,8 @@ class World(object):
     def get_npc(self, npc_name):
         return self.npc[npc_name]
 
-    def get_item(self, item_name):
-        '''
-        Returns a copy of the item object stored under the passed name.
-        This means that World retains a "pure" instance of every item type
-        for future reference. Each Place holds its own item objects that
-        can be changed or removed at will.
-        '''
-        # is deepcopy the right copy method to use? if shallow copy is
-        # sufficient, we could just use the inbuilt dict.copy()
-        return copy.deepcopy(self.items[item_name])        
 
+    # TODO Move to monster.py
     def get_monster(self, monster_name):
         '''
         Returns a copy of the monster object stored under the passed name.

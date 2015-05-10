@@ -62,3 +62,5 @@ define_command_registry = dict()
 def register_define_command(def_com):
     define_command_registry[def_com.name] = def_com
 
+def get_define_command(command_name):
+    return define_command_registry[command_name]
