@@ -10,7 +10,22 @@
 ;;;
 
 
-(defmacro input (var &optional (prompt ">>>"))
+; potentially inefficient if called often
+(defmacro set-list (value &rest var-list)
+	"Set each symbol in var-list to value"
+	(do* ((expr (list 'setf)) (vl var-list (cdr vl)) (var (car vl) (car vl)))
+		((null vl) expr)
+		(setf (cdr (last expr)) (list var))
+		(setf (cdr (last expr)) (list value))))
+		
+(defmacro input (&rest vars)
+	"Take input from terminal and store each element in a passed variable"
+	; Add a prompt parameter again?
+	`(progn
+		 (format t "~&>>> ")
+		 (set-list (read) ,@vars)))
+
+(defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
 	`(progn
 		 (format t "~&~A " ,prompt)
@@ -37,3 +52,12 @@
 			 (e (aref vector i) (aref vector i))
 			 (lst (list e) (cons e lst)))
 		((= i (1- (length vector))) (reverse lst))))
+
+; Use this to develop the input macro further
+(defun commandline ()
+	"This function takes in a command together with its argument
+from the commandline"
+	(format t "~&>>> ")
+	(setf command (read))
+	(setf argument (read))
+	(format t "~&Command = ~A~%Argument = ~A" command argument))
