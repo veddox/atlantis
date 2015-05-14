@@ -4,7 +4,7 @@
 ;;;
 ;;; This file provides commonly used utility functions and macros.
 ;;;
-;;; Licensed under the terms of the GPLv3
+;;; Licensed under the terms of the MIT license.
 ;;; author: Daniel Vedder
 ;;; date: 09/05/2015
 ;;;
@@ -23,13 +23,28 @@
 	; Add a prompt parameter again?
 	`(progn
 		 (format t "~&>>> ")
-		 (set-list (read) ,@vars)))
+		 (set-list (read) ,@vars)
+		 (magic (first (list ,@vars)))))
+
+(defmacro input-string (var)
+	"Read a string input line"
+	`(progn
+		 (format t "~&>>> ")
+		 (setf ,var (read-line))
+		 (magic (read-from-string ,var))))
 
 (defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
 	`(progn
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
+
+(defmacro magic (var)
+	"Execute typed-in Lisp code"
+	(let ((expr (gensym)))
+		`(when (equalp ,var 'magic)
+			 (progn (simple-input ,expr "[spell]>")
+				 (eval ,expr)))))
 
 (defmacro while (condition &body body)
 	"An implementation of a while loop as found in other languages"
@@ -53,11 +68,18 @@
 			 (lst (list e) (cons e lst)))
 		((= i (1- (length vector))) (reverse lst))))
 
-; Use this to develop the input macro further
-(defun commandline ()
-	"This function takes in a command together with its argument
-from the commandline"
-	(format t "~&>>> ")
-	(setf command (read))
-	(setf argument (read))
-	(format t "~&Command = ~A~%Argument = ~A" command argument))
+(defun load-file (file-name)
+	"Load a file into a list of strings (representing the lines)"
+	(with-open-file (f file-name)
+		(do* ((line (read-line f nil nil)
+				  (read-line f nil nil))
+				 (file-lines (list line) (append file-lines (list line))))
+			((null line) file-lines))))
+
+
+;; Intended for interactive sessions
+;; Load automatically at any clisp start?
+(let ((file-name 'util.lisp))
+	(defun l (&optional new-file-name)
+		(when new-file-name (setf file-name new-file-name))
+		(load file-name)))

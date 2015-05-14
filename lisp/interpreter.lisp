@@ -4,7 +4,7 @@
 ;;;
 ;;; The interpreter file loads an ATL source file and parses it.
 ;;;
-;;; Licensed under the terms of the GPLv3
+;;; Licensed under the terms of the MIT license
 ;;; author: Daniel Vedder
 ;;; date: 09/05/2015
 ;;;
