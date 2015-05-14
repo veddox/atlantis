@@ -1,1 +1,1 @@
-src/atlantis.py --server 88 --world worlds/Example/test.atl
+python/atlantis.py --server 88 --world worlds/Example/test.atl
