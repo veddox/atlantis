@@ -11,6 +11,7 @@
 import copy
 import place
 from character import Race, CharacterClass, Player
+from item import Item
 
 
 class World(object):

@@ -9,7 +9,7 @@
 # date: 02/05/2015
 #
 
-import Item
+import item
 from define import DefineCommand, register_define_command
 
 
@@ -54,8 +54,11 @@ class DefineRace(DefineCommand):
     '''
 
     def __init__(self):
-        super.__init__("define-race", "Define and describe a race of beings")
+        DefineCommand.__init__(self, "define-race",
+                       "Define and describe a race of beings")
         self.race = None
+        # FIXME: need new option methods to act as wrappers around self.race.x
+        # (self.race doesn't exist yet)
         self.add_option("description", "A description of this race",
                         self.race.set_description)
         self.add_option("strength", "The strength bonus that this race gets",
@@ -97,8 +100,8 @@ class CharacterClass(object):
         self.description = description
 
     def add_item(self, item_name):
-        item = Item.get_item(item_name)
-        self.items.append(item)
+        new_item = item.get_item(item_name)
+        self.items.append(new_item)
 
 
 class DefineClass(DefineCommand):
@@ -107,8 +110,11 @@ class DefineClass(DefineCommand):
     '''
 
     def __init__(self):
-        super.__init__("define-class", "Define and describe a character class")
+        DefineCommand.__init__(self, "define-class",
+                       "Define and describe a character class")
         self.char_class = None
+        # FIXME: need new option methods to act as wrappers around 
+        # self.char_class.x (self.char_class doesn't exist yet)
         self.add_option("description", "Describe this character class",
                         self.char_class.set_description)
         self.add_option("item", "An item that all members of this class carry",

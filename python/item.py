@@ -27,7 +27,7 @@ class ItemCommand(DefineCommand):
     '''
 
     def __init__(self):
-        super.__init__("define-item",
+        DefineCommand.__init__(self, "define-item",
                        "Describe a new item that players can interact with")
         self.item = None
         # TODO Add option commands
