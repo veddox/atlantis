@@ -17,3 +17,18 @@
 	(monsters NIL)
 	(npcs NIL))
 
+;;; Temporary, just so I have the structs >>>
+
+(defstruct npc
+	(name "")
+	(says ""))
+
+(defstruct monster
+	(name "")
+	(description "")
+	(strength 0))
+
+(defstruct item
+	(name "")
+	(description "")
+	(functions NIL))

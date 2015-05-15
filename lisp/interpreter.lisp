@@ -11,8 +11,14 @@
 
 (load 'util.lisp)
 (load 'game-objects.lisp)
+(load 'player.lisp)
 (load 'world.lisp)
 
+
+(defun load-atl (atl-file)
+	;not yet defined
+	NIL
+	)
 
 (defun define-place (name)
 	(format t "~&Making place ~A" name)
@@ -20,6 +26,7 @@
 
 (defun start-place (place)
 	;not yet defined
+	NIL
 	)
 
 (defun load-atl-file (file-name)
@@ -28,13 +35,22 @@
 			 (line (nth line-nr source) (nth line-nr source))
 			 (current-object NIL))
 		((= line-nr (length source)) NIL)
-		(unless (or (zerop (length line))
-					(eql (aref line 0) #\;))
-					(eql (aref line 0) #\SPACE)
-					(eql (aref line 0) #\TAB))
+		(cond ((zerop (length line)) (setf current-object NIL))
 			; interpret a define command
-			(funcall (symbol-function (read-from-string line))
-				; here follows is a kludge to work around a clisp bug (the 
-				; :start keyword in read-from-string is not recognized)
-				(read-from-string
-					(second (cut-string line (find-char #\space line)))))))
+			((not (or (eql (aref line 0) #\;)
+					  (eql (aref line 0) #\SPACE)
+					  (eql (aref line 0) #\TAB)))
+				(setf current-object (funcall (symbol-function
+												  (read-from-string line))
+					; here follows is a kludge to work around a clisp bug (the 
+					; :start keyword in read-from-string is not recognized)
+					(read-from-string
+						(second (cut-string line (find-char #\space line)))))))
+			; interpret an option command
+			((not (eql (aref line 0) #\;))
+				(setf line (string-left-trim '(#\Space #\Tab) line))
+				(set-object-attribute current-object (read-from-string line)
+					(read-from-string
+						(second (cut-string line (find-char #\space line))))))
+			(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A~"
+				   line-nr line)))))
