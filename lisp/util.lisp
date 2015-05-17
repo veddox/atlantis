@@ -12,6 +12,13 @@
 
 ;;; MACROS
 
+(defmacro magic (var)
+	"Execute typed-in Lisp code"
+	(let ((expr (gensym)))
+		`(when (equalp ,var 'magic)
+			 (progn (simple-input ,expr "[spell]>")
+				 (eval ,expr)))))
+
 ; potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
 	"Set each symbol in var-list to value"
@@ -26,14 +33,16 @@
 	`(progn
 		 (format t "~&>>> ")
 		 (set-list (read) ,@vars)
-		 (magic (first (list ,@vars)))))
+		 (magic (first (list ,@vars)))
+		 (first (list ,@vars))))
 
 (defmacro input-string (var)
 	"Read a string input line"
 	`(progn
 		 (format t "~&>>> ")
 		 (setf ,var (read-line))
-		 (magic (read-from-string ,var))))
+		 (magic (read-from-string ,var))
+		 ,var))
 
 (defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
@@ -41,18 +50,11 @@
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
 
-(defmacro magic (var)
-	"Execute typed-in Lisp code"
-	(let ((expr (gensym)))
-		`(when (equalp ,var 'magic)
-			 (progn (simple-input ,expr "[spell]>")
-				 (eval ,expr)))))
-
 (defmacro while (condition &body body)
 	"An implementation of a while loop as found in other languages"
 	`(do ()
-		 ((not ,condition))
-		 (,@body)))
+		 ((not ,condition) NIL)
+		 ,@body))
 
 (defmacro != (object1 object2 &key (test 'eql))
 	"A not-equals macro to save some typing"
@@ -102,20 +104,17 @@
 	(dotimes (letter (length s) NIL)
 		(when (eql (char s letter) c) (return letter))))
 
-(defun count-instances (search-term search-list)
+(defun count-instances (search-term search-list &key (test #'eql))
 	"Count the number of instances of search-term in search-list"
-	(do ((lst (cdr (member search-term search-list))
-			 (cdr (member search-term lst)))
-			(counter 0 (1+ counter)))
-		((null lst) counter)))
+	(let ((count 0))
+		(dolist (item search-list count)
+			(when (funcall test search-term item) (incf count)))))
 
-(defun count-vector-instances (search-term search-vector)
+(defun count-vector-instances (search-term search-vector &key (test #'eql))
 	"Count the number of instances of search-term in search-vector"
-	(do ((count 0) (item-nr 0 (1+ item-nr))
-			(item (aref search-vector item-nr) (aref search-vector item-nr)))
-		((= item-nr (1- (length search-vector))) count)
-		;TODO
-	))
+	(let ((count 0))
+		(dovector (item search-vector count)
+			(when (funcall test search-term item) (incf count)))))
 
 (defun to-list (vector)
 	"Turn the vector into a list"

@@ -47,10 +47,13 @@
 					(read-from-string
 						(second (cut-string line (find-char #\space line)))))))
 			; interpret an option command
-			((not (eql (aref line 0) #\;))
+			((or (eql (aref line 0) #\Space)
+				 (eql (aref line 0) #\Tab))
 				(setf line (string-left-trim '(#\Space #\Tab) line))
 				(set-object-attribute current-object (read-from-string line)
 					(read-from-string
 						(second (cut-string line (find-char #\space line))))))
-			(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A~"
-				   line-nr line)))))
+			((eql (aref line 0) #\;)) ;Comments are ignored
+			(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A'"
+				   ;can't happen
+				   (1+ line-nr) line)))))

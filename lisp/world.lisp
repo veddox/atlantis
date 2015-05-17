@@ -14,7 +14,7 @@
 
 
 ;; The world is basically a list of struct instances representing
-;; each game object
+;; each object created in this game
 
 (defstruct world
 	(players NIL)
@@ -23,6 +23,7 @@
 	(npcs NIL)
 	(items NIL))
 
+(setf *world* (make-world))
 
 ;; (defmacro add-game-object (game-object)
 ;; 	"Add a game-object to the *world*"
@@ -36,6 +37,7 @@
 ;; 			 (append (,object-function *world*) ,game-object))))
 
 
+;FIXME Needs work
 (defmacro add-game-object (game-object)
 	"Add a game-object to the *world*"
 	(let ((attribute-list
@@ -45,3 +47,9 @@
 				  ((npc-p game-object) '(world-npcs *world*))
 				  ((item-p game-object) '(world-items *world*)))))
 		`(setf ,attribute-list (append ,attribute-list ,game-object))))
+
+; TODO
+(defmacro get-game-object (object-name))
+
+;TODO
+(defmacro set-object-attribute (game-object property value))

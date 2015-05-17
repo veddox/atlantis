@@ -7,9 +7,10 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 0 1))
+(defconstant ATLANTIS-VERSION '(0 1 0))
 
 (load 'util.lisp)
+(load 'interpreter.lisp)
 
 
 (defun start-server ()
@@ -19,7 +20,8 @@
     (format t "~&What port should the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
-	(format t "~&Loading file ~A on port ~A" (string world-file) port))
+	(format t "~&Loading file ~S on port ~A" world-file port)
+	(load-atl-file world-file))
 
 (defun join-game ()
 	"Join a running game on the server"
