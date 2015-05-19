@@ -7,9 +7,10 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 0 1))
+(defconstant ATLANTIS-VERSION '(0 1 0))
 
 (load 'util.lisp)
+(load 'interpreter.lisp)
 
 
 (defun start-server ()
@@ -19,7 +20,9 @@
     (format t "~&What port should the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
-	(format t "~&Loading file ~A on port ~A" (string world-file) port))
+	(format t "~&Loading file ~S on port ~A" world-file port)
+	(load-file world-file)
+	(break))
 
 (defun join-game ()
 	"Join a running game on the server"
@@ -39,16 +42,18 @@
 		(first ATLANTIS-VERSION)
 		(second ATLANTIS-VERSION)
 		(third ATLANTIS-VERSION))
-	(format t "~&Copyright (c)2015 Daniel Vedder")
-	(format t "~&Licensed under the terms of the MIT license."))
+	(format t "~&Copyright (c) 2015 Daniel Vedder")
+	(format t "~&Licensed under the terms of the MIT license.~%"))
+
+(defun print-help ()
+	(print-version)
+	(format t "~%~%Sorry, the help is not yet available!"))
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
-	(with-open-file (logo "banner.txt")
-		(do ((line (read-line logo nil nil)
-				 (read-line logo nil nil)))
-			((null line))
-			(format t "~&~A" line)))
+	(let ((logo (load-text-file "banner.txt")))
+		(dolist (line logo)
+			(unless (null line) (format t "~%~A" line))))
 	(format t "~&~%Welcome! What do you want to do?")
 	(format t "~&-> (S)tart a server")
 	(format t "~&-> (J)oin a game")
@@ -62,4 +67,14 @@
 		((equalp choice 'e)
 			(format t "~&Goodbye!") (quit))))
 
-(start-menu)
+;; TODO
+;; (defun parse-commandline-args ()
+;; 	(do* ((i 0 (1+ i)) (a (nth i *args*) (nth i *args))
+;; 			 (param-functions '(("--version" (#'print-version 0))
+;; 								   ("--help" (#'print-help 0))
+;; 								   ("--server"
+
+
+(if *args*
+	(parse-commandline-args)
+	(start-menu))

@@ -1,0 +1,33 @@
+======================
+|| Project ATLANTIS ||
+======================
+
+
+SUMMARY
+
+Atlantis is a framework for creating an MUD world. It includes an interpreted
+language for describing places, items, monsters and NPCs; provides networking
+capabilities for multiplayer games and a text-based user interface. Inspired
+and influenced by OpenWorld, it is written in Common Lisp.
+
+
+GAME PLAY
+
+The player navigates around the world using shell-like commands. He is immersed
+into the game by DnD-like descriptive texts; new areas of the world can be
+generated on the fly by the players themselves. It is a RPG, players aim to
+develop their characters and can interact with other players.
+
+
+TECHNICAL CHALLENGES
+
+Networking: does Common Lisp support networking? threading? If not the latter,
+			how can a real-time networked multiplayer game be implemented?
+
+Implementation: presumably Atlantis will have to have a server-client model. 
+				How do the two communicate? Are there alternative implementation
+				models?
+
+Language: how complex should the inbuilt language be? Is it a purely descriptive
+		  language similar to XML/INI files? Should it be possible to script
+		  actions with it? Must it be Turing complete?
