@@ -67,12 +67,24 @@
 		((equalp choice 'e)
 			(format t "~&Goodbye!") (quit))))
 
-;; TODO
-;; (defun parse-commandline-args ()
-;; 	(do* ((i 0 (1+ i)) (a (nth i *args*) (nth i *args))
-;; 			 (param-functions '(("--version" (#'print-version 0))
-;; 								   ("--help" (#'print-help 0))
-;; 								   ("--server"
+(defun cmd-parameter (name &optional truth-value)
+	"Return the value of the parameter 'name'. Or T for present if truth-value."
+	(let ((argument (member name *args* :test #'equalp)))
+		(if argument
+			(if truth-value T
+				(second argument))
+			NIL)))
+
+(defun parse-commandline-args ()
+	(when (cmd-parameter "--version" T) (print-version) (quit))
+	(when (cmd-parameter "--help" T) (print-help) (quit))
+	(let ((server (cmd-parameter "--server"))
+			 (world-file (cmd-parameter "--world"))
+			 (client (cmd-parameter "--client")))
+		;(break)
+		(if (or world-file server) ;TODO change OR to AND
+			(load-file world-file)
+			(format t "~&Sorry, the client is not yet available!"))))
 
 
 (if *args*

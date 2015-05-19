@@ -15,18 +15,12 @@
 (load 'world.lisp)
 
 
-;; (defun load-atl (atl-file)
-;; 	;not yet defined
-;; 	NIL
-;; 	)
-
 (defun define-place (name)
 	(format t "~&Making place ~A" name)
 	(make-place :name name))
 
 (defun start-place (place)
 	;not yet defined
-	NIL
 	)
 
 (let ((world-directory NIL))
@@ -49,8 +43,10 @@
 				(incf line-nr)
 				(setf line (concatenate 'string line (nth line-nr source))))
 			(cond ((zerop (length line))
-					  (when current-object (add-game-object current-object))
+					  ;; TODO
+					  ;(when current-object (add-game-object current-object))
 					  (setf current-object NIL))
+				((eql (aref line 0) #\;)) ;Comments are ignored
 			    ; interpret a define command
 				((not (or (eql (aref line 0) #\;)
 						  (eql (aref line 0) #\SPACE)
@@ -68,7 +64,6 @@
 					(set-object-attribute current-object (read-from-string line)
 						(read-from-string
 							(second (cut-string line (find-char #\space line))))))
-				((eql (aref line 0) #\;)) ;Comments are ignored
 				(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A'"
 					   ;can't happen
 					   (1+ line-nr) line))))))
