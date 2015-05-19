@@ -1,0 +1,8 @@
+; Just a very small file to test whether the load function works properly
+; @author Daniel Vedder
+; @date 18/05/2015
+
+define-place "Fields of Punishment"
+	description "Precisely where you do NOT want to end up..."
+	neighbour "Nowhere"
+	neighbour "Elysium"

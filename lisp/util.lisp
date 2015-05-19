@@ -12,9 +12,17 @@
 
 ;;; MACROS
 
+(defmacro let-gensyms (syms &body body)
+	"Gratefully copied from Paul Graham's 'On Lisp'..."
+	;; I had to rename it from with-gensyms due to a naming conflict
+	`(let ,(mapcar #'(lambda (s)
+						 `(,s (gensym)))
+			   syms)
+		 ,@body))
+
 (defmacro magic (var)
 	"Execute typed-in Lisp code"
-	(let ((expr (gensym)))
+	(let-gensyms (expr)
 		`(when (equalp ,var 'magic)
 			 (progn (simple-input ,expr "[spell]>")
 				 (eval ,expr)))))
@@ -71,7 +79,7 @@
 
 (defmacro dovector ((element vector &optional (return-variable NIL)) &body body)
 	"A macro analogous to dolist"
-	(let ((index (gensym)))
+	(let-gensyms (index)
 		`(do* ((,index 0 (1+ ,index))
 				  (,element (safe-aref ,vector ,index)
 					  (safe-aref ,vector ,index)))
@@ -123,8 +131,8 @@
 			 (lst (list e) (cons e lst)))
 		((= i (1- (length vector))) (reverse lst))))
 
-(defun load-file (file-name)
-	"Load a file into a list of strings (representing the lines)"
+(defun load-text-file (file-name)
+	"Load a text file into a list of strings (representing the lines)"
 	;; adds two NIL to the end?
 	(with-open-file (f file-name)
 		(do* ((line (read-line f nil nil)

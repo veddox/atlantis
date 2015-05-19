@@ -25,17 +25,6 @@
 
 (setf *world* (make-world))
 
-;; (defmacro add-game-object (game-object)
-;; 	"Add a game-object to the *world*"
-;; 	(let ((object-function
-;; 			  (cond ((playerp game-object) 'world-players)
-;; 				  ((place-p game-object) 'world-places)
-;; 				  ((monster-p game-object) 'world-monsters)
-;; 				  ((npc-p game-object) 'world-npcs)
-;; 				  ((itemp-p game-object) 'world-items))))
-;; 		`(setf (,object-function *world*)
-;; 			 (append (,object-function *world*) ,game-object))))
-
 
 ;FIXME Needs work
 (defmacro add-game-object (game-object)
@@ -51,5 +40,3 @@
 ; TODO
 (defmacro get-game-object (object-name))
 
-;TODO
-(defmacro set-object-attribute (game-object property value))

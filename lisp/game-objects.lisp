@@ -12,12 +12,13 @@
 
 (defstruct place
 	(name "")
-	(neighbours NIL)
-	(items NIL)
-	(monsters NIL)
-	(npcs NIL))
+	(description "")
+	(neighbour NIL)
+	(item NIL)
+	(monster NIL)
+	(npc NIL))
 
-;;; Temporary, just so I have the structs >>>
+;;; INCOMPLETE STRUCTS >>>
 
 (defstruct npc
 	(name "")
@@ -26,9 +27,23 @@
 (defstruct monster
 	(name "")
 	(description "")
-	(strength 0))
+	(strength 0)
+	(armour-class 0))
 
 (defstruct item
 	(name "")
 	(description "")
-	(functions NIL))
+	(function NIL))
+
+(defun set-object-attribute (game-object property value)
+	"Set the attribute 'property' of 'game-object' to 'value'"
+	;; Here follows Lisp magic :D      (that took ages to get right...)
+	;; I'm not sure how elegant it is to call (eval) explicitly, but in this
+	;; case I couldn't avoid it - I needed a mix between a macro and a function
+	(let ((command (read-from-string
+						 (concatenate 'string
+							 (symbol-name (type-of game-object))
+							 "-" (if (stringp property) property
+									 (symbol-name property))))))
+		(eval `(setf (,command ,game-object) ,value))))
+
