@@ -19,3 +19,19 @@
 	(intelligence 0)
 	(items NIL)
 	(weapons NIL))
+
+
+(defstruct race
+	(name "")
+	(description "")
+	(strength-bonus 0)
+	(dexterity-bonus 0)
+	(constitution-bonus 0)
+	(intelligence-bonus 0)
+	(special-ability NIL))
+
+(defstruct character-class
+	(name "")
+	(description "")
+	(special-item NIL)
+	(special-ability NIL))

@@ -6,3 +6,13 @@ define-place "Fields of Punishment"
 	description "Precisely where you do NOT want to end up..."
 	neighbour "Nowhere"
 	neighbour "Elysium"
+
+define-race "Elf"
+	description "The oldest and wisest race of Middle Earth"
+
+define-class "Burglar"
+	description "Breaking and entering taken to the max!"
+	special-item "lockpick"
+	special-item "torch"
+
+load-file lisp-test.atl

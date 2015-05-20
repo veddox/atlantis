@@ -19,11 +19,21 @@
 	(format t "~&Making place ~A" name)
 	(make-place :name name))
 
-(defun start-place (place)
-	;not yet defined
-	)
+(defun define-race (name)
+	(format t "~&Making race ~A" name)
+	(make-race :name name))
 
-(let ((world-directory NIL))
+(defun define-class (name)
+	(format t "~&Making class ~A" name)
+	(make-character-class :name name))
+
+(defun start-place (place)
+	;; TODO
+	(format t "~&Starting place is ~A" place))
+
+
+(let ((world-directory NIL)
+		 (loaded-files NIL))
 	(defun load-file (file-name)
 		"Load and interpret an ATL source file"
 		;; save/load the current working directory
@@ -32,7 +42,13 @@
 								:directory world-directory
 								:name (pathname-name file-name)
 								:type (pathname-type file-name)))
-			(setf world-directory (pathname-directory file-name)))
+			(progn
+				(setf world-directory (pathname-directory file-name))
+				(setf file-name (parse-namestring file-name))))
+		;; check if this file has already been loaded
+		(if (member file-name loaded-files :test #'equalp)
+			(return-from load-file)
+			(setf loaded-files (cons file-name loaded-files)))
 		;; parse the ATL file
 		(do* ((line-nr 0 (1+ line-nr)) (source (load-text-file file-name))
 				 (line (nth line-nr source) (nth line-nr source))
@@ -43,7 +59,6 @@
 				(incf line-nr)
 				(setf line (concatenate 'string line (nth line-nr source))))
 			(cond ((zerop (length line))
-					  ;; TODO
 					  (when current-object (add-game-object current-object))
 					  (setf current-object NIL))
 				((eql (aref line 0) #\;)) ;Comments are ignored
