@@ -25,18 +25,16 @@
 
 (setf *world* (make-world))
 
-
-;FIXME Needs work
-(defmacro add-game-object (game-object)
-	"Add a game-object to the *world*"
-	(let ((attribute-list
-			  (cond ((player-p game-object) '(world-players *world*))
-				  ((place-p game-object) '(world-places *world*))
-				  ((monster-p game-object) '(world-monsters *world*))
-				  ((npc-p game-object) '(world-npcs *world*))
-				  ((item-p game-object) '(world-items *world*)))))
-		`(setf ,attribute-list (append ,attribute-list ,game-object))))
-
+(defun add-game-object (game-object)
+	"Add 'game-object' to *world*"
+	;; XXX: Very similar in structure to the function set-object-attribute in
+	;; game-objects.lisp. Can that be abstracted away into a macro or some such?
+	(let ((world-list (read-from-string
+						  (concatenate 'string "world-"
+							  (symbol-name (type-of game-object)) "s"))))
+		(eval `(setf (,world-list *world*)
+				   (append (,world-list *world*) (list ,game-object))))))
+							  
 ; TODO
-(defmacro get-game-object (object-name))
+(defun get-game-object (object-name))
 

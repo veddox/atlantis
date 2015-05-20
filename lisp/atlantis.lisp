@@ -21,8 +21,7 @@
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
 	(format t "~&Loading file ~S on port ~A" world-file port)
-	(load-file world-file)
-	(break))
+	(load-file world-file))
 
 (defun join-game ()
 	"Join a running game on the server"

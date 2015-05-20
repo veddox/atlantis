@@ -35,6 +35,7 @@
 	(description "")
 	(function NIL))
 
+
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"
 	;; Here follows Lisp magic :D      (that took ages to get right...)
@@ -45,5 +46,9 @@
 							 (symbol-name (type-of game-object))
 							 "-" (if (stringp property) property
 									 (symbol-name property))))))
-		(eval `(setf (,command ,game-object) ,value))))
-
+		;; XXX This following section is rather ugly...
+		(eval `(if (or (null (,command ,game-object))
+					   (listp (,command ,game-object)))
+				   (setf (,command ,game-object)
+					   (append (,command ,game-object) '(,value)))
+				   (setf (,command ,game-object) ,value)))))
