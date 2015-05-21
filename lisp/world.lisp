@@ -23,7 +23,8 @@
 	(places NIL)
 	(monsters NIL)
 	(npcs NIL)
-	(items NIL))
+	(items NIL)
+	(starting-place ""))
 
 (setf *world* (make-world))
 

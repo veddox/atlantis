@@ -18,7 +18,8 @@
 	(constitution 0)
 	(intelligence 0)
 	(items NIL)
-	(weapons NIL))
+	(weapons NIL)
+	(place))
 
 
 (defstruct race

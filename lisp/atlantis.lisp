@@ -29,11 +29,11 @@
 	(input-string ip)
 	(while (not (= (count-instances #\. (to-list ip)) 3))
 		(format t "~&Not an IP address: ~A. Please reenter:" ip)
-		(input ip))
+		(input-string ip))
 	(format t "~&What port does the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
-	(format t "~&Joining game on ~A:~A" (symbol-name ip) port))
+	(format t "~&Joining game on ~A:~A" ip port))
 
 
 (defun print-version ()
@@ -50,9 +50,9 @@
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
-	(let ((logo (load-text-file "banner.txt")))
-		(dolist (line logo)
-			(unless (null line) (format t "~%~A" line))))
+;	(let ((logo (load-text-file "banner.txt")))
+	(dolist (line (load-text-file "banner.txt"))
+		(unless (null line) (format t "~%~A" line)))
 	(format t "~&~%Welcome! What do you want to do?")
 	(format t "~&-> (S)tart a server")
 	(format t "~&-> (J)oin a game")
@@ -62,7 +62,11 @@
 	(cond ((equalp choice 's) (start-server))
 		((equalp choice 'j) (join-game))
 		((equalp choice 'a)
-			(print-version) (start-menu))
+			(print-version)
+			(when (y-or-n-p "~%Show the license text?")
+				(dolist (line (load-text-file "../LICENSE"))
+					(unless (null line) (format t "~%~A" line))))
+			(start-menu))
 		((equalp choice 'e)
 			(format t "~&Goodbye!") (quit))))
 

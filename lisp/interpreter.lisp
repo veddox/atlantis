@@ -28,14 +28,15 @@
 	(make-character-class :name name))
 
 (defun start-place (place)
-	;; TODO
-	(format t "~&Starting place is ~A" place))
+	(format t "~&Starting place is ~A" place)
+	(setf (world-starting-place *world*) place)
+	NIL)
 
 
 (let ((world-directory NIL)
 		 (loaded-files NIL))
 	(defun load-file (file-name)
-		"Load and interpret an ATL source file"
+		"Load and interpret an ATL source file or a Lisp extension file"
 		;; save/load the current working directory
 		(if (null (pathname-directory file-name))
 			(setf file-name (make-pathname
@@ -49,7 +50,11 @@
 		(if (member file-name loaded-files :test #'equalp)
 			(return-from load-file)
 			(setf loaded-files (cons file-name loaded-files)))
-		;; parse the ATL file
+		;; check if this is a Lisp extension file
+		(when (equalp (pathname-type file-name) "lisp")
+			(load file-name)
+			(return-from load-file))
+		;; otherwise, parse the ATL file
 		(do* ((line-nr 0 (1+ line-nr)) (source (load-text-file file-name))
 				 (line (nth line-nr source) (nth line-nr source))
 				 (current-object NIL))

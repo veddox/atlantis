@@ -16,3 +16,4 @@ define-class "Burglar"
 	special-item "torch"
 
 load-file lisp-test.atl
+load-file test-extension.lisp
