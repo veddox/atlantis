@@ -32,12 +32,23 @@
 	"Add 'game-object' to *world*"
 	;; XXX: Very similar in structure to the function set-object-attribute in
 	;; game-objects.lisp. Can that be abstracted away into a macro or some such?
-	(let ((world-list (read-from-string
-						  (concatenate 'string "world-"
-							  (symbol-name (type-of game-object)) "s"))))
+	(let ((world-list (build-symbol "world-" (type-of game-object) "s")))
 		(eval `(setf (,world-list *world*)
 				   (append (,world-list *world*) (list ,game-object))))))
 							  
-; TODO
-(defun get-game-object (object-name))
+(defun get-game-object (object-type object-name)
+	"Return the desired game object"
+	(let ((get-world-objects (build-symbol "world-" object-type "s"))
+			 (get-object-name (build-symbol object-type "-name")))
+		(dolist (object (eval `(,get-world-objects *world*)) NIL)
+			(when (equalp (eval `(,get-object-name ,object)) object-name)
+				(return object)))))
+
+(defun list-objects (object-type)
+	"Return a list of the names of all objects of the specified type"
+	(let ((get-world-objects (build-symbol "world-" object-type "s"))
+			 (get-object-name (build-symbol object-type "-name"))
+			 (name-list NIL))
+		(dolist (object (eval `(,get-world-objects *world*)) name-list)
+			(setf name-list (cons (eval `(,get-object-name ,object)) name-list)))))
 

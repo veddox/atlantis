@@ -39,13 +39,10 @@
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"
 	;; Here follows Lisp magic :D      (that took ages to get right...)
+	;; [And half the magic is gone after being outsourced to build-symbol :-(]
 	;; I'm not sure how elegant it is to call (eval) explicitly, but in this
 	;; case I couldn't avoid it - I needed a mix between a macro and a function
-	(let ((command (read-from-string
-						 (concatenate 'string
-							 (symbol-name (type-of game-object))
-							 "-" (if (stringp property) property
-									 (symbol-name property))))))
+	(let ((command (build-symbol (type-of game-object) "-" property)))
 		;; XXX This following section is rather ugly...
 		(eval `(if (or (null (,command ,game-object))
 					   (listp (,command ,game-object)))

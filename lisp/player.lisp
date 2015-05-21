@@ -19,7 +19,7 @@
 	(intelligence 0)
 	(items NIL)
 	(weapons NIL)
-	(place))
+	(place ""))
 
 
 (defstruct race

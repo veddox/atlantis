@@ -86,6 +86,11 @@
 			 ((= ,index (length ,vector)) ,return-variable)
 			 ,@body)))
 
+;; TODO ?
+;; (defmacro call-function (function-name &rest args)
+;; 	"Save myself some quoting when calling a function from a generated symbol"
+;; 	`(eval
+
 
 ;;; FUNCTIONS
 
@@ -139,4 +144,13 @@
 				  (read-line f nil nil))
 				 (file-lines (list line) (append file-lines (list line))))
 			((null line) file-lines))))
+
+(defun build-symbol (&rest components)
+	"Concatenate the passed components into a single symbol"
+	;; A very useful function illustrating the power of Lisp :-)
+	(let ((comps components))
+		(dotimes (i (length comps))
+			(when (symbolp (nth i comps))
+				(setf (nth i comps) (symbol-name (nth i comps)))))
+		(eval `(read-from-string (concatenate 'string ,@comps)))))
 

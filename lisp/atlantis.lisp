@@ -11,6 +11,7 @@
 
 (load 'util.lisp)
 (load 'interpreter.lisp)
+;(load 'client.lisp)
 
 
 (defun start-server ()
@@ -33,7 +34,10 @@
 	(format t "~&What port does the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
-	(format t "~&Joining game on ~A:~A" ip port))
+	(format t "~&What is your player name?")
+	(input-string name)
+	(format t "~&Joining game on ~A:~A as ~A" ip port name)
+	(play-game name))
 
 
 (defun print-version ()
