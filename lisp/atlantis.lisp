@@ -11,7 +11,7 @@
 
 (load 'util.lisp)
 (load 'interpreter.lisp)
-(load 'client.lisp)
+;(load 'client.lisp)
 
 
 (defun start-server ()

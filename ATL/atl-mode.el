@@ -1,0 +1,20 @@
+;;;
+;;; This is an Emacs mode for writing ATL, the descriptive language
+;;; for the Atlantis RPG.
+;;;
+;;; author: Daniel Vedder
+;;; date: 22/05/2015
+;;;
+
+(require 'generic-x) ;; we need this
+
+(define-generic-mode atl-mode
+	'(";") ;; comments
+	;; define commands
+	'("define-place" "define-item" "define-monster" "define-npc"
+		 "name-world" "load-file" "start-place")
+	'() ;; other commands (adjust this?
+	'("\\.atl$") ;; files for which to activate this mode 
+	'(#'(lambda () (setq linum-mode T)))   ;; other functions to call
+	"An Emacs mode for the ATL game description language" ;; doc string 
+)

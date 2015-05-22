@@ -2,13 +2,21 @@
 ; @author Daniel Vedder
 ; @date 18/05/2015
 
-define-place "Fields of Punishment"
-	description "Precisely where you do NOT want to end up..."
-	neighbour "Nowhere"
-	neighbour "Elysium"
-
 define-race "Elf"
 	description "The oldest and wisest race of Middle Earth"
+
+define-race "Dwarf"
+	description "Sons of the Earth, descendants of Durin"
+
+define-race "Hobbit"
+	description "Peace-loving and kind, true gentlemen"
+
+define-class "Warrior"
+	description "Fighting as a passion!"
+
+define-class "Wizard"
+	description "Ancient, powerful, keepers of the Knowledge..."
+	special-item "staff"
 
 define-class "Burglar"
 	description "Breaking and entering taken to the max!"

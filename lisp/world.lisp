@@ -17,6 +17,7 @@
 ;; each object created in this game
 
 (defstruct world
+	(name "")
 	(players NIL)
 	(character-classs NIL) ;Bad English because of parsing issues
 	(races NIL)
@@ -51,4 +52,10 @@
 			 (name-list NIL))
 		(dolist (object (eval `(,get-world-objects *world*)) name-list)
 			(setf name-list (cons (eval `(,get-object-name ,object)) name-list)))))
+
+(defun name-world (name)
+	"Set the name of the *world*"
+	(format t "~&The name of the world is ~A." name)
+	(setf (world-name *world*) name)
+	NIL)
 

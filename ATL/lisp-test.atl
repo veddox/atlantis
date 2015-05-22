@@ -2,16 +2,24 @@
 ; @author Daniel Vedder
 ; @date 04/05/2015
 
+; TODO change the name of this command?
+name-world "Los Alamos"
+
 define-place "Nowhere"
 	description "Welcome to Nowhere! 
-You are in the void, the space between 
-the worlds. Around you is black. Black, except for one tiny pin-prick of 
-light to the north."
+You are in the void, the space between the worlds. Around you is black. 
+Black, except for one tiny pin-prick of light to the north."
 	neighbour "Elysium"
 
 define-place "Elysium"
 	description "This is where you want to be when you are six feet under..."
 	neighbour "Nowhere"
+	neighbour "Fields of Punishment"
+
+define-place "Fields of Punishment"
+	description "Precisely where you do NOT want to end up..."
+	neighbour "Nowhere"
+	neighbour "Elysium"
 
 load-file lisp-test.atl
 load-file lisp-test2.atl
