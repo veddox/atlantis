@@ -44,19 +44,13 @@
 		 (magic (first (list ,@vars)))
 		 (first (list ,@vars))))
 
-(defmacro input-string (var)
+(defmacro input-string (&optional (var (gensym)))
 	"Read a string input line"
 	`(progn
 		 (format t "~&>>> ")
 		 (setf ,var (read-line))
 		 (magic (read-from-string ,var))
 		 ,var))
-
-(defmacro simple-input (var &optional (prompt ">>>"))
-	"Take input from terminal and store it in var"
-	`(progn
-		 (format t "~&~A " ,prompt)
-		 (setf ,var (read))))
 
 (defmacro while (condition &body body)
 	"An implementation of a while loop as found in other languages"
@@ -96,27 +90,39 @@
 
 ; Some of these functions are probably quite inefficient (lots of consing)
 
+(defun simple-input (var &optional (prompt ">>>"))
+	"Take input from terminal and store it in var"
+	(format t "~&~A " prompt)
+	(setf var (read)))
+
+(defun string-from-list (lst &optional (separator " "))
+	"Put all elements of lst into a single string, separated by the separator"
+	(let ((str (to-string (first lst))))
+		(dolist (item (cdr lst) str)
+			(setf str (concatenate 'string str separator (to-string item))))))
+
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
 	(do* ((c 0 (1+ c)) (letter (aref s c) (aref s c))
 			(letter-list-1 NIL) (letter-list-2 NIL))
 		((= c (1- (length s)))
-			(list (to-string (append letter-list-1))
-				(to-string (append letter-list-2 (list letter)))))
+			(list (list-to-string (append letter-list-1))
+				(list-to-string (append letter-list-2 (list letter)))))
 		(if (< c i) (setf letter-list-1 (append letter-list-1 (list letter)))
 			(setf letter-list-2 (append letter-list-2 (list letter))))))
 
-(defun to-string (char-list)
+(defun list-to-string (char-list)
 	"Convert a character list to a string"
 	(let ((s (make-string (length char-list) :initial-element #\SPACE)))
 		(dotimes (i (length char-list) s)
 			(setf (aref s i) (nth i char-list)))))
 
-(defun find-char (c s)
-	"Find character c in string s and return the index (or NIL if non-existent)"
-	(dotimes (letter (length s) NIL)
-		(when (eql (char s letter) c) (return letter))))
+(defun to-string (x)
+	"Whatever x is, convert it into a string"
+    (if (or (stringp x) (symbolp x)) (string x)
+		(format NIL "~S" x)))
 
+;; The next two functions might be simplified into one using the elt function
 (defun count-instances (search-term search-list &key (test #'eql))
 	"Count the number of instances of search-term in search-list"
 	(let ((count 0))

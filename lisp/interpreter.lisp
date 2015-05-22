@@ -76,14 +76,14 @@
 					     ;; this is a kludge to work around a clisp bug (not
 					     ;; recognizing the :start keyword in read-from-string)
 						 (read-from-string (second
-							   (cut-string line (find-char #\space line)))))))
+							   (cut-string line (position #\space line)))))))
 			    ;; interpret an option command
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
 					(setf line (string-left-trim '(#\Space #\Tab) line))
 					(set-object-attribute current-object (read-from-string line)
 						(read-from-string
-							(second (cut-string line (find-char #\space line))))))
+							(second (cut-string line (position #\space line))))))
 				(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A'"
 					   ;; can't happen
 					   (1+ line-nr) line))))))
