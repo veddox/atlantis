@@ -11,7 +11,7 @@
 
 (load 'util.lisp)
 (load 'interpreter.lisp)
-;(load 'client.lisp)
+(load 'client.lisp)
 
 
 (defun start-server ()
@@ -72,7 +72,8 @@
 					(unless (null line) (format t "~%~A" line))))
 			(start-menu))
 		((equalp choice 'e)
-			(format t "~&Goodbye!") (quit))))
+			(format t "~&Goodbye!") (quit))
+		(t (format t "~&Invalid choice!") (start-menu))))
 
 (defun cmd-parameter (name &optional truth-value)
 	"Return the value of the parameter 'name'. Or T for present if truth-value."
@@ -94,6 +95,10 @@
 			(format t "~&Sorry, the client is not yet available!"))))
 
 
+;; Initialize the random state (which would otherwise not be very random...)
+(setf *random-state* (make-random-state t))
+
+;; Only show the interactive menu if no commandline parameters are given
 (if *args*
 	(parse-commandline-args)
 	(start-menu))

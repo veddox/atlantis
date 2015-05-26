@@ -20,12 +20,16 @@
 			   syms)
 		 ,@body))
 
+(defmacro simple-input (var &optional (prompt ">>>"))
+	"Take input from terminal and store it in var"
+	`(progn
+		 (format t "~&~A " ,prompt)
+		 (setf ,var (read))))
+
 (defmacro magic (var)
 	"Execute typed-in Lisp code"
-	(let-gensyms (expr)
-		`(when (equalp ,var 'magic)
-			 (progn (simple-input ,expr "[spell]>")
-				 (eval ,expr)))))
+	`(when (eq ,var 'magic)
+		 (repl)))
 
 ; potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
@@ -66,6 +70,11 @@
 	"Returns (car (cdr (assoc entry table)))"
 	`(car (cdr (assoc ,entry ,table :test ,test))))
 
+(defmacro safe-nth (index lst)
+	"Return (nth index lst), or NIL if index is out of range"
+	`(if (> ,index (1- (length ,lst)))
+		 NIL (nth ,index ,lst)))
+
 (defmacro safe-aref (vector index)
 	"Return (aref vector index), but return NIL if out of range"
 	`(if (> ,index (1- (length ,vector)))
@@ -80,22 +89,22 @@
 			 ((= ,index (length ,vector)) ,return-variable)
 			 ,@body)))
 
-;; TODO ?
-;; (defmacro call-function (function-name &rest args)
-;; 	"Save myself some quoting when calling a function from a generated symbol"
-;; 	`(eval
-
-
 ;;; FUNCTIONS
 
 ; Some of these functions are probably quite inefficient (lots of consing)
 
-(defun simple-input (var &optional (prompt ">>>"))
-	"Take input from terminal and store it in var"
-	(format t "~&~A " prompt)
-	(setf var (read)))
 
-(defun string-from-list (lst &optional (separator " "))
+(defun call-function (function-name &rest args)
+	"Save myself some quoting when calling a function from a generated symbol"
+	;; Perhaps not very clean, but it works
+	(eval `(,function-name ,@args)))
+
+(defun keys (assoc-list)
+	"Return a list of the keys in an association list"
+	(if (null assoc-list) NIL
+		(cons (car (car assoc-list)) (keys (cdr assoc-list)))))
+
+(defun string-from-list (lst &optional (separator " - "))
 	"Put all elements of lst into a single string, separated by the separator"
 	(let ((str (to-string (first lst))))
 		(dolist (item (cdr lst) str)
@@ -159,4 +168,16 @@
 			(when (symbolp (nth i comps))
 				(setf (nth i comps) (symbol-name (nth i comps)))))
 		(eval `(read-from-string (concatenate 'string ,@comps)))))
+
+(defun repl ()
+	"Launch a read-eval-print loop"
+	(let ((expr (simple-input expr "lisp >")))
+		;; FIXME 'done' exits Lisp
+		(while (!= expr 'done)
+			(if (eq expr 'help)
+				(progn
+					(format t "~&You are in a read-eval-print loop.")
+					(format t "~&To escape, type done; to quit, type (quit)."))
+			(format t "~&~S" (eval expr)))
+			(simple-input expr "lisp >"))))
 
