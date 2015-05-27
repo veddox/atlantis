@@ -12,7 +12,7 @@
 	'(";") ;; comments
 	;; define commands
 	'("define-place" "define-item" "define-monster" "define-npc"
-		 "name-world" "load-file" "start-place")
+		 "define-race" "define-place" "name-world" "load-file" "start-place")
 	'() ;; other commands (adjust this?
 	'("\\.atl$") ;; files for which to activate this mode 
 	'(#'(lambda () (setq linum-mode T)))   ;; other functions to call

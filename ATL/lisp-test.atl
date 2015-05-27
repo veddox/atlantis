@@ -3,7 +3,7 @@
 ; @date 04/05/2015
 
 ; TODO change the name of this command?
-name-world "Los Alamos"
+name-world "Westernesse"
 
 define-place "Nowhere"
 	description "Welcome to Nowhere! 
@@ -21,7 +21,7 @@ define-place "Fields of Punishment"
 	neighbour "Nowhere"
 	neighbour "Elysium"
 
-load-file lisp-test.atl
-load-file lisp-test2.atl
+load-file lisp-test.atl ;Testing whether recursive loading is prevented
+load-file races-classes.atl
 
 start-place "Nowhere"

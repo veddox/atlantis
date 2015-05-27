@@ -1,6 +1,8 @@
-; Just a very small file to test whether the load function works properly
+; A file to define all the races and character classes in my test world.
 ; @author Daniel Vedder
 ; @date 18/05/2015
+
+;;; RACES
 
 define-race "Elf"
 	description "The oldest and wisest race of Middle Earth"
@@ -11,8 +13,15 @@ define-race "Dwarf"
 define-race "Hobbit"
 	description "Peace-loving and kind, true gentlemen"
 
+define-race "Human"
+	description "Boring, exciting, ever-changing, never-changing man..."
+
+
+;;; CLASSES
+
 define-class "Warrior"
 	description "Fighting as a passion!"
+	special-item "Sword"
 
 define-class "Wizard"
 	description "Ancient, powerful, keepers of the Knowledge..."
@@ -23,5 +32,9 @@ define-class "Burglar"
 	special-item "lockpick"
 	special-item "torch"
 
-load-file lisp-test.atl
-load-file test-extension.lisp
+define-class "Craftsman"
+	description "Maker of all things beautiful and useful"
+	special-item "hammer"
+
+load-file lisp-test.atl ;Again, a test for recursive loading
+load-file test-extension.lisp ;Testing whether Lisp extensions are loaded

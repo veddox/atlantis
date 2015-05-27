@@ -14,6 +14,18 @@
 (load 'client.lisp)
 
 
+(defun development ()
+	"A method to easily test whatever feature I am currently developing"
+	(load-file "../ATL/lisp-test.atl")
+	(let ((player (make-player :name "Bilbo"
+					  :race (get-game-object 'race "Hobbit")
+					  :class (get-game-object 'character-class "Burglar")
+					  :place (world-starting-place *world*)
+					  :strength 6 :constitution 12
+					  :dexterity 19 :intelligence 14)))
+		(add-game-object player)
+		(play-game (player-name player))))
+
 (defun start-server ()
 	"Start a new game on a server"
 	(format t "~&What world file do you want to load?")
@@ -62,17 +74,19 @@
 	(format t "~&-> (J)oin a game")
 	(format t "~&-> (A)bout")
 	(format t "~&-> (E)xit")
+	(format t "~&-> (D)evelop") ;XXX Remove later
 	(input choice)
-	(cond ((equalp choice 's) (start-server))
-		((equalp choice 'j) (join-game))
-		((equalp choice 'a)
+	(cond ((eq choice 's) (start-server))
+		((eq choice 'j) (join-game))
+		((eq choice 'a)
 			(print-version)
 			(when (y-or-n-p "~%Show the license text?")
 				(dolist (line (load-text-file "../LICENSE"))
 					(unless (null line) (format t "~%~A" line))))
 			(start-menu))
-		((equalp choice 'e)
+		((eq choice 'e)
 			(format t "~&Goodbye!") (quit))
+		((eq choice 'd) (development))
 		(t (format t "~&Invalid choice!") (start-menu))))
 
 (defun cmd-parameter (name &optional truth-value)
@@ -89,7 +103,6 @@
 	(let ((server (cmd-parameter "--server"))
 			 (world-file (cmd-parameter "--world"))
 			 (client (cmd-parameter "--client")))
-		;(break)
 		(if (or world-file server) ;TODO change OR to AND
 			(load-file world-file)
 			(format t "~&Sorry, the client is not yet available!"))))
