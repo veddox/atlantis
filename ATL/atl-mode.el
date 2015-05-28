@@ -15,6 +15,6 @@
 		 "define-race" "define-place" "name-world" "load-file" "start-place")
 	'() ;; other commands (adjust this?
 	'("\\.atl$") ;; files for which to activate this mode 
-	'(#'(lambda () (setq linum-mode T)))   ;; other functions to call
+	'(#'linum-mode)   ;; other functions to call
 	"An Emacs mode for the ATL game description language" ;; doc string 
 )

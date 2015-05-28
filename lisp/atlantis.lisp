@@ -24,6 +24,8 @@
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14)))
 		(add-game-object player)
+		(set-object-attribute (get-game-object 'place (player-place player))
+			'player (player-name player))
 		(play-game (player-name player))))
 
 (defun start-server ()

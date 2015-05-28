@@ -26,7 +26,7 @@
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
-			(while (!= (read-from-string command) 'quit)
+			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
 				(input-string command))
 			(format t "~&Goodbye!"))))
@@ -91,6 +91,8 @@ you may assign one number to each of the following attributes:")
 
 (defun describe-place (p)
 	"Print out a complete description of place p"
+	(when (stringp p)
+		(setf p (get-game-object 'place p)))
 	(format t "~&~%~A" (place-description p))
 	(format t "~&Neighbouring places: ~A" (string-from-list (place-neighbour p)))
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
@@ -98,22 +100,57 @@ you may assign one number to each of the following attributes:")
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
+	;; TODO Instead of converting typed-in text into a function call, would it
+	;; be better to keep an association list (command:function)? That would
+	;; mean some more book-keeping, but would prevent ugly/fatal error messages.
 	(let ((space (position #\Space cmd)))
 		(if space
 			(call-function (read-from-string cmd)
-				(read-from-string (second (cut-string cmd space))) player)
+				(second (cut-string cmd (1+ space))) player)
 			(call-function (read-from-string cmd) player))))
 
-;;; Here follow the functions that define the in-game commands.
-;;; All of them have to take exactly two argument (the argument
-;;; to the function and a player instance).
 
-(defun help (&optional arg player)
+;;;
+;;; Here follow the functions that define the in-game commands.
+;;;
+
+;;; The following commands consist of only one word and take only one argument
+
+(defun help (&optional player)
 	"Print out a list of in-game commands"
-	(format t "~&Sorry, not yet available!"))
+	(let ((tab (string #\tab)))
+		(format t "~&Commands:~%")
+		(format t "~&place~A-~ADescribe the current location" tab tab)
+		(format t "~&player~A-~ADescribe your player" tab tab)
+		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)))
+
+;; XXX Will the following two functions give problems?
+;; (Their name is identical with the struct name)
+(defun place (player)
+	"Describe the player's current location"
+	(describe-place (player-place player)))
+
+(defun player (player)
+	"Print a description of this player"
+	;; TODO
+	)
+
+;;; These next functions have to take exactly two argument (the argument
+;;; to the function and a player instance).
 
 (defun goto (location player)
 	"Go to the specified location"
+	(format t "~&~A is going to ~A." (player-name player) location)
+	(when (symbolp location) (setf location (symbol-name location)))
+	(when (not (member location
+				   (place-neighbour (get-game-object 'place
+										(player-place player)))
+				   :test #'equalp))
+		(format t "~&This place does not border your current location!")
+		(return-from goto NIL))
+	(remove-object-attribute (get-game-object 'place (player-place player))
+		'player (player-name player))
 	(set-object-attribute player 'place location)
 	(set-object-attribute (get-game-object 'place (player-place player))
-		'player (player-name player)))
+		'player (player-name player))
+	(describe-place location))

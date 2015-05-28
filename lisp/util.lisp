@@ -172,7 +172,6 @@
 (defun repl ()
 	"Launch a read-eval-print loop"
 	(let ((expr (simple-input expr "lisp >")))
-		;; FIXME 'done' exits Lisp
 		(while (!= expr 'done)
 			(if (eq expr 'help)
 				(progn
@@ -180,4 +179,11 @@
 					(format t "~&To escape, type done; to quit, type (quit)."))
 			(format t "~&~S" (eval expr)))
 			(simple-input expr "lisp >"))))
+
+;; XXX Interesting phenomenon of repl (security bug?):
+;; Enter two Lisp expressions that have not had a value assigned to them in the 
+;; current session (e.g. 'foo ls'). The first will cause the interpreter to
+;; exit with an error. The second, however, is still printed to stdout (which is
+;; now a shell), followed by a newline. If the symbol represents a valid shell
+;; command, it is therefore executed. ('ls' in the example above.)
 

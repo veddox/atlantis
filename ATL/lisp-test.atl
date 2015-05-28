@@ -2,8 +2,7 @@
 ; @author Daniel Vedder
 ; @date 04/05/2015
 
-; TODO change the name of this command?
-name-world "Westernesse"
+name-world "Underworld"
 
 define-place "Nowhere"
 	description "Welcome to Nowhere! 

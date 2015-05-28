@@ -51,3 +51,14 @@
 				   (setf (,command ,game-object)
 					   (append (,command ,game-object) '(,value)))
 				   (setf (,command ,game-object) ,value)))))
+
+(defun remove-object-attribute (game-object property value)
+	"Remove 'value' from the attribute 'property' in 'game-object'"
+	;; Same comment applies as above
+	(let ((command (build-symbol (type-of game-object) "-" property)))
+		(eval `(if (listp (,command ,game-object))
+				   ;; XXX This is going to give problems with multiple values
+				   (setf (,command ,game-object)
+					   (remove-if #'(lambda (x) (equalp x ,value))
+						   (,command ,game-object)))
+				   (setf (,command ,game-object) NIL)))))
