@@ -40,18 +40,17 @@
 
 (defun join-game ()
 	"Join a running game on the server"
-	;; XXX while developing...
-	;; (format t "~&What is the IP address of the server you want to join?")
-	;; (input-string ip)
-	;; (while (not (= (count-instances #\. (to-list ip)) 3))
-	;; 	(format t "~&Not an IP address: ~A. Please reenter:" ip)
-	;; 	(input-string ip))
-	;; (format t "~&What port does the game run on?")
-	;; (while (not (numberp (input port)))
-	;; 	(format t "~&Not a number: ~A. Please reenter:" port))
+	(format t "~&What is the IP address of the server you want to join?")
+	(input-string ip)
+	(while (not (= (count-instances #\. (to-list ip)) 3))
+		(format t "~&Not an IP address: ~A. Please reenter:" ip)
+		(input-string ip))
+	(format t "~&What port does the game run on?")
+	(while (not (numberp (input port)))
+		(format t "~&Not a number: ~A. Please reenter:" port))
 	(format t "~&What is your player name?")
 	(input-string name)
-	;; (format t "~&Joining game on ~A:~A as ~A" ip port name)
+	(format t "~&Joining game on ~A:~A as ~A" ip port name)
 	(play-game name))
 
 

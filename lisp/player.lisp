@@ -9,6 +9,8 @@
 ;;; date: 15/05/2015
 ;;;
 
+
+;; TODO add HP and XP!
 (defstruct player
 	(name "")
 	(race NIL)
@@ -18,7 +20,7 @@
 	(constitution 0)
 	(intelligence 0)
 	(items NIL)
-	(weapons NIL)
+	(weapon NIL)
 	(place ""))
 
 

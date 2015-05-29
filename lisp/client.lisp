@@ -91,35 +91,42 @@ you may assign one number to each of the following attributes:")
 
 (defun describe-place (p)
 	"Print out a complete description of place p"
-	(when (stringp p)
-		(setf p (get-game-object 'place p)))
+	(when (stringp p) (setf p (get-game-object 'place p)))
 	(format t "~&~%~A" (place-description p))
 	(format t "~&Neighbouring places: ~A" (string-from-list (place-neighbour p)))
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
-	(format t "~&Items: ~A" (string-from-list (place-item p))))
+	(format t "~&Items: ~A" (string-from-list (place-item p)))
+	(format t "~&NPCs: ~A" (string-from-list (place-npc p))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
-	;; TODO Instead of converting typed-in text into a function call, would it
-	;; be better to keep an association list (command:function)? That would
-	;; mean some more book-keeping, but would prevent ugly/fatal error messages.
-	(let ((space (position #\Space cmd)))
-		(if space
-			(call-function (read-from-string cmd)
-				(second (cut-string cmd (1+ space))) player)
-			(call-function (read-from-string cmd) player))))
-
+	(let* ((command (read-from-string cmd))
+			  (space (position #\Space cmd))
+			  (arg (if space (second (cut-string cmd (1+ space))) NIL)))
+		(if (member command *commands*)
+			(if space (funcall command player arg)
+				(funcall command player))
+			(format t "~&Sorry, this command does not exist!"))))
+		
 
 ;;;
 ;;; Here follow the functions that define the in-game commands.
 ;;;
 
+
+;; A list of all in-game commands. Each new command must be registered here.
+(defvar *commands*
+	'(help place player goto))
+
 ;;; The following commands consist of only one word and take only one argument
 
 (defun help (&optional player)
 	"Print out a list of in-game commands"
+	;; TODO Prettify the typesetting (instead of using tabs)
 	(let ((tab (string #\tab)))
 		(format t "~&Commands:~%")
+		(format t "~&help~A-~AShow this list of game commands" tab tab)
+		(format t "~&quit/exit~A-~AExit the game" tab tab)
 		(format t "~&place~A-~ADescribe the current location" tab tab)
 		(format t "~&player~A-~ADescribe your player" tab tab)
 		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)))
@@ -130,15 +137,29 @@ you may assign one number to each of the following attributes:")
 	"Describe the player's current location"
 	(describe-place (player-place player)))
 
-(defun player (player)
+(defun player (p)
 	"Print a description of this player"
-	;; TODO
-	)
+	(when (stringp p) (setf p (get-game-object 'player p)))
+	(format t "~&Player ~A:" (player-name p))
+	(format t "~&~%Current place: ~A" (player-place p))
+	(format t "~&Race: ~A~AClass: ~A"
+		(race-name (player-race p)) (string #\Tab)
+		(character-class-name (player-class p)))
+	(format t "~&=====")
+	(format t "~&Attributes:")
+	(format t "~&Intelligence: ~A~AStrength: ~A"
+		(player-intelligence p) (string #\Tab) (player-strength p))
+	(format t "~&Constitution: ~A~ADexterity: ~A"
+		(player-constitution p) (string #\Tab) (player-dexterity p))
+	(format t "~&=====")
+	(format t "~&Weapon: ~A" (player-weapon p))
+	;; XXX This last line might give problems (using items instead of names?)
+	(format t "~&Items: ~A" (string-from-list (player-items p))))
 
 ;;; These next functions have to take exactly two argument (the argument
 ;;; to the function and a player instance).
 
-(defun goto (location player)
+(defun goto (player location)
 	"Go to the specified location"
 	(format t "~&~A is going to ~A." (player-name player) location)
 	(when (symbolp location) (setf location (symbol-name location)))
@@ -154,3 +175,4 @@ you may assign one number to each of the following attributes:")
 	(set-object-attribute (get-game-object 'place (player-place player))
 		'player (player-name player))
 	(describe-place location))
+
