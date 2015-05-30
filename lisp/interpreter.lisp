@@ -9,11 +9,6 @@
 ;;; date: 09/05/2015
 ;;;
 
-(load 'util.lisp)
-(load 'game-objects.lisp)
-(load 'player.lisp)
-(load 'world.lisp)
-
 
 (defun define-place (name)
 	(format t "~&Making place ~A" name)

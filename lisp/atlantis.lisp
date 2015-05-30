@@ -10,6 +10,9 @@
 (defconstant ATLANTIS-VERSION '(0 1 0))
 
 (load 'util.lisp)
+(load 'game-objects.lisp)
+(load 'player.lisp)
+(load 'world.lisp)
 (load 'interpreter.lisp)
 (load 'client.lisp)
 

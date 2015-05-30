@@ -25,7 +25,8 @@
 	(monsters NIL)
 	(npcs NIL)
 	(items NIL)
-	(starting-place ""))
+	(starting-place "")
+	(game-manager "")) ;The player in charge of the game
 
 (setf *world* (make-world))
 

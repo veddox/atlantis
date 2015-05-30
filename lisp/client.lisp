@@ -19,6 +19,8 @@
 			(setf player (get-game-object 'player player-name)))
 		(when (null player)
 			(setf player (create-player player-name))
+			(when (null (list-objects 'player))
+				(setf (world-game-manager *world*) (player-name player)))
 			(add-game-object player)
 			(set-object-attribute (get-game-object 'place (player-place player))
 				'player (player-name player)))
@@ -118,9 +120,9 @@ you may assign one number to each of the following attributes:")
 (defvar *commands*
 	'(help place player goto))
 
-;;; The following commands consist of only one word and take only one argument
+;;; The following commands don't take any arguments except for a player
 
-(defun help (&optional player)
+(defun help (player)
 	"Print out a list of in-game commands"
 	;; TODO Prettify the typesetting (instead of using tabs)
 	(let ((tab (string #\tab)))
@@ -129,10 +131,13 @@ you may assign one number to each of the following attributes:")
 		(format t "~&quit/exit~A-~AExit the game" tab tab)
 		(format t "~&place~A-~ADescribe the current location" tab tab)
 		(format t "~&player~A-~ADescribe your player" tab tab)
-		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)))
+		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)
+		(when (equalp (player-name player) (world-game-manager *world*))
+			(format t "~&load <game-file>~A-~ALoad a saved game" tab tab)
+			(format t "~&save <game-file>~A-~ASave the game to file" tab tab))))
 
-;; XXX Will the following two functions give problems?
-;; (Their name is identical with the struct name)
+;; XXX Will the following two functions give problems? (Their name is
+;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
 	"Describe the player's current location"
 	(describe-place (player-place player)))

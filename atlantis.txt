@@ -23,11 +23,35 @@ TECHNICAL CHALLENGES
 
 Networking: does Common Lisp support networking? threading? If not the latter,
 			how can a real-time networked multiplayer game be implemented?
+				-> CLisp supports neither :-( However, it should be
+				possible to write a simple server-client model in C and then
+				integrate it with the CL code. A lot of the networking is
+				probably passing simple strings around, so that shouldn't be
+				too difficult. The threading is probably more of a challenge.
+				(If it's necessary, that is?)
+
 
 Implementation: presumably Atlantis will have to have a server-client model. 
 				How do the two communicate? Are there alternative implementation
 				models?
+					-> As stated above, this should be fairly easy to solve
+					with string representations of objects in Lisp. (Just pass
+					the *world* object to the client, for instance.)
+					-> For the sake of better code separation, it would probably
+					be wise to create two Lisp packages (server and client).
 
-Language: how complex should the inbuilt language be? Is it a purely descriptive
-		  language similar to XML/INI files? Should it be possible to script
-		  actions with it? Must it be Turing complete?
+Combat system: Here I have to think of something clever... The OpenWorld method
+	   		   would be an option, but I'm not too keen on it.
+
+
+PLAN OF ACTION - TODO
+
+Networking: as described above. I would tend to leave this for quite late, the
+			only problem might be that at a later stage, it would take a lot of
+			refactoring/rewriting to adjust the game to deal with networking.
+			Perhaps I can build a mockup of a server-client situation now, and
+			do the actual implementation later.
+
+Game features: Currently (v0.1), creating the world using ATL works, and the
+	 		   player can move around. Now I need to add game items, NPCs,
+			   monsters, a combat system, etc.
