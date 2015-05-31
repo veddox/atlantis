@@ -19,7 +19,7 @@
 			(setf player (get-game-object 'player player-name)))
 		(when (null player)
 			(setf player (create-player player-name))
-			(when (null (list-objects 'player))
+			(when (null (list-world-objects 'player))
 				(setf (world-game-manager *world*) (player-name player)))
 			(add-game-object player)
 			(set-object-attribute (get-game-object 'place (player-place player))
@@ -49,18 +49,18 @@
 		(unless (y-or-n-p "~&Create a new player?") (start-menu))
 		;; Chose race and class
 		(format t "~&Please chose a race:")
-		(format t "~&Options: ~A" (string-from-list (list-objects 'race)))
+		(format t "~&Options: ~A" (string-from-list (list-world-objects 'race)))
 		(setf race (input-string))
-		(while (not (member race (list-objects 'race) :test #'equalp))
+		(while (not (member race (list-world-objects 'race) :test #'equalp))
 			(format t "~&Invalid choice. Please reenter:")
 			(setf race (input-string)))
 		(setf (player-race player) (get-game-object 'race race))
 		(format t "~&Please chose a class:")
 		(format t "~&Options: ~A" (string-from-list
-									  (list-objects 'character-class)))
+									  (list-world-objects 'character-class)))
 		(setf character-class (input-string))
 		(while (not (member character-class
-						(list-objects 'character-class) :test #'equalp))
+						(list-world-objects 'character-class) :test #'equalp))
 			(format t "~&Invalid choice. Please reenter:")
 			(setf character-class (input-string)))
 		(setf (player-class player)
@@ -158,8 +158,7 @@ you may assign one number to each of the following attributes:")
 		(player-constitution p) (string #\Tab) (player-dexterity p))
 	(format t "~&=====")
 	(format t "~&Weapon: ~A" (player-weapon p))
-	;; XXX This last line might give problems (using items instead of names?)
-	(format t "~&Items: ~A" (string-from-list (player-items p))))
+	(format t "~&Items: ~A" (string-from-list (list-player-items 'item p))))
 
 ;;; These next functions have to take exactly two argument (the argument
 ;;; to the function and a player instance).

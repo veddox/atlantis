@@ -20,6 +20,7 @@
 			   syms)
 		 ,@body))
 
+;; DEPRECATED - Needs to be replaced in the current code
 (defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
 	`(progn
@@ -168,6 +169,18 @@
 			(when (symbolp (nth i comps))
 				(setf (nth i comps) (symbol-name (nth i comps)))))
 		(eval `(read-from-string (concatenate 'string ,@comps)))))
+
+(defun make-list-function (container-type &optional (add-s t))
+	"Return function to return a list of the names of all objects of the
+specified type in the container struct"
+	#'(lambda (object-type container)
+		  (let ((get-objects (build-symbol container-type "-"
+								 object-type (if add-s "s" "")))
+				   (get-object-name (build-symbol object-type "-name"))
+				   (name-list NIL))
+			  (dolist (object (eval `(,get-objects ,container)) name-list)
+				  (setf name-list
+					  (cons (eval `(,get-object-name ,object)) name-list))))))
 
 (defun repl ()
 	"Launch a read-eval-print loop"

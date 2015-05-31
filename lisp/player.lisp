@@ -38,3 +38,9 @@
 	(description "")
 	(special-item NIL)
 	(special-ability NIL))
+
+
+(let ((list-function (make-list-function 'player NIL)))
+	(defun list-player-objects (object-type player)
+		"Get a list of the names of all the player's objects of this type."
+		(funcall list-function object-type player)))

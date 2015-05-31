@@ -46,13 +46,10 @@
 			(when (equalp (eval `(,get-object-name ,object)) object-name)
 				(return object)))))
 
-(defun list-objects (object-type)
-	"Return a list of the names of all objects of the specified type"
-	(let ((get-world-objects (build-symbol "world-" object-type "s"))
-			 (get-object-name (build-symbol object-type "-name"))
-			 (name-list NIL))
-		(dolist (object (eval `(,get-world-objects *world*)) name-list)
-			(setf name-list (cons (eval `(,get-object-name ,object)) name-list)))))
+(let ((list-function (make-list-function 'world)))
+	(defun list-world-objects (object-type)
+		"Get a list of the names of all the world objects of this type."
+		(funcall list-function object-type *world*)))
 
 (defun name-world (name)
 	"Set the name of the *world*"

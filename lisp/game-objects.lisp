@@ -62,3 +62,8 @@
 					   (remove-if #'(lambda (x) (equalp x ,value))
 						   (,command ,game-object)))
 				   (setf (,command ,game-object) NIL)))))
+
+(let ((list-function (make-list-function 'place NIL)))
+	(defun list-place-objects (object-type place)
+		"Get a list of the names of all the place's objects of this type."
+		(funcall list-function object-type place)))
