@@ -10,7 +10,6 @@
 ;;;
 
 
-;; TODO add HP and XP!
 (defstruct player
 	(name "")
 	(race NIL)
@@ -19,9 +18,11 @@
 	(dexterity 0)
 	(constitution 0)
 	(intelligence 0)
-	(items NIL)
+	(item NIL)
 	(weapon NIL)
-	(place ""))
+	(place "")
+	(experience 0)
+	(health 0))
 
 
 (defstruct race

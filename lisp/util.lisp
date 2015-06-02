@@ -42,7 +42,7 @@
 		
 (defmacro input (&rest vars)
 	"Take input from terminal and store each element in a passed variable"
-	; Add a prompt parameter again?
+	;; XXX Add a prompt parameter again?
 	`(progn
 		 (format t "~&>>> ")
 		 (set-list (read) ,@vars)
@@ -95,6 +95,7 @@
 ; Some of these functions are probably quite inefficient (lots of consing)
 
 
+;; XXX DEPRECATED Not actually needed anywhere
 (defun call-function (function-name &rest args)
 	"Save myself some quoting when calling a function from a generated symbol"
 	;; Perhaps not very clean, but it works
@@ -105,11 +106,14 @@
 	(if (null assoc-list) NIL
 		(cons (car (car assoc-list)) (keys (cdr assoc-list)))))
 
+;; TODO change &optional to &key (and figure out why the heck that doesn't
+;; work - clisp bug?), add null-filler keyword
 (defun string-from-list (lst &optional (separator " - "))
 	"Put all elements of lst into a single string, separated by the separator"
-	(let ((str (to-string (first lst))))
-		(dolist (item (cdr lst) str)
-			(setf str (concatenate 'string str separator (to-string item))))))
+	(cond ((null lst) "")
+		((= (length lst) 1) (to-string (car lst)))
+		(T (concatenate 'string (to-string (first lst)) (to-string separator)
+			(string-from-list (cdr lst) separator)))))
 
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
@@ -129,32 +133,24 @@
 
 (defun to-string (x)
 	"Whatever x is, convert it into a string"
-    (if (or (stringp x) (symbolp x)) (string x)
-		(format NIL "~S" x)))
+	(cond ((stringp x) x)
+		((or (symbolp x) (characterp x)) (string x))
+		(t (format NIL "~S" x))))
 
-;; The next two functions might be simplified into one using the elt function
-(defun count-instances (search-term search-list &key (test #'eql))
-	"Count the number of instances of search-term in search-list"
+(defun count-instances (search-term search-sequence &key (test #'eql))
+	"Count the number of instances of search-term in search-sequence"
 	(let ((count 0))
-		(dolist (item search-list count)
-			(when (funcall test search-term item) (incf count)))))
+		(dotimes (i (length search-sequence) count)
+			(when (funcall test search-term (elt search-sequence i))
+				(incf count)))))
 
-(defun count-vector-instances (search-term search-vector &key (test #'eql))
-	"Count the number of instances of search-term in search-vector"
-	(let ((count 0))
-		(dovector (item search-vector count)
-			(when (funcall test search-term item) (incf count)))))
-
-(defun to-list (vector)
+(defun to-list (vector &optional (next-elt 0))
 	"Turn the vector into a list"
-	(do* ((i 0 (1+ i))
-			 (e (aref vector i) (aref vector i))
-			 (lst (list e) (cons e lst)))
-		((= i (1- (length vector))) (reverse lst))))
+	(if (= next-elt (1- (length vector))) NIL
+		(cons (aref vector next-elt) (to-list vector (1+ next-elt)))))
 
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"
-	;; adds two NIL to the end?
 	(with-open-file (f file-name)
 		(do* ((line (read-line f nil nil)
 				  (read-line f nil nil))
@@ -163,24 +159,20 @@
 
 (defun build-symbol (&rest components)
 	"Concatenate the passed components into a single symbol"
-	;; A very useful function illustrating the power of Lisp :-)
-	(let ((comps components))
-		(dotimes (i (length comps))
-			(when (symbolp (nth i comps))
-				(setf (nth i comps) (symbol-name (nth i comps)))))
-		(eval `(read-from-string (concatenate 'string ,@comps)))))
+	(read-from-string (string-from-list components "")))
 
 (defun make-list-function (container-type &optional (add-s t))
 	"Return function to return a list of the names of all objects of the
 specified type in the container struct"
 	#'(lambda (object-type container)
-		  (let ((get-objects (build-symbol container-type "-"
-								 object-type (if add-s "s" "")))
-				   (get-object-name (build-symbol object-type "-name"))
+		  (let ((get-objects (symbol-function (build-symbol container-type "-"
+								 object-type (if add-s "s" ""))))
+				   (get-object-name (symbol-function
+										(build-symbol object-type "-name")))
 				   (name-list NIL))
-			  (dolist (object (eval `(,get-objects ,container)) name-list)
+			  (dolist (object (funcall get-objects container) name-list)
 				  (setf name-list
-					  (cons (eval `(,get-object-name ,object)) name-list))))))
+					  (cons (funcall get-object-name object) name-list))))))
 
 (defun repl ()
 	"Launch a read-eval-print loop"
@@ -194,7 +186,7 @@ specified type in the container struct"
 			(simple-input expr "lisp >"))))
 
 ;; XXX Interesting phenomenon of repl (security bug?):
-;; Enter two Lisp expressions that have not had a value assigned to them in the 
+;; Enter two Lisp expressions that have not had a value assigned to them in the
 ;; current session (e.g. 'foo ls'). The first will cause the interpreter to
 ;; exit with an error. The second, however, is still printed to stdout (which is
 ;; now a shell), followed by a newline. If the symbol represents a valid shell

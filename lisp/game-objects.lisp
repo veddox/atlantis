@@ -37,6 +37,13 @@
 	(description "")
 	(function NIL))
 
+(defstruct weapon
+	(name "")
+	(description "")
+	(ranged NIL)
+	(condition 10)
+	(damage 0))
+
 
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"

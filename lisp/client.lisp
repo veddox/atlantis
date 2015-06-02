@@ -157,8 +157,9 @@ you may assign one number to each of the following attributes:")
 	(format t "~&Constitution: ~A~ADexterity: ~A"
 		(player-constitution p) (string #\Tab) (player-dexterity p))
 	(format t "~&=====")
-	(format t "~&Weapon: ~A" (player-weapon p))
-	(format t "~&Items: ~A" (string-from-list (list-player-items 'item p))))
+	(format t "~&Weapon: ~A"
+		(if (player-weapon p) (weapon-name (player-weapon p)) ""))
+	(format t "~&Items: ~A" (string-from-list (list-player-objects 'item p))))
 
 ;;; These next functions have to take exactly two argument (the argument
 ;;; to the function and a player instance).

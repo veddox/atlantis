@@ -55,7 +55,7 @@
 				 (current-object NIL))
 			((= line-nr (length source)) NIL)
 			;; concatenate string arguments spanning several lines
-			(while (= (count-vector-instances #\" line) 1)
+			(while (= (count-instances #\" line) 1)
 				(incf line-nr)
 				(setf line (concatenate 'string line (nth line-nr source))))
 			(cond ((zerop (length line))

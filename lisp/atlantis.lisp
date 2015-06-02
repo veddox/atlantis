@@ -29,6 +29,7 @@
 		(add-game-object player)
 		(set-object-attribute (get-game-object 'place (player-place player))
 			'player (player-name player))
+		(setf (world-game-manager *world*) (player-name player))
 		(play-game (player-name player))))
 
 (defun start-server ()
@@ -45,7 +46,7 @@
 	"Join a running game on the server"
 	(format t "~&What is the IP address of the server you want to join?")
 	(input-string ip)
-	(while (not (= (count-instances #\. (to-list ip)) 3))
+	(while (not (= (count-instances #\. ip) 3))
 		(format t "~&Not an IP address: ~A. Please reenter:" ip)
 		(input-string ip))
 	(format t "~&What port does the game run on?")
@@ -76,25 +77,23 @@
 	(format t "~&-> (E)xit")
 	(format t "~&-> (D)evelop") ;XXX Remove later
 	(input choice)
-	(cond ((eq choice 's) (start-server))
-		((eq choice 'j) (join-game))
-		((eq choice 'a)
-			(print-version)
+	(case choice
+		('s (start-server))
+		('j (join-game))
+		('a (print-version)
 			(when (y-or-n-p "~%Show the license text?")
 				(dolist (line (load-text-file "../LICENSE"))
 					(unless (null line) (format t "~%~A" line))))
 			(start-menu))
-		((eq choice 'e)
-			(format t "~&Goodbye!") (quit))
-		((eq choice 'd) (development))
+		('e	(format t "~&Goodbye!") (quit))
+		('d (development))
 		(t (format t "~&Invalid choice!") (start-menu))))
 
 (defun cmd-parameter (name &optional truth-value)
 	"Return the value of the parameter 'name'. Or T for present if truth-value."
 	(let ((argument (member name *args* :test #'equalp)))
 		(if argument
-			(if truth-value T
-				(second argument))
+			(if truth-value T (second argument))
 			NIL)))
 
 (defun print-help ()
@@ -109,6 +108,7 @@
 		(format t "~&--client <ip>:<port>~AConnect to the game server at <ip>:<port>" tab)))
 
 (defun parse-commandline-args ()
+	;; TODO clean this up? (should give error message with unknown params)
 	(when (or (cmd-parameter "--version" T) (cmd-parameter "-v" T))
 			  (print-version) (quit))
 	(when (or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
