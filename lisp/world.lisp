@@ -25,6 +25,7 @@
 	(monsters NIL)
 	(npcs NIL)
 	(items NIL)
+	(weapons NIL)
 	(starting-place "")
 	(game-manager "")) ;The player in charge of the game
 

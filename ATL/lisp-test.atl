@@ -19,8 +19,10 @@ define-place "Fields of Punishment"
 	description "Precisely where you do NOT want to end up..."
 	neighbour "Nowhere"
 	neighbour "Elysium"
+	monster "Fury"
 
 load-file lisp-test.atl ;Testing whether recursive loading is prevented
 load-file races-classes.atl
+load-file game-objects.atl
 
 start-place "Nowhere"

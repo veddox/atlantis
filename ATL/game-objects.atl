@@ -1,0 +1,15 @@
+; This module defines items, NPCs, monsters and weapons for my
+; Atlantis test world.
+; @author Daniel Vedder
+; @date 02/06/2015
+
+define-monster "Fury"
+	description "Hades messengers, torturers, assassins. Beware!"
+	strength 10
+	aggression 30
+	armour-class 3
+	weapon "fire-whip"
+
+define-weapon "fire-whip"
+	description "A 10-foot long whip, blazing with magical fire"
+	damage 2

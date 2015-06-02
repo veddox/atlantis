@@ -10,17 +10,25 @@
 ;;;
 
 
-(defun define-place (name)
-	(format t "~&Making place ~A" name)
-	(make-place :name name))
+(defun build-define-command (object-type)
+	"Build a new define command function for the specified object type"
+	#'(lambda (name)
+		  (format t "~&Making ~A ~A"
+			  (string-downcase (to-string object-type)) name)
+		  (funcall (build-symbol "make-" object-type) :name name)))
 
-(defun define-race (name)
-	(format t "~&Making race ~A" name)
-	(make-race :name name))
+(defmacro defcommand (command-name object-type)
+	`(defun ,command-name (name)
+		 (funcall ,(build-define-command object-type) name)))
 
-(defun define-class (name)
-	(format t "~&Making class ~A" name)
-	(make-character-class :name name))
+;;; Syntax for new define commands:
+;;; (defcommand <command-name> <created-object>)
+
+(defcommand define-place place)
+(defcommand define-race race)
+(defcommand define-class character-class)
+(defcommand define-monster monster)
+(defcommand define-weapon weapon)
 
 (defun start-place (place)
 	(format t "~&Starting place is ~A" place)

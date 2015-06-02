@@ -24,24 +24,27 @@
 
 (defstruct npc
 	(name "")
+	(description "")
 	(says ""))
 
 (defstruct monster
 	(name "")
 	(description "")
 	(strength 0)
+	(aggression 0)
+	(weapon "")
 	(armour-class 0))
 
 (defstruct item
 	(name "")
 	(description "")
+	(weapon "")
 	(function NIL))
 
 (defstruct weapon
 	(name "")
 	(description "")
 	(ranged NIL)
-	(condition 10)
 	(damage 0))
 
 

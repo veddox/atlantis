@@ -98,7 +98,8 @@ you may assign one number to each of the following attributes:")
 	(format t "~&Neighbouring places: ~A" (string-from-list (place-neighbour p)))
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
 	(format t "~&Items: ~A" (string-from-list (place-item p)))
-	(format t "~&NPCs: ~A" (string-from-list (place-npc p))))
+	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
+	(format t "~&Monsters: ~A" (string-from-list (place-monster p))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -108,7 +109,8 @@ you may assign one number to each of the following attributes:")
 		(if (member command *commands*)
 			(if space (funcall command player arg)
 				(funcall command player))
-			(format t "~&Sorry, this command does not exist!"))))
+			(progn (format t "~&Sorry, this command does not exist!")
+			(format t "~&Type 'help' for a list of commands.")))))
 		
 
 ;;;
