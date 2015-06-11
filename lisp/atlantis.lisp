@@ -10,6 +10,7 @@
 (defconstant ATLANTIS-VERSION '(0 1 1))
 
 (load "util.lisp")
+(load "networking.lisp")
 (load "game-objects.lisp")
 (load "player.lisp")
 (load "world.lisp")
@@ -45,16 +46,18 @@
 (defun join-game ()
 	"Join a running game on the server"
 	(format t "~&What is the IP address of the server you want to join?")
-	(input-string ip)
-	(while (not (= (count-instances #\. ip) 3))
-		(format t "~&Not an IP address: ~A. Please reenter:" ip)
-		(input-string ip))
+	(input-string server-ip)
+	(while (not (= (count-instances #\. server-ip) 3))
+		(format t "~&Not an IP address: ~A. Please reenter:" server-ip)
+		(input-string server-ip))
+	(setf (cassoc ip *server-address*) server-ip)
 	(format t "~&What port does the game run on?")
-	(while (not (numberp (input port)))
-		(format t "~&Not a number: ~A. Please reenter:" port))
+	(while (not (numberp (input server-port)))
+		(format t "~&Not a number: ~A. Please reenter:" server-port))
+	(setf (cassoc port *server-address*) server-port)
 	(format t "~&What is your player name?")
 	(input-string name)
-	(format t "~&Joining game on ~A:~A as ~A" ip port name)
+	(format t "~&Joining game on ~A:~A as ~A" server-ip server-port name)
 	(play-game name))
 
 

@@ -29,7 +29,7 @@
 	(starting-place "")
 	(game-manager "")) ;The player in charge of the game
 
-(setf *world* (make-world))
+(setf *world* (make-world)) ;XXX Move this to another module?
 
 (defun add-game-object (game-object)
 	"Add 'game-object' to *world*"

@@ -14,6 +14,7 @@
 (let ((player NIL))
 	(defun play-game (player-name)
 		"The main game loop"
+		;(update-world)
 		;; Initialize the player if necessary
 		(when (null player)
 			(setf player (get-game-object 'player player-name)))
@@ -30,6 +31,8 @@
 			(input-string command)
 			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
+				;(server-send (game-command command player))
+				;(update-world)
 				(input-string command))
 			(format t "~&Goodbye!"))))
 

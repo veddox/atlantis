@@ -74,6 +74,7 @@
 				((not (or (eql (aref line 0) #\;)
 						  (eql (aref line 0) #\SPACE)
 						  (eql (aref line 0) #\TAB)))
+					;; TODO Catch syntax errors
 					(setf current-object (funcall (symbol-function
 													  (read-from-string line))
 					     ;; this is a kludge to work around a clisp bug (not
