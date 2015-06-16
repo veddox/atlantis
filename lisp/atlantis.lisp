@@ -7,15 +7,14 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 1 1))
+(defconstant ATLANTIS-VERSION '(0 1 2))
 
 (load "util.lisp")
-(load "networking.lisp")
 (load "game-objects.lisp")
 (load "player.lisp")
 (load "world.lisp")
 (load "interpreter.lisp")
-(load "client.lisp")
+(load "ui.lisp")
 
 
 (defun development ()
@@ -37,7 +36,7 @@
 	"Start a new game on a server"
 	(format t "~&What world file do you want to load?")
 	(input-string world-file) 
-    (format t "~&What port should the game run on?")
+	(format t "~&What port should the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
 	(format t "~&Loading file ~S on port ~A" world-file port)
@@ -61,6 +60,11 @@
 	(play-game name))
 
 
+(defun single-player ()
+	"Start a single-player game"
+	;; TODO
+	)
+
 (defun print-version ()
 	(format t "~&Lisp Atlantis ~A.~A.~A"
 		(first ATLANTIS-VERSION)
@@ -74,23 +78,18 @@
 	(dolist (line (load-text-file "banner.txt"))
 		(unless (null line) (format t "~%~A" line)))
 	(format t "~&~%Welcome! What do you want to do?")
-	(format t "~&-> (S)tart a server")
-	(format t "~&-> (J)oin a game")
-	(format t "~&-> (A)bout")
-	(format t "~&-> (E)xit")
-	(format t "~&-> (D)evelop") ;XXX Remove later
-	(input choice)
+	(setf options '("Start a server" "Join a game" "Play single-player"
+					   "Develop" "About" "Exit"))
+	(setf choice (choose-option options))
 	(case choice
-		('s (start-server))
-		('j (join-game))
-		('a (print-version)
-			(when (y-or-n-p "~%Show the license text?")
-				(dolist (line (load-text-file "../LICENSE"))
-					(unless (null line) (format t "~%~A" line))))
+		(0 (start-server))
+		(1 (join-game))
+		(2 (single-player))
+		(3 (development))
+		(4 (print-version)
 			(start-menu))
-		('e	(format t "~&Goodbye!") (quit))
-		('d (development))
-		(t (format t "~&Invalid choice!") (start-menu))))
+		(5 (format t "~&Goodbye!")
+			(quit))))
 
 (defun cmd-parameter (name &optional truth-value)
 	"Return the value of the parameter 'name'. Or T for present if truth-value."

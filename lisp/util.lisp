@@ -27,12 +27,14 @@
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
 
+;; XXX Very useful for debugging, but represents a major security hole
+;; when used in a network setting
 (defmacro magic (var)
 	"Execute typed-in Lisp code"
 	`(when (eq ,var 'magic)
 		 (repl)))
 
-; potentially inefficient if called often
+;; XXX potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
 	"Set each symbol in var-list to value"
 	(do* ((expr (list 'setf)) (vl var-list (cdr vl)) (var (car vl) (car vl)))
@@ -173,6 +175,17 @@ specified type in the container struct"
 			  (dolist (object (funcall get-objects container) name-list)
 				  (setf name-list
 					  (cons (funcall get-object-name object) name-list))))))
+
+(defun choose-option (option-list)
+	"The user chooses one out of a list of options, the index is returned"
+	(dotimes (i (length option-list))
+		(format t "~&~S) ~A" (1+ i) (nth i option-list)))
+	(simple-input choice)
+	(while (or (not (numberp choice)) (< choice 1)
+			   (> choice (length option-list)))
+		(format t "~&Invalid choice! Please choose again:")
+		(simple-input choice))
+	(1- choice))
 
 (defun repl ()
 	"Launch a read-eval-print loop"
