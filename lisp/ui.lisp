@@ -14,14 +14,13 @@
 (let ((player NIL))
 	(defun play-game (player-name)
 		"The main game loop"
-		;(update-world)
 		;; Initialize the player if necessary
 		(when (null player)
 			(setf player (get-game-object 'player player-name)))
 		(when (null player)
 			(setf player (create-player player-name))
 			(when (null (list-world-objects 'player))
-				(setf (world-game-manager *world*) (player-name player)))
+				(setf (player-game-admin player) T))
 			(add-game-object player)
 			(set-object-attribute (get-game-object 'place (player-place player))
 				'player (player-name player)))
@@ -31,15 +30,12 @@
 			(input-string command)
 			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
-				;(server-send (game-command command player))
-				;(update-world)
 				(input-string command))
 			(format t "~&Goodbye!"))))
 
 (defun create-player (player-name)
 	"The user creates a new player"
-	;; XXX This function feels somewhat inelegant - lot's of repetetive stuff.
-	;; Is it worth cleaning up?
+	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let ((player (make-player :name player-name
 					  :place (world-starting-place *world*)))
 			 (race NIL) (character-class NIL)
@@ -52,20 +48,11 @@
 		(unless (y-or-n-p "~&Create a new player?") (start-menu))
 		;; Chose race and class
 		(format t "~&Please chose a race:")
-		(format t "~&Options: ~A" (string-from-list (list-world-objects 'race)))
-		(setf race (input-string))
-		(while (not (member race (list-world-objects 'race) :test #'equalp))
-			(format t "~&Invalid choice. Please reenter:")
-			(setf race (input-string)))
+		(setf race (choose-option (list-world-objects 'race)))
 		(setf (player-race player) (get-game-object 'race race))
 		(format t "~&Please chose a class:")
-		(format t "~&Options: ~A" (string-from-list
-									  (list-world-objects 'character-class)))
-		(setf character-class (input-string))
-		(while (not (member character-class
-						(list-world-objects 'character-class) :test #'equalp))
-			(format t "~&Invalid choice. Please reenter:")
-			(setf character-class (input-string)))
+		(setf character-class
+			(choose-option (list-world-objects 'character-class)))
 		(setf (player-class player)
 			(get-game-object 'character-class character-class))
 		;; Set character attributes
@@ -123,7 +110,7 @@ you may assign one number to each of the following attributes:")
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help place player goto))
+	'(help place player goto save))
 
 ;;; The following commands don't take any arguments except for a player
 
@@ -137,8 +124,7 @@ you may assign one number to each of the following attributes:")
 		(format t "~&place~A-~ADescribe the current location" tab tab)
 		(format t "~&player~A-~ADescribe your player" tab tab)
 		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)
-		(when (equalp (player-name player) (world-game-manager *world*))
-			(format t "~&load <game-file>~A-~ALoad a saved game" tab tab)
+		(when (player-game-admin player)
 			(format t "~&save <game-file>~A-~ASave the game to file" tab tab))))
 
 ;; XXX Will the following two functions give problems? (Their name is
@@ -186,3 +172,10 @@ you may assign one number to each of the following attributes:")
 		'player (player-name player))
 	(describe-place location))
 
+(defun save (player &optional game-file)
+	"Save a game to file (wrapper method around save-world)"
+	(unless game-file
+		(format t "~&Where do you want to save the game?")
+		(input-string game-file))
+	(save-world game-file)
+	(format t "~&Game saved."))

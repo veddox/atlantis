@@ -22,7 +22,8 @@
 	(weapon NIL)
 	(place "")
 	(experience 0)
-	(health 0))
+	(health 0)
+	(game-admin NIL))
 
 
 (defstruct race

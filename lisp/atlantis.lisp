@@ -25,11 +25,11 @@
 					  :class (get-game-object 'character-class "Burglar")
 					  :place (world-starting-place *world*)
 					  :strength 6 :constitution 12
-					  :dexterity 19 :intelligence 14)))
+					  :dexterity 19 :intelligence 14
+					  :game-admin T)))
 		(add-game-object player)
 		(set-object-attribute (get-game-object 'place (player-place player))
 			'player (player-name player))
-		(setf (world-game-manager *world*) (player-name player))
 		(play-game (player-name player))))
 
 (defun start-server ()
@@ -49,11 +49,11 @@
 	(while (not (= (count-instances #\. server-ip) 3))
 		(format t "~&Not an IP address: ~A. Please reenter:" server-ip)
 		(input-string server-ip))
-	(setf (cassoc ip *server-address*) server-ip)
+	;(setf (cassoc ip *server-address*) server-ip)
 	(format t "~&What port does the game run on?")
 	(while (not (numberp (input server-port)))
 		(format t "~&Not a number: ~A. Please reenter:" server-port))
-	(setf (cassoc port *server-address*) server-port)
+	;(setf (cassoc port *server-address*) server-port)
 	(format t "~&What is your player name?")
 	(input-string name)
 	(format t "~&Joining game on ~A:~A as ~A" server-ip server-port name)
@@ -62,8 +62,22 @@
 
 (defun single-player ()
 	"Start a single-player game"
-	;; TODO
-	)
+	(format t "~&What do you want to do?")
+	(setf options '("Start a new game" "Load a game" "Back to menu"))
+	(case (choose-number-option options)
+		(0 (format t "~&What world file do you want to load?")
+			(input-string world-file)
+			(format t "~&What is your name?")
+			(input-string name)
+			(load-file world-file)
+			(play-game name))
+		(1 (format t "~&What game file do you want to load?")
+			(input-string game)
+			(format t "~&What is your name?")
+			(input-string name)
+			(load-game game)
+			(play-game name))
+		(2 (start-menu))))
 
 (defun print-version ()
 	(format t "~&Lisp Atlantis ~A.~A.~A"
@@ -75,22 +89,22 @@
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
-	(dolist (line (load-text-file "banner.txt"))
-		(unless (null line) (format t "~%~A" line)))
+	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a server" "Join a game" "Play single-player"
 					   "Develop" "About" "Exit"))
-	(setf choice (choose-option options))
-	(case choice
+	(case (choose-number-option options)
 		(0 (start-server))
 		(1 (join-game))
 		(2 (single-player))
 		(3 (development))
 		(4 (print-version)
+			(when (y-or-n-p "Show the license text?")
+				(print-text-file "../LICENSE"))
 			(start-menu))
 		(5 (format t "~&Goodbye!")
 			(quit))))
-
+ 
 (defun cmd-parameter (name &optional truth-value)
 	"Return the value of the parameter 'name'. Or T for present if truth-value."
 	(let ((argument (member name *args* :test #'equalp)))

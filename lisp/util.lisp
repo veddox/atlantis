@@ -159,6 +159,11 @@
 				 (file-lines (list line) (append file-lines (list line))))
 			((null line) file-lines))))
 
+(defun print-text-file (file-name)
+	"Print out the contents of this text file"
+	(dolist (line (load-text-file file-name))
+		(unless (null line) (format t "~%~A" line))))
+
 (defun build-symbol (&rest components)
 	"Concatenate the passed components into a single symbol"
 	(read-from-string (string-from-list components "")))
@@ -176,7 +181,7 @@ specified type in the container struct"
 				  (setf name-list
 					  (cons (funcall get-object-name object) name-list))))))
 
-(defun choose-option (option-list)
+(defun choose-number-option (option-list)
 	"The user chooses one out of a list of options, the index is returned"
 	(dotimes (i (length option-list))
 		(format t "~&~S) ~A" (1+ i) (nth i option-list)))
@@ -186,6 +191,11 @@ specified type in the container struct"
 		(format t "~&Invalid choice! Please choose again:")
 		(simple-input choice))
 	(1- choice))
+
+(defun choose-option (option-list)
+	"Like choose-number-option, but return the value of the choice"
+	;; Basically just a utility wrapper
+	(nth (choose-number-option option-list) option-list))
 
 (defun repl ()
 	"Launch a read-eval-print loop"
