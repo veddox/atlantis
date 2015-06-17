@@ -13,7 +13,7 @@
 (defun build-define-command (object-type)
 	"Build a new define command function for the specified object type"
 	#'(lambda (name)
-		  (format t "~&Making ~A ~A"
+		  (debugging "~&Making ~A ~A"
 			  (string-downcase (to-string object-type)) name)
 		  (funcall (build-symbol "make-" object-type) :name name)))
 
@@ -31,7 +31,7 @@
 (defcommand define-weapon weapon)
 
 (defun start-place (place)
-	(format t "~&Starting place is ~A" place)
+	(debugging "~&Starting place is ~A" place)
 	(setf (world-starting-place *world*) place)
 	NIL)
 
@@ -88,6 +88,6 @@
 					(set-object-attribute current-object (read-from-string line)
 						(read-from-string
 							(second (cut-string line (position #\space line))))))
-				(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A'"
+				(T (error "~&ERROR: unrecognized syntax on line ~A: '~A'"
 					   ;; can't happen
 					   (1+ line-nr) line))))))

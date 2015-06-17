@@ -73,6 +73,7 @@
 						   (,command ,game-object)))
 				   (setf (,command ,game-object) NIL)))))
 
+;;; XXX Is this needed? A quick grep doesn't find it anywhere in the code.
 (let ((list-function (make-list-function 'place NIL)))
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."

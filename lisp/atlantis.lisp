@@ -17,8 +17,11 @@
 (load "ui.lisp")
 
 
+(defvar *debugging* NIL)
+
 (defun development ()
 	"A method to easily test whatever feature I am currently developing"
+	(setf *debugging* T)
 	(load-file "../ATL/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
 					  :race (get-game-object 'race "Hobbit")
@@ -34,12 +37,13 @@
 
 (defun start-server ()
 	"Start a new game on a server"
+	;; TODO Doesn't actually start a server yet
 	(format t "~&What world file do you want to load?")
 	(input-string world-file) 
 	(format t "~&What port should the game run on?")
 	(while (not (numberp (input port)))
 		(format t "~&Not a number: ~A. Please reenter:" port))
-	(format t "~&Loading file ~S on port ~A" world-file port)
+	(debugging "~&Loading file ~S on port ~A" world-file port)
 	(load-file world-file))
 
 (defun join-game ()
@@ -56,7 +60,7 @@
 	;(setf (cassoc port *server-address*) server-port)
 	(format t "~&What is your player name?")
 	(input-string name)
-	(format t "~&Joining game on ~A:~A as ~A" server-ip server-port name)
+	(debugging "~&Joining game on ~A:~A as ~A" server-ip server-port name)
 	(play-game name))
 
 
@@ -80,7 +84,7 @@
 		(2 (start-menu))))
 
 (defun print-version ()
-	(format t "~&Lisp Atlantis ~A.~A.~A"
+	(format t "~&Atlantis ~A.~A.~A"
 		(first ATLANTIS-VERSION)
 		(second ATLANTIS-VERSION)
 		(third ATLANTIS-VERSION))
@@ -114,32 +118,38 @@
 
 (defun print-help ()
 	(print-version)
-	(format t "~&~%Commandline options:")
-	(let ((tab (string #\Tab)))
-		(format t "~&-v --version~AShow the version number and exit" tab)
-		(format t "~&-h --help~AShow this help text and exit" tab)
-		(format t "~&--license~AShow the license text" tab)
-		(format t "~&--server <port>~AStart a server on <port> (requires --world)" tab)
-		(format t "~&--world <world-file>~AThe ATL file to load (requires --server)" tab)
-		(format t "~&--client <ip>:<port>~AConnect to the game server at <ip>:<port>" tab)))
+	(setf help-text "
+Commandline options:
+-v --version          Show the version number and exit
+-h --help             Show this help text and exit
+--license             Show the license text
+--debugging           Switch on debug mode
+--single-player       Start a single-player game
+--server <port>       Start a server on <port> (requires --world)
+--world <world-file>  The ATL file to load (requires --server)
+--client <ip>:<port>  Connect to the game server at <ip>:<port>")
+	(format t "~A" help-text))
 
 (defun parse-commandline-args ()
 	;; TODO clean this up? (should give error message with unknown params)
-	(when (or (cmd-parameter "--version" T) (cmd-parameter "-v" T))
+	(cond ((or (cmd-parameter "--version" T) (cmd-parameter "-v" T))
 			  (print-version) (quit))
-	(when (or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
-		(print-help) (quit))
-	(when (cmd-parameter "--license" T)
-		(dolist (line (load-text-file "../LICENSE"))
-			(unless (null line) (format t "~%~A" line)))
-		(quit))
+		((or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
+			(print-help) (quit))
+		((cmd-parameter "--license" T)
+			(dolist (line (load-text-file "../LICENSE"))
+				(unless (null line) (format t "~%~A" line)))
+			(quit))
+		((cmd-parameter "--debugging")
+			(setf *debugging* T))
+		((cmd-parameter "--single-player" T)
+			(single-player)))
 	(let ((server (cmd-parameter "--server"))
 			 (world-file (cmd-parameter "--world"))
 			 (client (cmd-parameter "--client")))
 		(unless (or server world-file client)
 			(format t "~&Invalid commandline parameter!") (quit))
-		;; TODO change OR to AND, change function calls
-		(if (or world-file server)
+		(if (and world-file server)
 			(load-file world-file)
 			(join-game))))
 

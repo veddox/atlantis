@@ -20,6 +20,10 @@
 			   syms)
 		 ,@body))
 
+(defmacro debugging (str &rest format-args)
+	"If *debugging* is true, print str"
+	`(when *debugging* (format t ,str ,@format-args)))
+
 ;; TODO DEPRECATED - Needs to be replaced in the current code
 (defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
@@ -96,7 +100,6 @@
 
 ; Some of these functions are probably quite inefficient (lots of consing)
 
-
 ;; XXX DEPRECATED Not actually needed anywhere
 (defun call-function (function-name &rest args)
 	"Save myself some quoting when calling a function from a generated symbol"
@@ -145,6 +148,12 @@
 		(dotimes (i (length search-sequence) count)
 			(when (funcall test search-term (elt search-sequence i))
 				(incf count)))))
+
+(defun set-p (lst)
+	"Is lst a set (i.e. no elements occur more than once)?"
+	(cond ((null lst) T)
+		((member (car lst) (cdr lst)) NIL)
+		(T (set-p (cdr lst)))))
 
 (defun to-list (vector &optional (next-elt 0))
 	"Turn the vector into a list"

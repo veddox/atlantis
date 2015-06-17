@@ -53,7 +53,7 @@
 
 (defun name-world (name)
 	"Set the name of the *world*"
-	(format t "~&The name of the world is ~A." name)
+	(debugging "~&The name of the world is ~A." name)
 	(setf (world-name *world*) name)
 	NIL)
 
@@ -62,12 +62,9 @@
 	(with-open-file (g game-file)
 		(let ((version-number (read g))
 				 (loaded-world (read g)))
-			;; XXX This introduces UI in a non-UI module...
 			(when (!= version-number ATLANTIS-VERSION :test equal)
-				(format t "~&WARNING: The loaded world was saved by a different")
-				(format t " version of Atlantis!")
-				(unless (yes-or-no-p "Continue anyway?")
-					(start-menu)))
+				(format t "~&WARNING: The loaded game was saved by a ")
+				(format t "different version of Atlantis!"))
 			(if (world-p loaded-world)
 				(setf *world* loaded-world)
 				(error "World file ~A is corrupted!" game-file)))))

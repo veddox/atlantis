@@ -56,7 +56,8 @@
 		(setf (player-class player)
 			(get-game-object 'character-class character-class))
 		;; Set character attributes
-		(while (< (reduce #'+ character-points) 24) ; Warning: magic number!
+		(while (or (< (reduce #'+ character-points) 24) ; XXX magic number!
+				   (not (set-p character-points)))
 			(set-list (1+ (random 20)) a b c d)
 			(setf character-points (list a b c d)))
 		(setf text "
@@ -74,7 +75,6 @@ you may assign one number to each of the following attributes:")
 			(while (not (member val character-points))
 				(format t "~&Sorry, invalid number chosen. Please reenter:")
 				(simple-input val (concatenate 'string (symbol-name attr) ":")))
-			;; FIXME Gives problems if two equal numbers are in char-points
 			(let ((player-fn (build-symbol "player-" attr)))
 				;; XXX Kludge ?!
 				(eval `(setf (,player-fn ,player) ,val)))
@@ -157,7 +157,7 @@ you may assign one number to each of the following attributes:")
 
 (defun goto (player location)
 	"Go to the specified location"
-	(format t "~&~A is going to ~A." (player-name player) location)
+	(debugging "~&~A is going to ~A." (player-name player) location)
 	(when (symbolp location) (setf location (symbol-name location)))
 	(when (not (member location
 				   (place-neighbour (get-game-object 'place
