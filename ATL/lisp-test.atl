@@ -8,18 +8,25 @@ define-place "Nowhere"
 	description "Welcome to Nowhere! 
 You are in the void, the space between the worlds. Around you is black. 
 Black, except for one tiny pin-prick of light to the north."
-	neighbour "Elysium"
+	neighbour "Styx"
 
 define-place "Elysium"
 	description "This is where you want to be when you are six feet under..."
-	neighbour "Nowhere"
+	neighbour "Styx"
 	neighbour "Fields of Punishment"
 
 define-place "Fields of Punishment"
 	description "Precisely where you do NOT want to end up..."
-	neighbour "Nowhere"
+	neighbour "Styx"
 	neighbour "Elysium"
 	monster "Fury"
+
+define-place "Styx"
+	description "The great river that all must cross - but woe to those who do!"
+	neighbour "Fields of Punishment"
+	neighbour "Elysium"
+	neighbour "Nowhere"
+	item "Anaklusmos"
 
 load-file lisp-test.atl ;Testing whether recursive loading is prevented
 load-file races-classes.atl

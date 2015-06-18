@@ -29,6 +29,8 @@
 (defcommand define-class character-class)
 (defcommand define-monster monster)
 (defcommand define-weapon weapon)
+(defcommand define-item item)
+(defcommand define-npc npc)
 
 (defun start-place (place)
 	(debugging "~&Starting place is ~A" place)

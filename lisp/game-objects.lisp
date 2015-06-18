@@ -38,7 +38,7 @@
 (defstruct item
 	(name "")
 	(description "")
-	(weapon "")
+	(weapon "no")
 	(function NIL))
 
 (defstruct weapon
@@ -55,7 +55,7 @@
 	;; I'm not sure how elegant it is to call (eval) explicitly, but in this
 	;; case I couldn't avoid it - I needed a mix between a macro and a function
 	(let ((command (build-symbol (type-of game-object) "-" property)))
-		;; XXX This following section is rather ugly...
+		;; TODO This following section is rather ugly...
 		(eval `(if (or (null (,command ,game-object))
 					   (listp (,command ,game-object)))
 				   (setf (,command ,game-object)
@@ -67,13 +67,15 @@
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))
 		(eval `(if (listp (,command ,game-object))
-				   ;; FIXME This is going to give problems with multiple values
+				   ;; TODO This is going to give problems with multiple values
+				   ;; (but will that scenario ever take place?)
 				   (setf (,command ,game-object)
 					   (remove-if #'(lambda (x) (equalp x ,value))
 						   (,command ,game-object)))
 				   (setf (,command ,game-object) NIL)))))
 
-;;; XXX Is this needed? A quick grep doesn't find it anywhere in the code.
+;; XXX This function is probably superfluous, as all place objects are stored
+;; in world, with only their names recorded in the place
 (let ((list-function (make-list-function 'place NIL)))
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."

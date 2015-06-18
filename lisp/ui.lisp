@@ -38,7 +38,6 @@
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let ((player (make-player :name player-name
 					  :place (world-starting-place *world*)))
-			 (race NIL) (character-class NIL)
 			 (char-attr
 			 '((strength 0) (dexterity 0)
 			 (constitution 0) (intelligence 0)))
@@ -48,13 +47,13 @@
 		(unless (y-or-n-p "~&Create a new player?") (start-menu))
 		;; Chose race and class
 		(format t "~&Please chose a race:")
-		(setf race (choose-option (list-world-objects 'race)))
-		(setf (player-race player) (get-game-object 'race race))
+		(setf (player-race player) (choose-option (list-world-objects 'race)))
 		(format t "~&Please chose a class:")
-		(setf character-class
-			(choose-option (list-world-objects 'character-class)))
 		(setf (player-class player)
-			(get-game-object 'character-class character-class))
+			(choose-option (list-world-objects 'character-class)))
+		(dolist (i (character-class-special-item
+					   (get-game-object 'character-class (player-class player))))
+			(set-object-attribute player 'item i))
 		;; Set character attributes
 		(while (or (< (reduce #'+ character-points) 24) ; XXX magic number!
 				   (not (set-p character-points)))
@@ -84,6 +83,7 @@ you may assign one number to each of the following attributes:")
 (defun describe-place (p)
 	"Print out a complete description of place p"
 	(when (stringp p) (setf p (get-game-object 'place p)))
+	(format t "~&~%~A" (string-upcase (place-name p)))
 	(format t "~&~%~A" (place-description p))
 	(format t "~&Neighbouring places: ~A" (string-from-list (place-neighbour p)))
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
@@ -100,7 +100,7 @@ you may assign one number to each of the following attributes:")
 			(if space (funcall command player arg)
 				(funcall command player))
 			(progn (format t "~&Sorry, this command does not exist!")
-			(format t "~&Type 'help' for a list of commands.")))))
+				(format t "~&Type 'help' for a list of commands.")))))
 		
 
 ;;;
@@ -110,53 +110,77 @@ you may assign one number to each of the following attributes:")
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help place player goto save))
+	'(help place player
+		 goto pickup drop
+		 weapon fight shoot
+		 save))
 
 ;;; The following commands don't take any arguments except for a player
 
 (defun help (player)
 	"Print out a list of in-game commands"
-	;; TODO Prettify the typesetting (instead of using tabs)
-	(let ((tab (string #\tab)))
-		(format t "~&Commands:~%")
-		(format t "~&help~A-~AShow this list of game commands" tab tab)
-		(format t "~&quit/exit~A-~AExit the game" tab tab)
-		(format t "~&place~A-~ADescribe the current location" tab tab)
-		(format t "~&player~A-~ADescribe your player" tab tab)
-		(format t "~&goto <place>~A-~AGo to a neighbouring location" tab tab)
-		(when (player-game-admin player)
-			(format t "~&save <game-file>~A-~ASave the game to file" tab tab))))
+	(setf help-text "
+Commands:
+help             -  Show this list of game commands
+quit/exit        -  Exit the game
+place            -  Describe the current location
+player           -  Describe your player
+goto <place>     -  Go to a neighbouring location
+about <object>   -  Show a description of this entity
+pickup <item>    -  Pick up an item lying around
+drop <item>      -  Drop the item
+shoot <monster>  -  Take a shot at a monster
+fight <monster>  -  Fight a monster
+save <game-file> -  Save the game to file")
+	(format t "~A" help-text))
 
 ;; XXX Will the following two functions give problems? (Their name is
 ;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
-	"Describe the player's current location"
+	"Describe the player's current location (wrapper function)"
 	(describe-place (player-place player)))
 
 (defun player (p)
 	"Print a description of this player"
-	(when (stringp p) (setf p (get-game-object 'player p)))
-	(format t "~&Player ~A:" (player-name p))
-	(format t "~&~%Current place: ~A" (player-place p))
-	(format t "~&Race: ~A~AClass: ~A"
-		(race-name (player-race p)) (string #\Tab)
-		(character-class-name (player-class p)))
-	(format t "~&=====")
-	(format t "~&Attributes:")
-	(format t "~&Intelligence: ~A~AStrength: ~A"
-		(player-intelligence p) (string #\Tab) (player-strength p))
-	(format t "~&Constitution: ~A~ADexterity: ~A"
-		(player-constitution p) (string #\Tab) (player-dexterity p))
-	(format t "~&=====")
-	(format t "~&Weapon: ~A"
-		(if (player-weapon p) (weapon-name (player-weapon p)) ""))
-	(format t "~&Items: ~A" (string-from-list (list-player-objects 'item p))))
+	(let ((tab (string #\tab)))
+		(when (stringp p) (setf p (get-game-object 'player p)))
+		(format t "~&Player ~A:" (player-name p))
+		(format t "~&~%Current place: ~A" (player-place p))
+		(format t "~&Race: ~A~AClass: ~A" (player-race p) tab (player-class p))
+		(format t "~&=====")
+		(format t "~&Attributes:")
+		(format t "~&Intelligence: ~A~AStrength: ~A"
+			(player-intelligence p) tab (player-strength p))
+		(format t "~&Constitution: ~A~ADexterity: ~A"
+			(player-constitution p) tab (player-dexterity p))
+		(format t "~&=====")
+		(format t "~&Weapon: ~A" (player-weapon p))
+		(format t "~&Items: ~A" (string-from-list (player-item p)))
+		(format t "~&=====")
+		(format t "~&Max health: ~A~ACurrent health: ~A"
+			(player-max-health p) tab (player-health p))
+		(format t "~&Experience: ~A" (player-experience p))))
 
-;;; These next functions have to take exactly two argument (the argument
+;;; These next functions have to take two arguments (the argument
 ;;; to the function and a player instance).
 
-(defun goto (player location)
+(defun save (player &optional game-file)
+	"Save a game to file (wrapper method around save-world)"
+	;; This permissions check could give problems in single-player mode
+	;; (unless (player-game-admin player)
+	;; 	(format t "~&Sorry, you do not have the permissions for this action!")
+	(unless game-file
+		(format t "~&Where do you want to save the game?")
+		(input-string game-file))
+	(when (y-or-n-p "Save game to ~A?" game-file)
+		(save-world game-file)
+		(format t "~&Game saved.")))
+
+(defun goto (player &optional location)
 	"Go to the specified location"
+	(unless location
+		(format t "~&Please specify a location!")
+		(return-from goto))
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(when (symbolp location) (setf location (symbol-name location)))
 	(when (not (member location
@@ -164,7 +188,7 @@ you may assign one number to each of the following attributes:")
 										(player-place player)))
 				   :test #'equalp))
 		(format t "~&This place does not border your current location!")
-		(return-from goto NIL))
+		(return-from goto))
 	(remove-object-attribute (get-game-object 'place (player-place player))
 		'player (player-name player))
 	(set-object-attribute player 'place location)
@@ -172,10 +196,62 @@ you may assign one number to each of the following attributes:")
 		'player (player-name player))
 	(describe-place location))
 
-(defun save (player &optional game-file)
-	"Save a game to file (wrapper method around save-world)"
-	(unless game-file
-		(format t "~&Where do you want to save the game?")
-		(input-string game-file))
-	(save-world game-file)
-	(format t "~&Game saved."))
+(defun about (player &optional object)
+	"Print a description of this object"
+	(unless object
+		(format t "~&Please specify the object you wish to inspect!")
+		(return-from about))
+	;; TODO
+	)
+
+(defun pickup (player &optional item-name)
+	"The player picks up an item"
+	(unless item-name
+		(format t "~&Please specify an item to pick up!")
+		(return-from pickup))
+	(let ((place (get-game-object 'place (player-place player)))
+			 (item (get-game-object 'item item-name)))
+		(if (member item-name (place-item place) :test #'equalp)
+			(progn
+				(set-object-attribute player 'item item-name)
+				(when (item-function item)
+					(funcall (item-function item)))
+				(remove-object-attribute place 'item item-name)
+				(format t "~&You have picked up: ~A" item-name))
+			(format t "~&Sorry, this item is not here!"))))
+
+(defun drop (player &optional item)
+	"The player drops the specified item"
+	(unless item
+		(format t "~&Please specify an item to drop!")
+		(return-from drop))
+	(if (member item (player-item player) :test #'equalp)
+		(progn
+			(remove-object-attribute player 'item item)
+			(when (equalp (item-weapon (get-game-object 'item item)) "yes")
+				(set-object-attribute player 'weapon ""))
+			(set-object-attribute
+				(get-game-object 'place (player-place player)) 'item item)
+			(format t "~&You have dropped: ~A" item))
+		(format t "~&You do not possess this item!")))
+
+(defun weapon (player &optional new-weapon)
+	"The player sets another item to be his weapon"
+	(when (or (not new-weapon) (equalp new-weapon "none"))
+		(setf (player-weapon player) "")
+		(format t "~&You no longer have any weapon equipped.")
+		(return-from weapon))
+	(if (and (member new-weapon (player-item player) :test #'equalp)
+			(equalp (item-weapon (get-game-object 'item new-weapon)) "yes"))
+		(progn
+			(setf (player-weapon player) new-weapon)
+			(format t "~&You have equipped: ~A" new-weapon))
+		(format t "~&Sorry, this item is not available as a weapon!")))
+
+(defun fight (player &optional opponent)
+	"The player enters combat"
+	(unless opponent
+		(format t "~&Please specify an opponent!")
+		(return-from fight))
+	;; TODO
+	)

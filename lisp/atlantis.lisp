@@ -24,8 +24,7 @@
 	(setf *debugging* T)
 	(load-file "../ATL/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
-					  :race (get-game-object 'race "Hobbit")
-					  :class (get-game-object 'character-class "Burglar")
+					  :race "Hobbit" :class "Burglar"
 					  :place (world-starting-place *world*)
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14

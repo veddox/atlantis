@@ -2,4 +2,4 @@
 ;; author: Daniel Vedder
 ;; date: 21/05/2015
 
-(format t "~&Loaded Lisp extension file.")
+(debugging "~&Loaded Lisp extension file.")

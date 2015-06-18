@@ -12,17 +12,18 @@
 
 (defstruct player
 	(name "")
-	(race NIL)
-	(class NIL)
+	(race "")
+	(class "")
 	(strength 0)
 	(dexterity 0)
 	(constitution 0)
 	(intelligence 0)
 	(item NIL)
-	(weapon NIL)
+	(weapon "")
 	(place "")
 	(experience 0)
-	(health 0)
+	(max-health 50)
+	(health 50)
 	(game-admin NIL))
 
 
@@ -42,6 +43,8 @@
 	(special-ability NIL))
 
 
+;; This function is probably superfluous, as the player struct should only store
+;; names of game objects (the actual objects are stored in *world*)
 (let ((list-function (make-list-function 'player NIL)))
 	(defun list-player-objects (object-type player)
 		"Get a list of the names of all the player's objects of this type."
