@@ -14,6 +14,7 @@
 (let ((player NIL))
 	(defun play-game (player-name)
 		"The main game loop"
+		(clear-screen)
 		;; Initialize the player if necessary
 		(when (null player)
 			(setf player (get-game-object 'player player-name)))
@@ -25,6 +26,7 @@
 			(set-object-attribute (get-game-object 'place (player-place player))
 				'player (player-name player)))
 		;; The actual game loop
+		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
@@ -83,9 +85,10 @@ you may assign one number to each of the following attributes:")
 (defun describe-place (p)
 	"Print out a complete description of place p"
 	(when (stringp p) (setf p (get-game-object 'place p)))
-	(format t "~&~%~A" (string-upcase (place-name p)))
+	(format t "~&~A" (string-upcase (place-name p)))
 	(format t "~&~%~A" (place-description p))
-	(format t "~&Neighbouring places: ~A" (string-from-list (place-neighbour p)))
+	(format t "~&~%Neighbouring places: ~A"
+		(string-from-list (place-neighbour p)))
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
 	(format t "~&Items: ~A" (string-from-list (place-item p)))
 	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
@@ -111,9 +114,9 @@ you may assign one number to each of the following attributes:")
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
 	'(help place player
-		 goto pickup drop
+		 goto pickup drop talk
 		 weapon fight shoot
-		 save))
+		 about save clear))
 
 ;;; The following commands don't take any arguments except for a player
 
@@ -123,10 +126,12 @@ you may assign one number to each of the following attributes:")
 Commands:
 help             -  Show this list of game commands
 quit/exit        -  Exit the game
+clear            -  Clear the screen
 place            -  Describe the current location
 player           -  Describe your player
 goto <place>     -  Go to a neighbouring location
 about <object>   -  Show a description of this entity
+talk <npc>       -  Talk to an NPC
 pickup <item>    -  Pick up an item lying around
 drop <item>      -  Drop the item
 shoot <monster>  -  Take a shot at a monster
@@ -139,6 +144,11 @@ save <game-file> -  Save the game to file")
 (defun place (player)
 	"Describe the player's current location (wrapper function)"
 	(describe-place (player-place player)))
+
+(defun clear (player)
+	"Clear the screen (wrapper function)"
+	(clear-screen)
+	(place player))
 
 (defun player (p)
 	"Print a description of this player"
@@ -164,24 +174,25 @@ save <game-file> -  Save the game to file")
 ;;; These next functions have to take two arguments (the argument
 ;;; to the function and a player instance).
 
-(defun save (player &optional game-file)
-	"Save a game to file (wrapper method around save-world)"
-	;; This permissions check could give problems in single-player mode
-	;; (unless (player-game-admin player)
-	;; 	(format t "~&Sorry, you do not have the permissions for this action!")
-	(unless game-file
-		(format t "~&Where do you want to save the game?")
-		(input-string game-file))
-	(when (y-or-n-p "Save game to ~A?" game-file)
-		(save-world game-file)
-		(format t "~&Game saved.")))
+(let ((last-save NIL))
+	(defun save (player &optional game-file)
+		"Save a game to file (wrapper method around save-world)"
+		;; XXX Include a permissions check (only allow admins to save)?
+		;; Could give problems in single-player mode.
+		(cond (game-file (setf last-save game-file))
+			((and last-save (not game-file)) (setf game-file last-save))
+			((not (or last-save game-file))
+				(format t "~&Where do you want to save the game?")
+				(input-string game-file)))
+		(when (y-or-n-p "Save game to ~A?" game-file)
+			(save-world game-file)
+			(format t "~&Game saved."))))
 
 (defun goto (player &optional location)
 	"Go to the specified location"
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
-	(debugging "~&~A is going to ~A." (player-name player) location)
 	(when (symbolp location) (setf location (symbol-name location)))
 	(when (not (member location
 				   (place-neighbour (get-game-object 'place
@@ -189,6 +200,8 @@ save <game-file> -  Save the game to file")
 				   :test #'equalp))
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
+	(clear-screen)
+	(debugging "~&~A is going to ~A." (player-name player) location)
 	(remove-object-attribute (get-game-object 'place (player-place player))
 		'player (player-name player))
 	(set-object-attribute player 'place location)
@@ -196,13 +209,54 @@ save <game-file> -  Save the game to file")
 		'player (player-name player))
 	(describe-place location))
 
-(defun about (player &optional object)
+(defun about (player &optional object-name)
 	"Print a description of this object"
-	(unless object
+	(unless object-name
 		(format t "~&Please specify the object you wish to inspect!")
 		(return-from about))
-	;; TODO
-	)
+	;; TODO There's got to be a more elegant way of doing this...
+	(let ((place (get-game-object 'place (player-place player)))
+			 (description NIL))
+		(macrolet ((set-descr (place-object place-description object-type)
+					   `(when (member object-name (,place-object place)
+								  :test #'equalp)
+							(setf description (,place-description
+												  (get-game-object
+													  ',object-type
+													  object-name))))))
+			(set-descr place-item item-description item)
+			(set-descr place-monster monster-description monster)
+			(set-descr place-npc npc-description npc))
+		(if description
+			(format t "~&(~A) ~A" object-name description)
+			(format t "~&Could not find ~A!" object-name))))
+
+
+		;; (cond ((member object-name (place-item place))
+		;; 		  (setf description (item-description
+		;; 								(get-game-object 'item object-name))))
+		;; 	((member object-name (place-monster place))
+		;; 		(setf description (monster-description
+		;; 							  (get-game-object 'monster object-name))))
+		;; 	((member object-name (place-monster place))
+		;; 		(setf description (monster-description
+		;; 							  (get-game-object 'monster object-name))))
+		;; 	(t (format t "~&Could not find ~A!" object-name)
+		;; 		(return-from about)))
+		;; (format t "~&~A" description)))
+
+(defun talk (player &optional npc-name)
+	"Talk to the desired NPC"
+	;; TODO Add interactive facility
+	(unless npc-name
+		(format t "~&Please specify an NPC to talk to!")
+		(return-from talk))
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (npc (when (member npc-name (place-npc place) :test #'equalp)
+					   (get-game-object 'npc npc-name))))
+		(if npc
+			(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+			(format t "~&~A is not here!" npc-name))))
 
 (defun pickup (player &optional item-name)
 	"The player picks up an item"

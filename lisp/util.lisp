@@ -206,6 +206,13 @@ specified type in the container struct"
 	;; Basically just a utility wrapper
 	(nth (choose-number-option option-list) option-list))
 
+(defun clear-screen ()
+	"Clear the screen in an OS-dependent manner"
+	;; NOTE: only works with CLISP! (ext:shell function used)
+	(cond ((member ':unix *features*) (ext:shell "clear"))
+		((member ':win32 *features*) (ext:shell "cls"))
+		(t (debugging "~&clear-screen is not supported on this operating system!"))))
+
 (defun repl ()
 	"Launch a read-eval-print loop"
 	(let ((expr (simple-input expr "lisp >")))

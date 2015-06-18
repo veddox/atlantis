@@ -21,3 +21,11 @@ define-item "Anaklusmos"
 define-weapon "Anaklusmos"
 	description "Riptide, a sword for heroes!"
 	damage 4
+
+define-npc "Hades"
+	description "Hades, Lord of the Dead!"
+	says "Beware, mortal - do not tempt me!"
+
+define-npc "Charon"
+	description "A robe-clad ghoul, dread ferryman of the Styx."
+	says "..."

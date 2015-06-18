@@ -92,6 +92,7 @@
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
+	(clear-screen)
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a server" "Join a game" "Play single-player"

@@ -67,7 +67,7 @@
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))
 		(eval `(if (listp (,command ,game-object))
-				   ;; TODO This is going to give problems with multiple values
+				   ;; FIXME This is going to give problems with multiple values
 				   ;; (but will that scenario ever take place?)
 				   (setf (,command ,game-object)
 					   (remove-if #'(lambda (x) (equalp x ,value))
