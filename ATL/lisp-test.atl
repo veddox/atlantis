@@ -1,4 +1,4 @@
-; This is a simple test ATL file to test whatever I have implemented so far.
+; This is a simple ATL file to test whatever I have implemented so far.
 ; @author Daniel Vedder
 ; @date 04/05/2015
 
@@ -24,7 +24,7 @@ define-place "Fields of Punishment"
 	monster "Fury"
 
 define-place "Fields of Asphodel"
-	description "Nothing special. Really, nothing special at all.
+	description "Nothing special. Really, nothing special at all. 
 Just a whole load of dead people..."
 	neighbour "Fields of Punishment"
 	neighbour "Elysium"
@@ -41,5 +41,6 @@ define-place "Styx"
 load-file lisp-test.atl ;Testing whether recursive loading is prevented
 load-file races-classes.atl
 load-file game-objects.atl
+load-file creator-test.atl
 
-start-place "Nowhere"
+start-place "Styx"

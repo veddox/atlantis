@@ -120,6 +120,15 @@
 		(T (concatenate 'string (to-string (first lst)) (to-string separator)
 			(string-from-list (cdr lst) separator)))))
 
+(defun split-string (str separator)
+	"Split the string up into a list of strings along the separator character"
+	(cond ((equalp str (to-string separator)) NIL)
+		((zerop (count-instances separator str)) (list str))
+		(T (let ((split-elt (cut-string str (position separator str))))
+			   (cons (first split-elt)
+				   (split-string (second (cut-string (second split-elt) 1))
+					   separator))))))
+
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
 	(do* ((c 0 (1+ c)) (letter (aref s c) (aref s c))

@@ -115,7 +115,7 @@ you may assign one number to each of the following attributes:")
 (defvar *commands*
 	'(help place player
 		 goto pickup drop talk
-		 weapon fight shoot
+		 equip fight shoot
 		 about save clear))
 
 ;;; The following commands don't take any arguments except for a player
@@ -134,21 +134,22 @@ about <object>   -  Show a description of this entity
 talk <npc>       -  Talk to an NPC
 pickup <item>    -  Pick up an item lying around
 drop <item>      -  Drop the item
+equip <weapon>   -  Equip this item as your weapon
 shoot <monster>  -  Take a shot at a monster
 fight <monster>  -  Fight a monster
 save <game-file> -  Save the game to file")
 	(format t "~A" help-text))
+
+(defun clear (player)
+	"Clear the screen (wrapper function)"
+	(clear-screen)
+	(place player))
 
 ;; XXX Will the following two functions give problems? (Their name is
 ;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
 	"Describe the player's current location (wrapper function)"
 	(describe-place (player-place player)))
-
-(defun clear (player)
-	"Clear the screen (wrapper function)"
-	(clear-screen)
-	(place player))
 
 (defun player (p)
 	"Print a description of this player"
@@ -214,36 +215,24 @@ save <game-file> -  Save the game to file")
 	(unless object-name
 		(format t "~&Please specify the object you wish to inspect!")
 		(return-from about))
-	;; TODO There's got to be a more elegant way of doing this...
+	;; TODO What about objects that the player is carrying?
+	;; And there's probably a more elegant way of doing this...
 	(let ((place (get-game-object 'place (player-place player)))
 			 (description NIL))
-		(macrolet ((set-descr (place-object place-description object-type)
-					   `(when (member object-name (,place-object place)
-								  :test #'equalp)
-							(setf description (,place-description
-												  (get-game-object
-													  ',object-type
-													  object-name))))))
-			(set-descr place-item item-description item)
-			(set-descr place-monster monster-description monster)
-			(set-descr place-npc npc-description npc))
+		(macrolet ((set-descr (type)
+					   (let ((place-descr (build-symbol type "-description"))
+								(place-object (build-symbol "place-" type)))
+						   `(when (member object-name (,place-object place)
+									  :test #'equalp)
+								(setf description (,place-descr
+													  (get-game-object ',type
+														  object-name)))))))
+			(set-descr item)
+			(set-descr monster)
+			(set-descr npc))
 		(if description
 			(format t "~&(~A) ~A" object-name description)
 			(format t "~&Could not find ~A!" object-name))))
-
-
-		;; (cond ((member object-name (place-item place))
-		;; 		  (setf description (item-description
-		;; 								(get-game-object 'item object-name))))
-		;; 	((member object-name (place-monster place))
-		;; 		(setf description (monster-description
-		;; 							  (get-game-object 'monster object-name))))
-		;; 	((member object-name (place-monster place))
-		;; 		(setf description (monster-description
-		;; 							  (get-game-object 'monster object-name))))
-		;; 	(t (format t "~&Could not find ~A!" object-name)
-		;; 		(return-from about)))
-		;; (format t "~&~A" description)))
 
 (defun talk (player &optional npc-name)
 	"Talk to the desired NPC"
@@ -289,7 +278,7 @@ save <game-file> -  Save the game to file")
 			(format t "~&You have dropped: ~A" item))
 		(format t "~&You do not possess this item!")))
 
-(defun weapon (player &optional new-weapon)
+(defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
 	(when (or (not new-weapon) (equalp new-weapon "none"))
 		(setf (player-weapon player) "")

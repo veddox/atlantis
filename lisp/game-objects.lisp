@@ -38,6 +38,7 @@
 (defstruct item
 	(name "")
 	(description "")
+	(cost 0)
 	(weapon "no")
 	(function NIL))
 

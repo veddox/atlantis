@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 1 2))
+(defconstant ATLANTIS-VERSION '(0 1 3))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -15,7 +15,7 @@
 (load "world.lisp")
 (load "interpreter.lisp")
 (load "ui.lisp")
-
+(load "creator.lisp")
 
 (defvar *debugging* NIL)
 
@@ -33,6 +33,13 @@
 		(set-object-attribute (get-game-object 'place (player-place player))
 			'player (player-name player))
 		(play-game (player-name player))))
+
+(defun not-available ()
+	"Before I tackle networking..."
+	(format t "~&Sorry, multiplayer is currently not supported!")
+	(format t "~&Please press ENTER")
+	(y-or-n-p "~&OK?")
+	(start-menu))
 
 (defun start-server ()
 	"Start a new game on a server"
@@ -96,17 +103,18 @@
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a server" "Join a game" "Play single-player"
-					   "Develop" "About" "Exit"))
+					   "Create worlds" "Develop" "About" "Exit"))
 	(case (choose-number-option options)
-		(0 (start-server))
-		(1 (join-game))
+		(0 (not-available))
+		(1 (not-available))
 		(2 (single-player))
-		(3 (development))
-		(4 (print-version)
+		(3 (world-creator))
+		(4 (development))
+		(5 (print-version)
 			(when (y-or-n-p "Show the license text?")
 				(print-text-file "../LICENSE"))
 			(start-menu))
-		(5 (format t "~&Goodbye!")
+		(6 (format t "~&Goodbye!")
 			(quit))))
  
 (defun cmd-parameter (name &optional truth-value)
