@@ -9,15 +9,21 @@
 ;;; date: 09/05/2015
 ;;;
 
+;; A list of ATL language constructs
+;; (Note: not complete - each (defcommand) appends to this list)
+(defvar *atl-commands*
+	'(load-file start-place name-world))
 
 (defun build-define-command (object-type)
 	"Build a new define command function for the specified object type"
 	#'(lambda (name)
-		  (format t "~&Making ~A ~A"
+		  (debugging "~&Making ~A ~A"
 			  (string-downcase (to-string object-type)) name)
 		  (funcall (build-symbol "make-" object-type) :name name)))
 
 (defmacro defcommand (command-name object-type)
+	;; XXX Macros should not have side-effects?
+	(setf *atl-commands* (cons command-name *atl-commands*))
 	`(defun ,command-name (name)
 		 (funcall ,(build-define-command object-type) name)))
 
@@ -29,9 +35,11 @@
 (defcommand define-class character-class)
 (defcommand define-monster monster)
 (defcommand define-weapon weapon)
+(defcommand define-item item)
+(defcommand define-npc npc)
 
 (defun start-place (place)
-	(format t "~&Starting place is ~A" place)
+	(debugging "~&Starting place is ~A" place)
 	(setf (world-starting-place *world*) place)
 	NIL)
 
@@ -74,13 +82,15 @@
 				((not (or (eql (aref line 0) #\;)
 						  (eql (aref line 0) #\SPACE)
 						  (eql (aref line 0) #\TAB)))
-					;; TODO Catch syntax errors
-					(setf current-object (funcall (symbol-function
-													  (read-from-string line))
-					     ;; this is a kludge to work around a clisp bug (not
-					     ;; recognizing the :start keyword in read-from-string)
-						 (read-from-string (second
-							   (cut-string line (position #\space line)))))))
+					(let ((def-cmd (read-from-string line)))
+						(if (member def-cmd *atl-commands*)
+							(setf current-object
+								(funcall def-cmd
+									;; clisp doesn't recognize the :start
+									;; keyword in read-from-string
+									(read-from-string (second (cut-string line
+												(position #\space line))))))
+							(error "~&ERROR: unrecognized syntax: '~A'" line))))
 			    ;; interpret an option command
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
@@ -88,6 +98,6 @@
 					(set-object-attribute current-object (read-from-string line)
 						(read-from-string
 							(second (cut-string line (position #\space line))))))
-				(T (format t "~&ERROR: unrecognized syntax on line ~A: '~A'"
-					   ;; can't happen
-					   (1+ line-nr) line))))))
+				(T ;; can't happen
+					(error "~&ERROR: unrecognized syntax: '~A'" line))))))
+				

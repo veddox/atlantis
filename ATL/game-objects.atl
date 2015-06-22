@@ -13,3 +13,19 @@ define-monster "Fury"
 define-weapon "fire-whip"
 	description "A 10-foot long whip, blazing with magical fire"
 	damage 2
+
+define-item "Anaklusmos"
+	description "Riptide, a sword for heroes!"
+	weapon "yes"
+
+define-weapon "Anaklusmos"
+	description "Riptide, a sword for heroes!"
+	damage 4
+
+define-npc "Hades"
+	description "Hades, Lord of the Dead!"
+	says "Beware, mortal - do not tempt me!"
+
+define-npc "Charon"
+	description "A robe-clad ghoul, dread ferryman of the Styx."
+	says "..."

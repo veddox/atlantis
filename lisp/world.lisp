@@ -26,8 +26,7 @@
 	(npcs NIL)
 	(items NIL)
 	(weapons NIL)
-	(starting-place "")
-	(game-manager "")) ;The player in charge of the game
+	(starting-place ""))
 
 (setf *world* (make-world)) ;XXX Move this to another module?
 
@@ -54,7 +53,23 @@
 
 (defun name-world (name)
 	"Set the name of the *world*"
-	(format t "~&The name of the world is ~A." name)
+	(debugging "~&The name of the world is ~A." name)
 	(setf (world-name *world*) name)
 	NIL)
 
+(defun load-game (game-file)
+	"Load a saved game from disk"
+	(with-open-file (g game-file)
+		(let ((version-number (read g))
+				 (loaded-world (read g)))
+			(when (!= version-number ATLANTIS-VERSION :test equal)
+				(format t "~&WARNING: The loaded game was saved by a ")
+				(format t "different version of Atlantis!"))
+			(if (world-p loaded-world)
+				(setf *world* loaded-world)
+				(error "World file ~A is corrupted!" game-file)))))
+
+(defun save-world (game-file)
+	"Save a game to file"
+	(with-open-file (g game-file :direction :output)
+		(format g "~S~%~S~%" ATLANTIS-VERSION *world*)))

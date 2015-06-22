@@ -20,6 +20,10 @@
 			   syms)
 		 ,@body))
 
+(defmacro debugging (str &rest format-args)
+	"If *debugging* is true, print str"
+	`(when *debugging* (format t ,str ,@format-args)))
+
 ;; TODO DEPRECATED - Needs to be replaced in the current code
 (defmacro simple-input (var &optional (prompt ">>>"))
 	"Take input from terminal and store it in var"
@@ -27,12 +31,14 @@
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
 
+;; XXX Very useful for debugging, but represents a major security hole
+;; when used in a network setting
 (defmacro magic (var)
 	"Execute typed-in Lisp code"
 	`(when (eq ,var 'magic)
 		 (repl)))
 
-; potentially inefficient if called often
+;; XXX potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
 	"Set each symbol in var-list to value"
 	(do* ((expr (list 'setf)) (vl var-list (cdr vl)) (var (car vl) (car vl)))
@@ -94,7 +100,6 @@
 
 ; Some of these functions are probably quite inefficient (lots of consing)
 
-
 ;; XXX DEPRECATED Not actually needed anywhere
 (defun call-function (function-name &rest args)
 	"Save myself some quoting when calling a function from a generated symbol"
@@ -114,6 +119,15 @@
 		((= (length lst) 1) (to-string (car lst)))
 		(T (concatenate 'string (to-string (first lst)) (to-string separator)
 			(string-from-list (cdr lst) separator)))))
+
+(defun split-string (str separator)
+	"Split the string up into a list of strings along the separator character"
+	(cond ((equalp str (to-string separator)) NIL)
+		((zerop (count-instances separator str)) (list str))
+		(T (let ((split-elt (cut-string str (position separator str))))
+			   (cons (first split-elt)
+				   (split-string (second (cut-string (second split-elt) 1))
+					   separator))))))
 
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
@@ -144,6 +158,12 @@
 			(when (funcall test search-term (elt search-sequence i))
 				(incf count)))))
 
+(defun set-p (lst)
+	"Is lst a set (i.e. no elements occur more than once)?"
+	(cond ((null lst) T)
+		((member (car lst) (cdr lst)) NIL)
+		(T (set-p (cdr lst)))))
+
 (defun to-list (vector &optional (next-elt 0))
 	"Turn the vector into a list"
 	(if (= next-elt (1- (length vector))) NIL
@@ -156,6 +176,11 @@
 				  (read-line f nil nil))
 				 (file-lines (list line) (append file-lines (list line))))
 			((null line) file-lines))))
+
+(defun print-text-file (file-name)
+	"Print out the contents of this text file"
+	(dolist (line (load-text-file file-name))
+		(unless (null line) (format t "~%~A" line))))
 
 (defun build-symbol (&rest components)
 	"Concatenate the passed components into a single symbol"
@@ -173,6 +198,29 @@ specified type in the container struct"
 			  (dolist (object (funcall get-objects container) name-list)
 				  (setf name-list
 					  (cons (funcall get-object-name object) name-list))))))
+
+(defun choose-number-option (option-list)
+	"The user chooses one out of a list of options, the index is returned"
+	(dotimes (i (length option-list))
+		(format t "~&~S) ~A" (1+ i) (nth i option-list)))
+	(simple-input choice)
+	(while (or (not (numberp choice)) (< choice 1)
+			   (> choice (length option-list)))
+		(format t "~&Invalid choice! Please choose again:")
+		(simple-input choice))
+	(1- choice))
+
+(defun choose-option (option-list)
+	"Like choose-number-option, but return the value of the choice"
+	;; Basically just a utility wrapper
+	(nth (choose-number-option option-list) option-list))
+
+(defun clear-screen ()
+	"Clear the screen in an OS-dependent manner"
+	;; NOTE: only works with CLISP! (ext:shell function used)
+	(cond ((member ':unix *features*) (ext:shell "clear"))
+		((member ':win32 *features*) (ext:shell "cls"))
+		(t (debugging "~&clear-screen is not supported on this operating system!"))))
 
 (defun repl ()
 	"Launch a read-eval-print loop"
