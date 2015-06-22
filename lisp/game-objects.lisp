@@ -25,12 +25,14 @@
 (defstruct npc
 	(name "")
 	(description "")
-	(says ""))
+	(says "")
+	(sells NIL))
 
 (defstruct monster
 	(name "")
 	(description "")
 	(strength 0)
+	(dexterity 0)
 	(aggression 0)
 	(weapon "")
 	(armour-class 0))

@@ -26,7 +26,8 @@
 	(npcs NIL)
 	(items NIL)
 	(weapons NIL)
-	(starting-place ""))
+	(starting-place "")
+	(starting-money 0))
 
 (setf *world* (make-world)) ;XXX Move this to another module?
 

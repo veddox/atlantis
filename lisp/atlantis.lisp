@@ -25,10 +25,10 @@
 	(load-file "../ATL/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
 					  :race "Hobbit" :class "Burglar"
-					  :place (world-starting-place *world*)
+					  :place "Elysium"
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14
-					  :game-admin T)))
+					  :money 100 :game-admin T)))
 		(add-game-object player)
 		(set-object-attribute (get-game-object 'place (player-place player))
 			'player (player-name player))

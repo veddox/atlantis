@@ -4,7 +4,7 @@
 ; @date 02/06/2015
 
 define-monster "Fury"
-	description "Hades messengers, torturers, assassins. Beware!"
+	description "Hades' messengers, torturers, assassins. Beware!"
 	strength 10
 	aggression 30
 	armour-class 3
@@ -29,3 +29,10 @@ define-npc "Hades"
 define-npc "Charon"
 	description "A robe-clad ghoul, dread ferryman of the Styx."
 	says "..."
+
+define-npc "Persephone" ;testing the shop system
+	description "Hades' beautiful wife, bringer of summer."
+	says "Welcome, my friend from the upper world!"
+	sells "Sleeping potion"
+	sells "Handmirror"
+	sells "Book of Lore"

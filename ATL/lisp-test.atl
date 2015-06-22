@@ -15,6 +15,7 @@ define-place "Elysium"
 	neighbour "Styx"
 	neighbour "Fields of Punishment"
 	neighbour "Fields of Asphodel"
+	npc "Persephone"
 
 define-place "Fields of Punishment"
 	description "Precisely where you do NOT want to end up..."
@@ -44,3 +45,4 @@ load-file game-objects.atl
 load-file creator-test.atl
 
 start-place "Styx"
+start-money 50

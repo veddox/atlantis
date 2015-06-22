@@ -40,7 +40,8 @@
 		(setf atl-code (format NIL "~A~&~%~A" atl-code
 						   (concatenate 'string "define-"
 							   (string-downcase (to-string object-type))
-							   " " (first line-values))))
+							   " " (to-string #\") (first line-values)
+							   (to-string #\"))))
 		;; Enter the value for each characteristic
 		(dotimes (i (1- (length object-characteristics)))
 			(setf atl-code (format NIL "~A~&~A" atl-code
@@ -53,4 +54,16 @@
 
 (defun world-creator ()
 	"The UI for the functions in this module"
-	(format t "~&Sorry, not yet available!"))
+	(clear-screen)
+	(format t "~&Welcome to the Atlantis world creator!")
+	(format t "~&~%What do you want to do?")
+	(case (choose-number-option '("Import a spreadsheet" "Nothing"))
+		(0 (progn
+			   (format t "~&What OpenDocument spreadsheet do you want to import?")
+			   (input-string s)
+			   (format t "~&What ATL file do you want to export it to?")
+			   (input-string a)
+			   (import-spreadsheet s a)
+			   (if (y-or-n-p "Done. Create something else?")
+				   (world-creator) (start-menu))))
+		(1 (start-menu))))

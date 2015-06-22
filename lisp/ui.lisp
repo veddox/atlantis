@@ -39,7 +39,8 @@
 	"The user creates a new player"
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let ((player (make-player :name player-name
-					  :place (world-starting-place *world*)))
+					  :place (world-starting-place *world*)
+					  :money (world-starting-money *world*)))
 			 (char-attr
 			 '((strength 0) (dexterity 0)
 			 (constitution 0) (intelligence 0)))
@@ -114,7 +115,8 @@ you may assign one number to each of the following attributes:")
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
 	'(help place player
-		 goto pickup drop talk
+		 goto pickup drop
+		 talk trade
 		 equip fight shoot
 		 about save clear))
 
@@ -131,7 +133,7 @@ place            -  Describe the current location
 player           -  Describe your player
 goto <place>     -  Go to a neighbouring location
 about <object>   -  Show a description of this entity
-talk <npc>       -  Talk to an NPC
+talk to <npc>    -  Talk to an NPC
 pickup <item>    -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
@@ -170,7 +172,8 @@ save <game-file> -  Save the game to file")
 		(format t "~&=====")
 		(format t "~&Max health: ~A~ACurrent health: ~A"
 			(player-max-health p) tab (player-health p))
-		(format t "~&Experience: ~A" (player-experience p))))
+		(format t "~&Experience: ~A~AMoney: ~A"
+			(player-experience p) tab (player-money p))))
 
 ;;; These next functions have to take two arguments (the argument
 ;;; to the function and a player instance).
@@ -215,6 +218,9 @@ save <game-file> -  Save the game to file")
 	(unless object-name
 		(format t "~&Please specify the object you wish to inspect!")
 		(return-from about))
+	;; A bit of syntactic sugar...
+	(cond ((equalp object-name "me") (player player) (return-from about))
+		((equalp object-name "here") (place player) (return-from about)))
 	;; TODO What about objects that the player is carrying?
 	;; And there's probably a more elegant way of doing this...
 	(let ((place (get-game-object 'place (player-place player)))
@@ -240,12 +246,53 @@ save <game-file> -  Save the game to file")
 	(unless npc-name
 		(format t "~&Please specify an NPC to talk to!")
 		(return-from talk))
+	;; Allow for a bit of syntactic sugar (note: interface inconsistency?)
+	(let ((split-name (cut-string npc-name 3)))
+		(when (equalp (first split-name) "to ")
+			(setf npc-name (second split-name))))
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (npc (when (member npc-name (place-npc place) :test #'equalp)
 					   (get-game-object 'npc npc-name))))
 		(if npc
-			(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+			(progn
+				(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+				(when (and (npc-sells npc)
+						  (y-or-n-p "Trade with ~A?" npc-name))
+					(trade player npc)))
 			(format t "~&~A is not here!" npc-name))))
+
+(defun trade (player npc)
+	"The player trades with this NPC"
+	;; TODO Implement player-sells-to-npc feature
+	(when (and (stringp npc)
+			  (member npc
+				  (place-npc (get-game-object 'place (player-place player)))
+				  :test #'equalp))
+		(setf npc (get-game-object 'npc npc))
+		(unless (npc-sells npc)
+			(format t "~&This NPC doesn't sell anything!")
+			(return-from trade)))
+	(format t "~&~%What do you want to buy? Your money: ~S"
+		(player-money player))
+	(let* ((choice (choose-option (append (npc-sells npc) (list "None"))))
+			  (item (get-game-object 'item choice))
+			  (cost (if item (item-cost item) NIL)))
+		(cond ((equalp choice "None") NIL)
+			;; XXX Do we have to insure that every object referenced by the
+			;; world exists, or is that the responsibility of the person
+			;; who writes the ATL code?
+			((not item)
+				(format t "~&This object does not exist!")
+				(format t "(Talk to the world creator)")
+				NIL)
+			((< (player-money player) cost)
+				(format t "~&You do not have enough money!"))
+			((y-or-n-p "Buy ~A for ~S?" choice cost)
+				(decf (player-money player) cost)
+				(set-object-attribute player 'item choice)
+				(format t "~&Bought ~A for ~A." choice cost))))
+	(if (y-or-n-p "Buy something else?")
+		(trade player npc) (clear player)))
 
 (defun pickup (player &optional item-name)
 	"The player picks up an item"
@@ -283,7 +330,7 @@ save <game-file> -  Save the game to file")
 	(when (or (not new-weapon) (equalp new-weapon "none"))
 		(setf (player-weapon player) "")
 		(format t "~&You no longer have any weapon equipped.")
-		(return-from weapon))
+		(return-from equip))
 	(if (and (member new-weapon (player-item player) :test #'equalp)
 			(equalp (item-weapon (get-game-object 'item new-weapon)) "yes"))
 		(progn

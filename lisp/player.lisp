@@ -18,6 +18,7 @@
 	(dexterity 0)
 	(constitution 0)
 	(intelligence 0)
+	(money 0)
 	(item NIL)
 	(weapon "")
 	(place "")
@@ -43,8 +44,8 @@
 	(special-ability NIL))
 
 
-;; This function is probably superfluous, as the player struct should only store
-;; names of game objects (the actual objects are stored in *world*)
+;; XXX This function is probably superfluous, as the player struct should only 
+;; store names of game objects (the actual objects are stored in *world*)
 (let ((list-function (make-list-function 'player NIL)))
 	(defun list-player-objects (object-type player)
 		"Get a list of the names of all the player's objects of this type."
