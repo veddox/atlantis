@@ -106,6 +106,10 @@
 	;; Perhaps not very clean, but it works
 	(eval `(,function-name ,@args)))
 
+(defun average (&rest numbers)
+	"Compute the average of the given numbers"
+	(/ (reduce #'+ numbers) (length numbers)))
+
 (defun keys (assoc-list)
 	"Return a list of the keys in an association list"
 	(if (null assoc-list) NIL
@@ -145,6 +149,10 @@
 		(dotimes (i (length char-list) s)
 			(setf (aref s i) (nth i char-list)))))
 
+(defun trim-whitespace (s)
+	"Trim off spaces and tabs before and after string s"
+	(string-trim '(#\space #\tab) s))
+
 (defun to-string (x)
 	"Whatever x is, convert it into a string"
 	(cond ((stringp x) x)
@@ -181,6 +189,16 @@
 	"Print out the contents of this text file"
 	(dolist (line (load-text-file file-name))
 		(unless (null line) (format t "~%~A" line))))
+
+(defun write-to-file (text filename &optional (append NIL))
+	"Write text (a string or list of strings) to the specified file"
+	(let ((text-list (if (listp text) text (list text)))
+			 (f (if append
+					(open filename :direction :output :if-exists :append)
+					(open filename :direction :output))))
+		(dolist (line text-list)
+			(format f "~&~A~&" line))
+		(close f)))
 
 (defun build-symbol (&rest components)
 	"Concatenate the passed components into a single symbol"

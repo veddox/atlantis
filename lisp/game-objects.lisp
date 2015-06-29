@@ -31,6 +31,7 @@
 (defstruct monster
 	(name "")
 	(description "")
+	(health 0)
 	(strength 0)
 	(dexterity 0)
 	(aggression 0)
@@ -47,18 +48,16 @@
 (defstruct weapon
 	(name "")
 	(description "")
-	(ranged NIL)
+	(type "generic")
 	(damage 0))
 
 
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"
 	;; Here follows Lisp magic :D      (that took ages to get right...)
-	;; [And half the magic is gone after being outsourced to build-symbol :-(]
-	;; I'm not sure how elegant it is to call (eval) explicitly, but in this
-	;; case I couldn't avoid it - I needed a mix between a macro and a function
+	;; XXX It's not elegant to call (eval) explicitly, but in this case I can't
+	;; find a way to avoid it - I needed a mix between a macro and a function
 	(let ((command (build-symbol (type-of game-object) "-" property)))
-		;; TODO This following section is rather ugly...
 		(eval `(if (or (null (,command ,game-object))
 					   (listp (,command ,game-object)))
 				   (setf (,command ,game-object)
@@ -70,11 +69,11 @@
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))
 		(eval `(if (listp (,command ,game-object))
-				   ;; FIXME This is going to give problems with multiple values
-				   ;; (but will that scenario ever take place?)
+				   ;; FIXME This gives problems with multiple values
 				   (setf (,command ,game-object)
 					   (remove-if #'(lambda (x) (equalp x ,value))
 						   (,command ,game-object)))
+				   ;; TODO set numbers to 0, strings to ""
 				   (setf (,command ,game-object) NIL)))))
 
 ;; XXX This function is probably superfluous, as all place objects are stored
@@ -83,3 +82,8 @@
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."
 		(funcall list-function object-type place)))
+
+(defun monster-strikes-player (monster player)
+	"The monster attacks a player"
+	;;TODO
+	)

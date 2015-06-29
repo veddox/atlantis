@@ -111,13 +111,12 @@ you may assign one number to each of the following attributes:")
 ;;; Here follow the functions that define the in-game commands.
 ;;;
 
-
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
 	'(help place player
 		 goto pickup drop
 		 talk trade
-		 equip fight shoot
+		 equip attack
 		 about save clear))
 
 ;;; The following commands don't take any arguments except for a player
@@ -137,8 +136,7 @@ talk to <npc>    -  Talk to an NPC
 pickup <item>    -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
-shoot <monster>  -  Take a shot at a monster
-fight <monster>  -  Fight a monster
+attack <monster> -  Fight a monster
 save <game-file> -  Save the game to file")
 	(format t "~A" help-text))
 
@@ -168,6 +166,7 @@ save <game-file> -  Save the game to file")
 			(player-constitution p) tab (player-dexterity p))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
+		;; XXX This will need adjusting for large item numbers
 		(format t "~&Items: ~A" (string-from-list (player-item p)))
 		(format t "~&=====")
 		(format t "~&Max health: ~A~ACurrent health: ~A"
@@ -187,7 +186,8 @@ save <game-file> -  Save the game to file")
 			((and last-save (not game-file)) (setf game-file last-save))
 			((not (or last-save game-file))
 				(format t "~&Where do you want to save the game?")
-				(input-string game-file)))
+				(input-string game-file)
+				(setf last-save game-file)))
 		(when (y-or-n-p "Save game to ~A?" game-file)
 			(save-world game-file)
 			(format t "~&Game saved."))))
@@ -338,10 +338,55 @@ save <game-file> -  Save the game to file")
 			(format t "~&You have equipped: ~A" new-weapon))
 		(format t "~&Sorry, this item is not available as a weapon!")))
 
-(defun fight (player &optional opponent)
-	"The player enters combat"
+(defun attack (player &optional opponent)
+	"The player launches an attack at a monster"
 	(unless opponent
 		(format t "~&Please specify an opponent!")
-		(return-from fight))
-	;; TODO
-	)
+		(return-from attack))
+	(unless (member opponent
+				(list-place-objects 'monster (player-place player))
+				:test #'equalp)
+		(format t "~&This monster is not here!")
+		(return-from attack))
+	(let* ((monster (get-game-object 'monster opponent))
+			  (m-str (monster-strength monster))
+			  (m-dex (monster-dexterity monster))
+			  (m-ac (monster-armour-class monster))
+			  (m-weapon (get-game-object 'weapon (monster-weapon monster)))
+			  (p-str (player-strength player))
+			  (p-dex (player-dexterity player))
+			  (p-ac (player-armour-class player))
+			  (p-weapon (if (not (equalp (player-weapon player) "")) ;lbyl
+							(get-game-object 'weapon (player-weapon player))
+							(make-weapon :name "Fists" :damage 0)))
+			  (damage 0))
+		(if (> (+ (random 10) p-dex) (+ (random 10) m-dex))
+			(setf damage (calculate-damage p-str p-weapon m-dex m-ac))
+			(setf damage (- 0 (calculate-damage m-str m-weapon p-dex p-ac))))
+		;(break)
+		(cond ((plusp damage)
+				  (decf (monster-health monster) damage)
+				  (format t "~&You hit! ~A points damage." damage)
+				  (when (> 1 (monster-health monster))
+					  (let ((experience (round (average m-str m-dex))))
+						  (break)
+						  (remove-object-attribute (player-place player)
+							  'monster monster)
+						  (break)
+						  (add-player-experience player experience)
+						  (format t "~&You killed the monster!")
+						  (format t "~A points experience." experience))))
+			((minusp damage)
+				(change-player-health player (- 0 damage))
+				(format t "~&You missed. The monster hit!")
+				(format t "~A points damage." damage))
+			(t (format t "~&You missed. The monster missed.")))))
+
+(defun calculate-damage (att-str att-weapon def-dex def-ac)
+	"A private function to calculate the damage caused by an attack"
+	(let ((damage 0))
+		(incf damage (random att-str))
+		(incf damage (weapon-damage att-weapon))
+		(decf damage (random def-dex))
+		(decf damage def-ac)
+		(if (minusp damage) 0 damage)))
