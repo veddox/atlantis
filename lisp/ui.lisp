@@ -25,6 +25,7 @@
 			(add-game-object player)
 			(set-object-attribute (get-game-object 'place (player-place player))
 				'player (player-name player)))
+		(objectify-place-monsters (player-place player))
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
@@ -93,7 +94,8 @@ you may assign one number to each of the following attributes:")
 	(format t "~&Players present: ~A" (string-from-list (place-player p)))
 	(format t "~&Items: ~A" (string-from-list (place-item p)))
 	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
-	(format t "~&Monsters: ~A" (string-from-list (place-monster p))))
+	(format t "~&Monsters: ~A" (string-from-list
+								   (list-place-objects 'monster p))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -194,6 +196,7 @@ save <game-file> -  Save the game to file")
 
 (defun goto (player &optional location)
 	"Go to the specified location"
+	;; Look before you leap
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
@@ -204,12 +207,14 @@ save <game-file> -  Save the game to file")
 				   :test #'equalp))
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
+	;; Do all the necessary housekeeping
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
+	(objectify-place-monsters location)
 	(remove-object-attribute (get-game-object 'place (player-place player))
 		'player (player-name player))
 	(set-object-attribute player 'place location)
-	(set-object-attribute (get-game-object 'place (player-place player))
+	(set-object-attribute (get-game-object 'place location)
 		'player (player-name player))
 	(describe-place location))
 
@@ -226,9 +231,9 @@ save <game-file> -  Save the game to file")
 	(let ((place (get-game-object 'place (player-place player)))
 			 (description NIL))
 		(macrolet ((set-descr (type)
-					   (let ((place-descr (build-symbol type "-description"))
-								(place-object (build-symbol "place-" type)))
-						   `(when (member object-name (,place-object place)
+					   (let ((place-descr (build-symbol type "-description")))
+						   `(when (member object-name
+									  (list-place-objects ',type place)
 									  :test #'equalp)
 								(setf description (,place-descr
 													  (get-game-object ',type
@@ -344,7 +349,8 @@ save <game-file> -  Save the game to file")
 		(format t "~&Please specify an opponent!")
 		(return-from attack))
 	(unless (member opponent
-				(list-place-objects 'monster (player-place player))
+				(list-place-objects 'monster
+					(get-game-object 'place (player-place player)))
 				:test #'equalp)
 		(format t "~&This monster is not here!")
 		(return-from attack))
@@ -363,7 +369,6 @@ save <game-file> -  Save the game to file")
 		(if (> (+ (random 10) p-dex) (+ (random 10) m-dex))
 			(setf damage (calculate-damage p-str p-weapon m-dex m-ac))
 			(setf damage (- 0 (calculate-damage m-str m-weapon p-dex p-ac))))
-		;(break)
 		(cond ((plusp damage)
 				  (decf (monster-health monster) damage)
 				  (format t "~&You hit! ~A points damage." damage)

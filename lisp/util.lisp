@@ -98,13 +98,13 @@
 
 ;;; FUNCTIONS
 
-; Some of these functions are probably quite inefficient (lots of consing)
+;; Some of these functions are probably quite inefficient (lots of consing)
 
-;; XXX DEPRECATED Not actually needed anywhere
-(defun call-function (function-name &rest args)
-	"Save myself some quoting when calling a function from a generated symbol"
-	;; Perhaps not very clean, but it works
-	(eval `(,function-name ,@args)))
+(defun remove-first-if (fn lst)
+	"Remove the first element in a list that satisfies the given predicate"
+    (cond ((null lst) NIL)
+		((funcall fn (car lst))	(cdr lst))
+		(T (cons (car lst) (remove-first-if fn (cdr lst))))))
 
 (defun average (&rest numbers)
 	"Compute the average of the given numbers"
@@ -205,17 +205,19 @@
 	(read-from-string (string-from-list components "")))
 
 (defun make-list-function (container-type &optional (add-s t))
-	"Return function to return a list of the names of all objects of the
+	"Return a function to return a list of the names of all objects of the
 specified type in the container struct"
 	#'(lambda (object-type container)
-		  (let ((get-objects (symbol-function (build-symbol container-type "-"
-								 object-type (if add-s "s" ""))))
-				   (get-object-name (symbol-function
-										(build-symbol object-type "-name")))
-				   (name-list NIL))
-			  (dolist (object (funcall get-objects container) name-list)
+		  (let* ((get-objects (symbol-function
+								  (build-symbol container-type "-"
+									  object-type (if add-s "s" ""))))
+					(get-object-name (symbol-function
+										 (build-symbol object-type "-name")))
+					(objects (funcall get-objects container)) (name-list NIL))
+			  (dolist (o objects name-list)
+				  (when (stringp o) (return objects))
 				  (setf name-list
-					  (cons (funcall get-object-name object) name-list))))))
+					  (cons (funcall get-object-name o) name-list))))))
 
 (defun choose-number-option (option-list)
 	"The user chooses one out of a list of options, the index is returned"

@@ -35,6 +35,7 @@
 	(strength 0)
 	(dexterity 0)
 	(aggression 0)
+	(spawn-probability 0)
 	(weapon "")
 	(armour-class 0))
 
@@ -48,7 +49,7 @@
 (defstruct weapon
 	(name "")
 	(description "")
-	(type "generic")
+	(type "")
 	(damage 0))
 
 
@@ -69,21 +70,29 @@
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))
 		(eval `(if (listp (,command ,game-object))
-				   ;; FIXME This gives problems with multiple values
 				   (setf (,command ,game-object)
-					   (remove-if #'(lambda (x) (equalp x ,value))
+					   (remove-first-if #'(lambda (x) (equalp x ,value))
 						   (,command ,game-object)))
 				   ;; TODO set numbers to 0, strings to ""
 				   (setf (,command ,game-object) NIL)))))
 
-;; XXX This function is probably superfluous, as all place objects are stored
-;; in world, with only their names recorded in the place
+(defun objectify-name-list (object-type name-list)
+	"Turn all the string names in name-list into instances of the object type"
+	;; Basically the inverse of a make-list-function function (cf. util.lisp)
+	(let ((objects NIL))
+		(dolist (n name-list objects)
+			(setf objects (cons (get-game-object object-type n) objects)))))
+
+(defun objectify-place-monsters (place)
+	"Objectify all the monsters in this place"
+	;; XXX This introduces a side effect!
+	(let* ((p (if (place-p place) place (get-game-object 'place place)))
+			  (monster-list (objectify-name-list 'monster (place-monster p))))
+		(if (monster-p (first (place-monster p)))
+			(return-from objectify-place-monsters place)
+			(setf (place-monster p) monster-list))))
+		
 (let ((list-function (make-list-function 'place NIL)))
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."
 		(funcall list-function object-type place)))
-
-(defun monster-strikes-player (monster player)
-	"The monster attacks a player"
-	;;TODO
-	)

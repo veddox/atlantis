@@ -99,7 +99,7 @@
 			    ;; interpret an option command
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
-					(setf line (string-left-trim '(#\Space #\Tab) line))
+					(setf line (trim-whitespace line))
 					(set-object-attribute current-object (read-from-string line)
 						(read-from-string
 							(second (cut-string line (position #\space line))))))
