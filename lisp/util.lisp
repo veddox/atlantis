@@ -257,7 +257,7 @@ specified type in the container struct"
 			(format t "~&~S" (eval expr)))
 			(simple-input expr "lisp >"))))
 
-;; FIXME Interesting phenomenon of repl (security bug?):
+;; XXX Interesting phenomenon of repl (security bug?):
 ;; Enter two Lisp expressions that have not had a value assigned to them in the
 ;; current session (e.g. 'foo ls'). The first will cause the interpreter to
 ;; exit with an error. The second, however, is still printed to stdout (which is

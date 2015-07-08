@@ -217,21 +217,12 @@ save <game-file> -  Save the game to file")
 	;; A bit of syntactic sugar...
 	(cond ((equalp object-name "me") (player player) (return-from about))
 		((equalp object-name "here") (place player) (return-from about)))
-	;; FIXME What about objects that the player is carrying?
-	;; TODO Outsource this to game-objects.lisp (or player.lisp)
-	(let ((place (get-game-object 'place (player-place player)))
-			 (description NIL))
-		(macrolet ((set-descr (type)
-					   (let ((place-descr (build-symbol type "-description")))
-						   `(when (member object-name
-									  (list-place-objects ',type place)
-									  :test #'equalp)
-								(setf description (,place-descr
-													  (get-game-object ',type
-														  object-name)))))))
-			(set-descr item)
-			(set-descr monster)
-			(set-descr npc))
+	(let ((description (get-object-description object-name
+						   (player-place player))))
+		;; Don't forget items the player is carrying
+		(when (member object-name (player-item player) :test #'equalp)
+			(setf description
+				(item-description (get-game-object 'item object-name))))
 		(if description
 			(format t "~&(~A) ~A" object-name description)
 			(format t "~&Could not find ~A!" object-name))))

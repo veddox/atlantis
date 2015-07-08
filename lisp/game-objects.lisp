@@ -96,3 +96,15 @@
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."
 		(funcall list-function object-type place)))
+
+(defun get-object-description (object-name place)
+	"Get a description of this object in place (or nil if not there)"
+	(let ((p (if (place-p place) place (get-game-object 'place place))))
+		(cond ((member object-name (list-place-objects 'item p) :test #'equalp)
+				  (item-description (get-game-object 'item object-name)))
+			((member object-name (list-place-objects 'monster p) :test #'equalp)
+				(monster-description (get-game-object 'monster object-name)))
+			((member object-name (list-place-objects 'npc p) :test #'equalp)
+				(npc-description (get-game-object 'npc object-name)))
+			(t NIL))))
+		
