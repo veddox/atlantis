@@ -49,6 +49,15 @@
 	(special-ability NIL))
 
 
+(defun add-player (player)
+	"Add this player to the game world"
+	(when (null (list-world-objects 'player))
+		(setf (player-game-admin player) T))
+	(add-game-object player)
+	(set-object-attribute (get-game-object 'place (player-place player))
+		'player (player-name player))
+	(objectify-place-monsters (player-place player)))
+
 ;; XXX This function is probably superfluous, as the player struct should only 
 ;; store names of game objects (the actual objects are stored in *world*)
 (let ((list-function (make-list-function 'player NIL)))

@@ -177,6 +177,10 @@
 	(if (= next-elt (1- (length vector))) NIL
 		(cons (aref vector next-elt) (to-list vector (1+ next-elt)))))
 
+(defun random-elt (seq)
+	"Return a random element of this sequence"
+	(elt seq (random (length seq))))
+
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"
 	(with-open-file (f file-name)

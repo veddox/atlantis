@@ -33,20 +33,11 @@
 (defcommand define-place place)
 (defcommand define-race race)
 (defcommand define-class character-class)
+(defcommand define-player player)
 (defcommand define-monster monster)
 (defcommand define-weapon weapon)
 (defcommand define-item item)
 (defcommand define-npc npc)
-
-(defun start-place (place)
-	(debugging "~&Starting place is ~A" place)
-	(setf (world-starting-place *world*) place)
-	NIL)
-
-(defun start-money (amount)
-	(debugging "~&Starting money is ~A gold pieces" amount)
-	(setf (world-starting-money *world*) amount)
-	NIL)
 
 
 (let ((world-directory NIL)

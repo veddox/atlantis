@@ -4,6 +4,12 @@
 
 name-world "Underworld"
 
+define-player "Start"
+	money 200
+	place "Fields of Punishment"
+	max-health 50
+	health 50
+
 define-place "Nowhere"
 	description "Welcome to Nowhere! 
 You are in the void, the space between the worlds. Around you is black. 
@@ -43,6 +49,3 @@ load-file lisp-test.atl ;Testing whether recursive loading is prevented
 load-file races-classes.atl
 load-file game-objects.atl
 load-file creator-test.atl
-
-start-place "Styx"
-start-money 50

@@ -2,30 +2,25 @@
 ;;; Atlantis is a framework for creating multi-user dungeon worlds.
 ;;; This is the Common Lisp implementation.
 ;;;
-;;; The client module is responsible for the actual user interface presented
-;;; to a player. (Warning: this will likely change significantly, currently
-;;; I am only implementing a mock-up before I get the networking part working.)
+;;; This module is responsible for the interactive user interface. All
+;;; in-game UI should be done here. (Pre-game UI goes into atlantis.lisp.)
+;;; Currently, it also does quite a bit of game logic - perhaps that should
+;;; be changed later.
 ;;;
 ;;; Licensed under the terms of the MIT license.
 ;;; author: Daniel Vedder
 ;;; date: 21/05/2015
 ;;;
 
-(let ((player NIL))
-	(defun play-game (player-name)
-		"The main game loop"
+
+(defun play-game (player-name)
+	"The main game loop"
+	(let ((player (get-game-object 'player player-name)))
 		(clear-screen)
 		;; Initialize the player if necessary
 		(when (null player)
-			(setf player (get-game-object 'player player-name)))
-		(when (null player)
 			(setf player (create-player player-name))
-			(when (null (list-world-objects 'player))
-				(setf (player-game-admin player) T))
-			(add-game-object player)
-			(set-object-attribute (get-game-object 'place (player-place player))
-				'player (player-name player)))
-		(objectify-place-monsters (player-place player))
+			(add-player player))
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
@@ -39,14 +34,15 @@
 (defun create-player (player-name)
 	"The user creates a new player"
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
-	(let ((player (make-player :name player-name
-					  :place (world-starting-place *world*)
-					  :money (world-starting-money *world*)))
-			 (char-attr
-			 '((strength 0) (dexterity 0)
-			 (constitution 0) (intelligence 0)))
-			 (items NIL) (weapon "")
-			 (character-points NIL))
+	(let* ((start-player (get-game-object 'player "Start"))
+			  (player (if start-player (copy-player start-player)
+						  (make-player :name player-name
+							  :place (random-elt (list-world-objects 'place)))))
+			  (char-attr
+				  '((strength 0) (dexterity 0)
+					   (constitution 0) (intelligence 0)))
+			  (items NIL) (weapon "")
+			  (character-points NIL))
 		(format t "~&The name you have chosen is not registered on this game.")
 		(unless (y-or-n-p "~&Create a new player?") (start-menu))
 		;; Chose race and class
@@ -68,7 +64,7 @@ Now distribute your attribute points. Random numbers have been chosen,
 you may assign one number to each of the following attributes:")
 		(format t "~&~A~%~A~%~%The numbers are:"
 			text (string-from-list (keys char-attr)))
-		;; TODO I should replace simple-input with something offering 'magic'
+		;; XXX I should replace simple-input with something offering 'magic' (?)
 		(do* ((i 0 (1+ i)) (attr (safe-nth i (keys char-attr))
 							   (safe-nth i (keys char-attr)))
 				 (val (cassoc attr char-attr) (cassoc attr char-attr)))
@@ -196,7 +192,7 @@ save <game-file> -  Save the game to file")
 
 (defun goto (player &optional location)
 	"Go to the specified location"
-	;; Look before you leap
+	;; Look before you leap ;-)
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
@@ -345,6 +341,7 @@ save <game-file> -  Save the game to file")
 
 (defun attack (player &optional opponent)
 	"The player launches an attack at a monster"
+	;; FIXME Still gives problems (usually, neither opponent hits)
 	(unless opponent
 		(format t "~&Please specify an opponent!")
 		(return-from attack))
