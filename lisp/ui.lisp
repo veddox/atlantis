@@ -4,13 +4,14 @@
 ;;;
 ;;; This module is responsible for the interactive user interface. All
 ;;; in-game UI should be done here. (Pre-game UI goes into atlantis.lisp.)
-;;; Currently, it also does quite a bit of game logic - perhaps that should
-;;; be changed later.
 ;;;
 ;;; Licensed under the terms of the MIT license.
 ;;; author: Daniel Vedder
 ;;; date: 21/05/2015
 ;;;
+
+;; TODO Out-source all game logic to other modules
+;; (This module should be purely UI)
 
 
 (defun play-game (player-name)
@@ -196,22 +197,16 @@ save <game-file> -  Save the game to file")
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
-	(when (symbolp location) (setf location (symbol-name location)))
 	(when (not (member location
 				   (place-neighbour (get-game-object 'place
 										(player-place player)))
 				   :test #'equalp))
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
-	;; Do all the necessary housekeeping
+	;; Change places
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
-	(objectify-place-monsters location)
-	(remove-object-attribute (get-game-object 'place (player-place player))
-		'player (player-name player))
-	(set-object-attribute player 'place location)
-	(set-object-attribute (get-game-object 'place location)
-		'player (player-name player))
+	(change-player-location player location)
 	(describe-place location))
 
 (defun about (player &optional object-name)
@@ -222,8 +217,8 @@ save <game-file> -  Save the game to file")
 	;; A bit of syntactic sugar...
 	(cond ((equalp object-name "me") (player player) (return-from about))
 		((equalp object-name "here") (place player) (return-from about)))
-	;; TODO What about objects that the player is carrying?
-	;; And there's probably a more elegant way of doing this...
+	;; FIXME What about objects that the player is carrying?
+	;; TODO Outsource this to game-objects.lisp (or player.lisp)
 	(let ((place (get-game-object 'place (player-place player)))
 			 (description NIL))
 		(macrolet ((set-descr (type)
@@ -341,7 +336,7 @@ save <game-file> -  Save the game to file")
 
 (defun attack (player &optional opponent)
 	"The player launches an attack at a monster"
-	;; FIXME Still gives problems (usually, neither opponent hits)
+	;; Check input for validity
 	(unless opponent
 		(format t "~&Please specify an opponent!")
 		(return-from attack))
@@ -351,6 +346,7 @@ save <game-file> -  Save the game to file")
 				:test #'equalp)
 		(format t "~&This monster is not here!")
 		(return-from attack))
+	;; Bind all relevant values to variables (saves typing later)
 	(let* ((monster (get-game-object 'monster opponent))
 			  (m-str (monster-strength monster))
 			  (m-dex (monster-dexterity monster))
@@ -363,26 +359,30 @@ save <game-file> -  Save the game to file")
 							(get-game-object 'weapon (player-weapon player))
 							(make-weapon :name "Fists" :damage 0)))
 			  (damage 0))
-		(if (> (+ (random 10) p-dex) (+ (random 10) m-dex))
+		;; Print information about the combattants
+		(format t "~&Health ~A: ~A    Health ~A: ~A" (player-name player)
+			(player-health player) opponent (monster-health monster))
+		;; Determine whether the player or the monster strikes
+		(if (> (+ (random 10) p-dex) (+ (random 10) m-dex)) ;XXX magic numbers!
 			(setf damage (calculate-damage p-str p-weapon m-dex m-ac))
 			(setf damage (- 0 (calculate-damage m-str m-weapon p-dex p-ac))))
+		;; Negative damage denotes that the player has been hit
 		(cond ((plusp damage)
 				  (decf (monster-health monster) damage)
 				  (format t "~&You hit! ~A points damage." damage)
 				  (when (> 1 (monster-health monster))
 					  (let ((experience (round (average m-str m-dex))))
-						  (break)
-						  (remove-object-attribute (player-place player)
+						  (remove-object-attribute
+							  (get-game-object 'place (player-place player))
 							  'monster monster)
-						  (break)
 						  (add-player-experience player experience)
-						  (format t "~&You killed the monster!")
+						  (format t "~&You killed the monster! ")
 						  (format t "~A points experience." experience))))
 			((minusp damage)
-				(change-player-health player (- 0 damage))
-				(format t "~&You missed. The monster hit!")
+				(change-player-health player damage)
+				(format t "~&You missed. Your opponent hit! ")
 				(format t "~A points damage." damage))
-			(t (format t "~&You missed. The monster missed.")))))
+			(t (format t "~&You missed. Your opponent missed.")))))
 
 (defun calculate-damage (att-str att-weapon def-dex def-ac)
 	"A private function to calculate the damage caused by an attack"

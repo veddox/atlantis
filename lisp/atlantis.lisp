@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 1 3))
+(defconstant ATLANTIS-VERSION '(0 1 4))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -25,13 +25,12 @@
 	(load-file "../ATL/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
 					  :race "Hobbit" :class "Burglar"
-					  :place "Elysium"
+					  :place "Fields of Punishment"
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14
-					  :money 100 :game-admin T)))
-		(add-game-object player)
-		(set-object-attribute (get-game-object 'place (player-place player))
-			'player (player-name player))
+					  :money 100 :game-admin T
+					  :weapon "Anaklusmos")))
+		(add-player player)
 		(play-game (player-name player))))
 
 (defun not-available ()

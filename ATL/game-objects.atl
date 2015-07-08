@@ -6,7 +6,7 @@
 define-monster "Fury"
 	description "Hades' messengers, torturers, assassins. Beware!"
 	health 10
-	dexterity 10
+	dexterity 20
 	strength 10
 	aggression 30
 	armour-class 3
@@ -21,10 +21,19 @@ define-item "Anaklusmos"
 	description "Riptide, a sword for heroes!"
 	weapon "yes"
 
+define-item "Lightning bolt"
+	description "Zeus lightning bolt - the most powerful weapon of the universe!"
+	weapon "yes"
+
 define-weapon "Anaklusmos"
 	description "Riptide, a sword for heroes!"
 	type "sword"
 	damage 4
+
+define-weapon "Lightning bolt" ; primarily for debugging
+	description "Zeus lightning bolt - the most powerful weapon of the universe!"
+	type "magic"
+	damage 40
 
 define-npc "Hades"
 	description "Hades, Lord of the Dead!"

@@ -53,10 +53,19 @@
 	"Add this player to the game world"
 	(when (null (list-world-objects 'player))
 		(setf (player-game-admin player) T))
-	(add-game-object player)
-	(set-object-attribute (get-game-object 'place (player-place player))
-		'player (player-name player))
-	(objectify-place-monsters (player-place player)))
+	(change-player-location player (player-place player))
+	(add-game-object player))
+
+(defun change-player-location (player location)
+	"Change the player's location and do housekeeping"
+	(setf location (to-string location))
+	(objectify-place-monsters location)
+	(when (player-place player)
+		(remove-object-attribute (get-game-object 'place (player-place player))
+			'player (player-name player)))
+	(set-object-attribute player 'place location)
+	(set-object-attribute (get-game-object 'place location)
+		'player (player-name player)))
 
 ;; XXX This function is probably superfluous, as the player struct should only 
 ;; store names of game objects (the actual objects are stored in *world*)
