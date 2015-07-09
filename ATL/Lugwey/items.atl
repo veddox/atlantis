@@ -24,3 +24,26 @@ define-weapon "Dagger"
 	description "A long, sharp knife, useful for self defence."
 	type "Knife"
 	damage 3
+
+define-item "Signet ring"
+	description "A heavy gold ring, bearing the seal of the Monastery of Lugwey."
+	cost 100
+
+define-item "Whip"
+	description "A horse-whip."
+	weapon "yes"
+	cost 10
+
+define-weapon "Whip"
+	description "A plain old leather horse-whip."
+	type "Whip"
+	damage 1
+
+define-item "Saddle"
+	description "If you want to ride a horse, a saddle certainly helps."
+	cost 20
+
+define-item "Lantern"
+	description "An oil lantern, the glass casing nearly black with soot."
+	cost 10
+	function "light"

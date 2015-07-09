@@ -89,6 +89,7 @@
 												(position #\space line))))))
 							(error "~&ERROR: unrecognized syntax: '~A'" line))))
 			    ;; interpret an option command
+				;; TODO allow binary options (options without an argument)
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
 					(setf line (trim-whitespace line))

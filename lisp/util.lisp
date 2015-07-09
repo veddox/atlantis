@@ -135,6 +135,7 @@
 
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
+	;; FIXME (cut-string "43" 2) => ("4" "3") ?!
 	(do* ((c 0 (1+ c)) (letter (aref s c) (aref s c))
 			(letter-list-1 NIL) (letter-list-2 NIL))
 		((= c (1- (length s)))

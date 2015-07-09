@@ -20,8 +20,8 @@ define-place "Gate"
 
 define-place "Monastery grounds"
 	description "Paths criss-cross well-kept lawns. Here and there, roses bloom
-	in a flower bed. On one side stand the monastery buildings with
-	their calm, ancient dignity. On the other, the gardens, stables
+	in a flower bed. On one side stands the main monastery building
+	with its calm, ancient dignity. On the other, the gardens, stables
 	and agricultural outhouses speak of a simple working life."
 	neighbour "Gate"
 	neighbour "Chapel"
@@ -34,3 +34,55 @@ define-place "Forest track"
 	through the forest from the monastery to the village."
 	neighbour "Gate"
 	item "Signet ring"
+
+define-place "Chapel"
+	description ""
+	neighbour "Monastery grounds"
+	neighbour "Dormitory"
+	neighbour "Cloister"
+
+define-place "Dormitory"
+	description ""
+	neighbour "Monastery grounds"
+	neighbour "Chapel"
+	neighbour "Dining hall"
+	neighbour "Cloister"
+
+define-place "Cloister"
+	description "Inside the main monastery building, a colonnade surrounds a
+	rectangular courtyard. Neatly laid out flower beds are arranged
+	around the central well. Some monks are walking about, deep in
+	conversation."
+	neighbour "Chapel"
+	neighbour "Dormitory"
+	neighbour "Dining hall"
+	neighbour "Infirmary"
+	neighbour "Scriptorium"
+
+define-place "Dining hall"
+	description ""
+	neighbour "Dormitory"
+	neighbour "Cloister"
+
+define-place "Infirmary"
+	description ""
+	neighbour "Cloister"
+
+define-place "Scriptorium"
+	description ""
+	neighbour "Cloister"
+
+define-place "Gardens"
+	description ""
+	neighbour "Monastery grounds"
+	neighbour "Stable"
+
+define-place "Stable"
+	description "A rickety old wood building, dark and smelling of animals.
+	Two cart horses stand in their boxes near the entrance, a
+	mare with her foal and a couple of donkeys are further back."
+	neighbour "Monastery grounds"
+	neighbour "Gardens"
+	item "Whip"
+	item "Saddle"
+	item "Lantern"

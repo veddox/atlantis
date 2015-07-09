@@ -1,0 +1,12 @@
+; The Monastery of Lugwey is the first "real" world I am creating with ATL.
+; Its purpose (apart from being playable) is to help with the development of
+; Atlantis by showing potential deficits, bringing up new ideas, etc.
+;
+; This file describes all the NPCs in this world.
+;
+; @author Daniel Vedder
+; @date 09/07/2015
+
+define-npc "Gatekeeper"
+	description "An old monk, slightly hard of hearing, and looking very bored."
+	says "Welcome, stranger! Good to see somebody here! Come on in!"
