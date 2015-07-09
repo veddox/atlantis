@@ -1,0 +1,36 @@
+; The Monastery of Lugwey is the first "real" world I am creating with ATL.
+; Its purpose (apart from being playable) is to help with the development of
+; Atlantis by showing potential deficits, bringing up new ideas, etc.
+;
+; This file holds all the place descriptions.
+;
+; @author Daniel Vedder
+; @date 09/07/2015
+
+define-place "Gate"
+	description "An old, partly moss-covered stone wall rises up in front of
+	you. Set in it, a wooden gate, reinforced with rusty iron strips.
+	One wing is open, permitting a view into the space beyond.
+	Behind you, the dusty track leads off into the forest.
+
+	A monk is sitting in the gate house, obviously bored."
+	neighbour "Forest track"
+	neighbour "Monastery grounds"
+	npc "Gatekeeper"
+
+define-place "Monastery grounds"
+	description "Paths criss-cross well-kept lawns. Here and there, roses bloom
+	in a flower bed. On one side stand the monastery buildings with
+	their calm, ancient dignity. On the other, the gardens, stables
+	and agricultural outhouses speak of a simple working life."
+	neighbour "Gate"
+	neighbour "Chapel"
+	neighbour "Dormitory"
+	neighbour "Gardens"
+	neighbour "Stable"
+
+define-place "Forest track"
+	description "A rutted track, scarred by the wheels of many carts, leads
+	through the forest from the monastery to the village."
+	neighbour "Gate"
+	item "Signet ring"

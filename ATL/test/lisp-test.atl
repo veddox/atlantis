@@ -1,0 +1,51 @@
+; This is a simple ATL file to test whatever I have implemented so far.
+; @author Daniel Vedder
+; @date 04/05/2015
+
+name-world "Underworld"
+
+define-player "Start"
+	money 200
+	place "Fields of Punishment"
+	max-health 50
+	health 50
+
+define-place "Nowhere"
+	description "Welcome to Nowhere! 
+You are in the void, the space between the worlds. Around you is black. 
+Black, except for one tiny pin-prick of light to the north."
+	neighbour "Styx"
+
+define-place "Elysium"
+	description "This is where you want to be when you are six feet under..."
+	neighbour "Styx"
+	neighbour "Fields of Punishment"
+	neighbour "Fields of Asphodel"
+	npc "Persephone"
+
+define-place "Fields of Punishment"
+	description "Precisely where you do NOT want to end up..."
+	neighbour "Styx"
+	neighbour "Elysium"
+	neighbour "Fields of Asphodel"
+	monster "Fury"
+
+define-place "Fields of Asphodel"
+	description "Nothing special. Really, nothing special at all. 
+Just a whole load of dead people..."
+	neighbour "Fields of Punishment"
+	neighbour "Elysium"
+	npc "Hades"
+
+define-place "Styx"
+	description "The great river that all must cross - but woe to those who do!"
+	neighbour "Fields of Punishment"
+	neighbour "Elysium"
+	neighbour "Nowhere"
+	item "Anaklusmos"
+	npc "Charon"
+
+load-file lisp-test.atl ;Testing whether recursive loading is prevented
+load-file races-classes.atl
+load-file game-objects.atl
+load-file creator-test.atl

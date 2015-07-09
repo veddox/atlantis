@@ -1,0 +1,38 @@
+; The Monastery of Lugwey is the first "real" world I am creating with ATL.
+; Its purpose (apart from being playable) is to help with the development of
+; Atlantis by showing potential deficits, bringing up new ideas, etc.
+;
+; This is the main world file.
+;
+; @author Daniel Vedder
+; @date 09/07/2015
+
+name-world "Lugwey"
+
+define-player "Start"
+	money 50
+	place "Gate"
+	max-health 50
+	health 50
+
+define-race "Human"
+	description "Errare humanum est"
+	intelligence-bonus 1
+
+define-class "Scholar"
+	description "Dubio ergo corgito, corgito ergo sum"
+	special-item "Paper"
+	special-item "Quill"
+
+;; DEVELOPMENT
+define-player "Leonardo"
+	race "Human"
+	class "Scholar"
+	item "Dagger"
+	weapon "Dagger"
+	money 60
+	place "Gate"
+
+load-file "places.atl"
+load-file "items.atl"
+load-file "npcs.atl"

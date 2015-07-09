@@ -1,0 +1,26 @@
+; The Monastery of Lugwey is the first "real" world I am creating with ATL.
+; Its purpose (apart from being playable) is to help with the development of
+; Atlantis by showing potential deficits, bringing up new ideas, etc.
+;
+; This file holds all the item descriptions.
+;
+; @author Daniel Vedder
+; @date 09/07/2015
+
+define-item "Parchment"
+	description "Dried animal skins used as paper."
+	cost 5
+
+define-item "Quill"
+	description "A goose-feather, sharpened at one end to make a pen."
+	cost 5
+
+define-item "Dagger"
+	description "A long, sharp knife, useful for self defence."
+	weapon "Yes"
+	cost 20
+
+define-weapon "Dagger"
+	description "A long, sharp knife, useful for self defence."
+	type "Knife"
+	damage 3

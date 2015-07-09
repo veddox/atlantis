@@ -22,7 +22,7 @@
 (defun development ()
 	"A method to easily test whatever feature I am currently developing"
 	(setf *debugging* T)
-	(load-file "../ATL/lisp-test.atl")
+	(load-file "../ATL/test/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
 					  :race "Hobbit" :class "Burglar"
 					  :place "Fields of Punishment"

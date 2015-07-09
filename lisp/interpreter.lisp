@@ -69,7 +69,8 @@
 			;; concatenate string arguments spanning several lines
 			(while (= (count-instances #\" line) 1)
 				(incf line-nr)
-				(setf line (concatenate 'string line (nth line-nr source))))
+				(setf line (concatenate 'string line (to-string #\Newline)
+							   (trim-whitespace (nth line-nr source)))))
 			(cond ((zerop (length line))
 					  (when current-object (add-game-object current-object))
 					  (setf current-object NIL))
