@@ -85,3 +85,7 @@
 	(incf (player-experience player) amount)
 	(when (zerop (rem (player-experience player) *level-experience*))
 		(incf (player-level player) player)))
+
+(defun add-player-money (player amount)
+	"Increase the player's money by amount"
+	(incf (player-money player) amount))

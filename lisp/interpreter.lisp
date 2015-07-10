@@ -11,8 +11,7 @@
 
 ;; A list of ATL language constructs
 ;; (Note: not complete - each (defcommand) appends to this list)
-(defvar *atl-commands*
-	'(load-file start-place start-money name-world))
+(defvar *atl-commands* '(load-file name-world))
 
 (defun build-define-command (object-type)
 	"Build a new define command function for the specified object type"
@@ -38,6 +37,7 @@
 (defcommand define-weapon weapon)
 (defcommand define-item item)
 (defcommand define-npc npc)
+(defcommand define-quest quest)
 
 
 (let ((world-directory NIL)

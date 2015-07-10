@@ -26,7 +26,8 @@
 	(name "")
 	(description "")
 	(says "")
-	(sells NIL))
+	(sells NIL)
+	(quest ""))
 
 (defstruct monster
 	(name "")
@@ -52,6 +53,14 @@
 	(type "")
 	(damage 0))
 
+(defstruct quest
+	(name "")
+	(say-before "")
+	(say-after "")
+	(proof-item NIL)
+	(reward-item NIL)
+	(money 0)
+	(experience 0))
 
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"

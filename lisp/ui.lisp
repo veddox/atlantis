@@ -207,6 +207,7 @@ save <game-file> -  Save the game to file")
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(change-player-location player location)
+	(add-player-experience player 1)
 	(describe-place location))
 
 (defun about (player &optional object-name)
@@ -240,13 +241,38 @@ save <game-file> -  Save the game to file")
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (npc (when (member npc-name (place-npc place) :test #'equalp)
 					   (get-game-object 'npc npc-name))))
-		(if npc
-			(progn
-				(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
-				(when (and (npc-sells npc)
-						  (y-or-n-p "Trade with ~A?" npc-name))
-					(trade player npc)))
-			(format t "~&~A is not here!" npc-name))))
+		;; Check if the NPC is here
+		(unless npc
+			(format t "~&~A is not here!" npc-name)
+			(return-from talk))
+		(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+		;; Trade with the NPC
+		(when (and (npc-sells npc)
+				  (y-or-n-p "Trade with ~A?" npc-name))
+			(trade player npc))
+		;; Handle quests
+		(let ((quest (get-game-object 'quest (npc-quest npc))))
+			(when quest
+				(if (dolist (i (quest-proof-item quest))
+						(unless (member i (player-item player) :test #'equalp)
+							(return T)))
+					(when (y-or-n-p "~%~A has a quest. Accept it?" npc-name)
+						(format t "~&~A: ~A" (string-upcase npc-name)
+							(quest-say-before quest)))
+					(when (y-or-n-p "~%Give to ~A: ~A?" npc-name
+							  (string-from-list (quest-proof-item quest) ", "))
+						(dolist (j (quest-proof-item quest))
+							(remove-object-attribute player 'item j))
+						(dolist (k (quest-reward-item quest))
+							(set-object-attribute player 'item k))
+						(add-player-experience player (quest-experience quest))
+						(add-player-money player (quest-money quest))
+						(format t "~&~A: ~A" (string-upcase npc-name)
+							(quest-say-after quest))
+						(format t "~&~%Quest complete. You gain:")
+						(format t "~&Money: ~A Experience: ~A~&Items: ~A"
+							(quest-money quest) (quest-experience quest)
+							(string-from-list (quest-reward-item quest)))))))))
 
 (defun trade (player npc)
 	"The player trades with this NPC"

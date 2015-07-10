@@ -26,6 +26,7 @@
 	(npcs NIL)
 	(items NIL)
 	(weapons NIL)
+	(quests NIL)
 	(starting-place "")
 	(starting-money 0))
 

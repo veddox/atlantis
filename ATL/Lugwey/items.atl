@@ -55,3 +55,6 @@ define-item "Hoe"
 define-item "Bucket"
 	description "A wooden bucket, held together by iron rims."
 	cost 15
+
+define-item "Cup of water"
+	description "A cup brimming full of nice, cool water..."

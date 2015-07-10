@@ -11,13 +11,13 @@ define-npc "Gatekeeper"
 	description "An old monk, slightly hard of hearing, and looking very bored."
 	says "Welcome, stranger! Good to see somebody here! Come on in!"
 
-define-npc "Gardner"
+define-npc "Gardener"
 	description "A middle-aged monk with a rather dirty habit and a sweaty face."
 	says "Hello there! Could you bring me some water? I'm really thirsty!"
 	quest "Bring water"
 
 define-quest "Bring water"
-	start "Go and have a look near the kitchen, perhaps you'll find some."
-	end "Thank you very much for this water, I appreciate that!"
+	say-before "Go and have a look near the kitchen, perhaps you'll find some."
+	say-after "Thank you very much for this water, I appreciate that!"
 	proof-item "Cup of water"
 	experience 15
