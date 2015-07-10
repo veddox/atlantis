@@ -47,3 +47,11 @@ define-item "Lantern"
 	description "An oil lantern, the glass casing nearly black with soot."
 	cost 10
 	function "light"
+
+define-item "Hoe"
+	description "A wooden hoe, useful for farming."
+	cost 12
+
+define-item "Bucket"
+	description "A wooden bucket, held together by iron rims."
+	cost 15

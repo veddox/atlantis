@@ -31,12 +31,16 @@ define-place "Monastery grounds"
 
 define-place "Forest track"
 	description "A rutted track, scarred by the wheels of many carts, leads
-	through the forest from the monastery to the village."
+	through the forest from the monastery to the near-by village."
 	neighbour "Gate"
 	item "Signet ring"
 
 define-place "Chapel"
-	description ""
+	description "Soft light filters in through the stained glass window,
+	illuminating statues of saints and angels. The pews in this
+	little chapel are empty, but behind you, the choir is practising
+	a Gregorian chant. A priest is standing at the altar with
+	his back to you."
 	neighbour "Monastery grounds"
 	neighbour "Dormitory"
 	neighbour "Cloister"
@@ -63,6 +67,7 @@ define-place "Dining hall"
 	description ""
 	neighbour "Dormitory"
 	neighbour "Cloister"
+	neighbour "Kitchen"
 
 define-place "Infirmary"
 	description ""
@@ -72,10 +77,32 @@ define-place "Scriptorium"
 	description ""
 	neighbour "Cloister"
 
-define-place "Gardens"
+define-place "Kitchen"
 	description ""
+	neighbour "Dining Hall"
+	neighbour "Storeroom"
+	neighbour "Beer cellar"
+
+define-place "Storeroom"
+	description ""
+	neighbour "Kitchen"
+	neighbour "Beer cellar"
+
+define-place "Beer cellar"
+	description ""
+	neighbour "Kitchen"
+	neighbour "Storeroom"
+
+define-place "Gardens"
+	description "Plots of lettuce, tomatoes, beans, and many more vegetables
+	surround here, growing under the caring hand of the monks. Furrows
+	leading from a stream in the vicinity water the garden, a fence
+	keeps out unwanted visitors. A few monks are currently at work."
 	neighbour "Monastery grounds"
 	neighbour "Stable"
+	npc "Gardner"
+	item "Hoe"
+	item "Bucket"
 
 define-place "Stable"
 	description "A rickety old wood building, dark and smelling of animals.

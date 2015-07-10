@@ -13,7 +13,8 @@
 	;; define commands
 	'("define-place" "define-item" "define-monster" "define-npc"
 		 "define-race" "define-place" "define-weapon"
-		 "define-class" "define-player" "name-world" "load-file")
+		 "define-class" "define-player" "define-quest"
+		 "name-world" "load-file")
 	'() ;; other commands (adjust this?)
 	'("\\.atl$") ;; files for which to activate this mode 
 	'(linum-mode)   ;; other functions to call
