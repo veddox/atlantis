@@ -135,14 +135,12 @@
 
 (defun cut-string (s i)
 	"Cut string s in two at index i and return the two substrings in a list"
-	;; FIXME (cut-string "43" 2) => ("4" "3") ?!
-	(do* ((c 0 (1+ c)) (letter (aref s c) (aref s c))
-			(letter-list-1 NIL) (letter-list-2 NIL))
-		((= c (1- (length s)))
-			(list (list-to-string (append letter-list-1))
-				(list-to-string (append letter-list-2 (list letter)))))
-		(if (< c i) (setf letter-list-1 (append letter-list-1 (list letter)))
-			(setf letter-list-2 (append letter-list-2 (list letter))))))
+	(if (or (minusp i) (> i (length s))) s
+		(let ((s1 (make-string i)) (s2 (make-string (- (length s) i))))
+			(dotimes (c (length s) (list s1 s2))
+				(if (> i c)
+					(setf (aref s1 c) (aref s c))
+					(setf (aref s2 (- c i)) (aref s c)))))))
 
 (defun list-to-string (char-list)
 	"Convert a character list to a string"
@@ -159,6 +157,13 @@
 	(cond ((stringp x) x)
 		((or (symbolp x) (characterp x)) (string x))
 		(t (format NIL "~S" x))))
+
+(defun extract-elements (str)
+	"Extract all Lisp elements (strings, symbols, numbers, etc.) from str"
+	(multiple-value-bind (next-element i) (read-from-string str nil)
+		(if (null next-element) NIL
+			(cons next-element
+				(extract-elements (second (cut-string str i)))))))
 
 (defun count-instances (search-term search-sequence &key (test #'eql))
 	"Count the number of instances of search-term in search-sequence"
@@ -177,6 +182,13 @@
 	"Turn the vector into a list"
 	(if (= next-elt (1- (length vector))) NIL
 		(cons (aref vector next-elt) (to-list vector (1+ next-elt)))))
+
+(defun cut-list (l i)
+	"Cut list l in two at index i and return the two sublists in a list"
+	(if (or (< i 1) (> i (length l))) l
+		(do* ((lst2 l (cdr lst2))
+				 (lst1 (list (car lst2)) (append lst1 (list (car lst2)))))
+			((= i (length lst1)) (list lst1 (cdr lst2))))))
 
 (defun random-elt (seq)
 	"Return a random element of this sequence"

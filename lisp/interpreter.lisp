@@ -44,6 +44,7 @@
 		 (loaded-files NIL))
 	(defun load-file (file-name)
 		"Load and interpret an ATL source file or a Lisp extension file"
+		;; XXX Should this be split up into several functions?
 		;; save/load the current working directory
 		(if (null (pathname-directory file-name))
 			(setf file-name (make-pathname
@@ -92,10 +93,15 @@
 				;; TODO allow binary options (options without an argument)
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
-					(setf line (trim-whitespace line))
-					(set-object-attribute current-object (read-from-string line)
-						(read-from-string
-							(second (cut-string line (position #\space line))))))
+					(let ((options (extract-elements line)))
+						(case (length options)
+							(1 (set-object-attribute current-object
+								   (first options) T))
+							(2 (set-object-attribute current-object
+								   (first options) (second options)))
+							;; FIXME gives problems with lines like this:
+							;; "    ;commented"
+							(t (error "~&Too many arguments: '~A'" line)))))
 				(T ;; can't happen
 					(error "~&ERROR: unrecognized syntax: '~A'" line))))))
 				

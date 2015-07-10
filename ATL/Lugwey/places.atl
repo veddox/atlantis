@@ -44,6 +44,15 @@ define-place "Chapel"
 	neighbour "Monastery grounds"
 	neighbour "Dormitory"
 	neighbour "Cloister"
+	neighbour "Crypt"
+
+define-place "Crypt"
+	description "Your steps echo in the cold, vaulted chamber. Here, underneath
+	the chapel, is where the monastery's abbots lie buried. Generations
+	of clerics resting in their stony graves..."
+	neighbour "Chapel"
+	dark
+
 
 define-place "Dormitory"
 	description ""

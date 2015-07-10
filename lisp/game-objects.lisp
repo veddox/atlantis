@@ -18,7 +18,8 @@
 	(player NIL)
 	(item NIL)
 	(monster NIL)
-	(npc NIL))
+	(npc NIL)
+	(dark NIL))
 
 ;;; WORK IN PROGRESS >>>
 

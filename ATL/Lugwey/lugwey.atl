@@ -31,7 +31,9 @@ define-player "Leonardo"
 	item "Dagger"
 	weapon "Dagger"
 	money 60
-	place "Gate"
+	place "Chapel"
+	item "Lantern"
+;	night-vision
 
 load-file "places.atl"
 load-file "items.atl"

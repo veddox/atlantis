@@ -19,13 +19,13 @@
 	(let ((player (get-game-object 'player player-name)))
 		(clear-screen)
 		;; Initialize the player if necessary
-		(when (null player)
+		(unless player
 			(setf player (create-player player-name))
 			(add-player player))
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
-			(describe-place place)
+			(describe-place place (player-night-vision player))
 			(input-string command)
 			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
@@ -45,7 +45,7 @@
 			  (items NIL) (weapon "")
 			  (character-points NIL))
 		(format t "~&The name you have chosen is not registered on this game.")
-		(unless (y-or-n-p "~&Create a new player?") (start-menu))
+		(unless (y-or-n-p "~&Create a new player?") (start-menu) (quit))
 		;; Chose race and class
 		(format t "~&Please chose a race:")
 		(setf (player-race player) (choose-option (list-world-objects 'race)))
@@ -81,18 +81,22 @@ you may assign one number to each of the following attributes:")
 			(setf character-points
 				(remove-if #'(lambda (x) (= x val)) character-points)))))
 
-(defun describe-place (p)
+(defun describe-place (p &optional (show-dark t))
 	"Print out a complete description of place p"
+	;; XXX This has become slightly ugly with the addition of darkness...
 	(when (stringp p) (setf p (get-game-object 'place p)))
 	(format t "~&~A" (string-upcase (place-name p)))
-	(format t "~&~%~A" (place-description p))
+	(format t "~&~%~A" (if (and (place-dark p) (not show-dark))
+						   "You do not see a thing in here. It's too dark!"
+						   (place-description p)))
 	(format t "~&~%Neighbouring places: ~A"
 		(string-from-list (place-neighbour p)))
-	(format t "~&Players present: ~A" (string-from-list (place-player p)))
-	(format t "~&Items: ~A" (string-from-list (place-item p)))
-	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
-	(format t "~&Monsters: ~A" (string-from-list
-								   (list-place-objects 'monster p))))
+	(unless (and (place-dark p) (not show-dark))
+		(format t "~&Players present: ~A" (string-from-list (place-player p)))
+		(format t "~&Items: ~A" (string-from-list (place-item p)))
+		(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
+		(format t "~&Monsters: ~A" (string-from-list
+									   (list-place-objects 'monster p)))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -148,7 +152,7 @@ save <game-file> -  Save the game to file")
 ;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
 	"Describe the player's current location (wrapper function)"
-	(describe-place (player-place player)))
+	(describe-place (player-place player) (player-night-vision player)))
 
 (defun player (p)
 	"Print a description of this player"
@@ -208,7 +212,7 @@ save <game-file> -  Save the game to file")
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(change-player-location player location)
 	(add-player-experience player 1)
-	(describe-place location))
+	(describe-place location (player-night-vision player)))
 
 (defun about (player &optional object-name)
 	"Print a description of this object"
