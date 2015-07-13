@@ -85,6 +85,7 @@ you may assign one number to each of the following attributes:")
 	"Print out a complete description of place p"
 	;; XXX This has become slightly ugly with the addition of darkness...
 	(when (stringp p) (setf p (get-game-object 'place p)))
+	(objectify-place-monsters p)
 	(format t "~&~A" (string-upcase (place-name p)))
 	(format t "~&~%~A" (if (and (place-dark p) (not show-dark))
 						   "You do not see a thing in here. It's too dark!"
@@ -119,7 +120,7 @@ you may assign one number to each of the following attributes:")
 	'(help place player
 		 goto pickup drop
 		 talk trade
-		 equip attack
+		 equip attack spell
 		 about save clear))
 
 ;;; The following commands don't take any arguments except for a player
@@ -167,6 +168,8 @@ save <game-file> -  Save the game to file")
 			(player-intelligence p) tab (player-strength p))
 		(format t "~&Constitution: ~A~ADexterity: ~A"
 			(player-constitution p) tab (player-dexterity p))
+		(format t "~&Night vision: ~A"
+			(if (player-night-vision p) "yes" "no"))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
 		;; XXX This will need adjusting for large item numbers
@@ -368,7 +371,10 @@ save <game-file> -  Save the game to file")
 		(format t "~&This monster is not here!")
 		(return-from attack))
 	;; Bind all relevant values to variables (saves typing later)
-	(let* ((monster (get-game-object 'monster opponent))
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (monster (dolist (m (place-monster place))
+						   (when (equalp (monster-name m) opponent)
+							   (return m))))
 			  (m-str (monster-strength monster))
 			  (m-dex (monster-dexterity monster))
 			  (m-ac (monster-armour-class monster))
@@ -393,8 +399,7 @@ save <game-file> -  Save the game to file")
 				  (format t "~&You hit! ~A points damage." damage)
 				  (when (> 1 (monster-health monster))
 					  (let ((experience (round (average m-str m-dex))))
-						  (remove-object-attribute
-							  (get-game-object 'place (player-place player))
+						  (remove-object-attribute place
 							  'monster monster)
 						  (add-player-experience player experience)
 						  (format t "~&You killed the monster! ")
@@ -413,3 +418,16 @@ save <game-file> -  Save the game to file")
 		(decf damage (random def-dex))
 		(decf damage def-ac)
 		(if (minusp damage) 0 damage)))
+
+(defun spell (player &optional spell)
+	"Call this game function"
+	;; TODO Remove this/change it so that not all game-functions can be called
+	(cond ((null spell)
+			  (format t "~&Please specify a spell to cast!")
+			  (return-from spell))
+		((not (member spell (list-world-objects 'game-function) :test #'equalp))
+			(format t "~&This spell does not exist!")
+			(return-from spell))
+		(t (format t "~&~A" (game-function-print
+								(get-game-object 'game-function spell)))
+			(run-game-function spell player))))

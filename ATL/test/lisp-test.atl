@@ -45,6 +45,21 @@ define-place "Styx"
 	item "Anaklusmos"
 	npc "Charon"
 
+define-function "Light"
+	docstring "Gives a player night-vision"
+	player night-vision T
+	print "You can now see in the dark!"
+
+define-function "Spawn Fury"
+	docstring "Spawn a Fury in this place"
+	place monster "Fury"
+	print "Watch out! A Kindly One!"
+
+define-function "Heal"
+	docstring "Heal the player by 1HP"
+	player health +1
+	print "+1 HP"
+
 load-file lisp-test.atl ;Testing whether recursive loading is prevented
 load-file races-classes.atl
 load-file game-objects.atl

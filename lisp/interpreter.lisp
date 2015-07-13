@@ -38,6 +38,7 @@
 (defcommand define-item item)
 (defcommand define-npc npc)
 (defcommand define-quest quest)
+(defcommand define-function game-function)
 
 
 (let ((world-directory NIL)
@@ -90,7 +91,6 @@
 												(position #\space line))))))
 							(error "~&ERROR: unrecognized syntax: '~A'" line))))
 			    ;; interpret an option command
-				;; TODO allow binary options (options without an argument)
 				((or (eql (aref line 0) #\Space)
 					 (eql (aref line 0) #\Tab))
 					(let ((options (extract-elements line)))
@@ -99,9 +99,15 @@
 								   (first options) T))
 							(2 (set-object-attribute current-object
 								   (first options) (second options)))
+							(3 (if (game-function-p current-object)
+								   (set-object-attribute current-object
+									   (first options) (cdr options))
+								   (error "~&ERROR: too many arguments: '~A'"
+									   line)))
 							;; FIXME gives problems with lines like this:
 							;; "    ;commented"
-							(t (error "~&Too many arguments: '~A'" line)))))
+							(t (error "~&ERROR: too many arguments: '~A'"
+								   line)))))
 				(T ;; can't happen
 					(error "~&ERROR: unrecognized syntax: '~A'" line))))))
 				

@@ -27,7 +27,7 @@
 	(level 0)
 	(max-health 50)
 	(health 50)
-	(night-vision NIL)
+	(night-vision NIL) ;This needs to be shifted into a list of abilities
 	(game-admin NIL))
 
 ;; How many XP are needed to level up?

@@ -27,8 +27,7 @@
 	(items NIL)
 	(weapons NIL)
 	(quests NIL)
-	(starting-place "")
-	(starting-money 0))
+	(game-functions NIL))
 
 (setf *world* (make-world)) ;XXX Move this to another module?
 

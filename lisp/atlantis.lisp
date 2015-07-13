@@ -29,7 +29,8 @@
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14
 					  :money 100 :game-admin T
-					  :weapon "Anaklusmos")))
+					  :item '("Anaklusmos")
+					  :weapon "Lightning bolt")))
 		(add-player player)
 		(play-game (player-name player))))
 

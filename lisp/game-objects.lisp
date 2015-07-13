@@ -19,7 +19,8 @@
 	(item NIL)
 	(monster NIL)
 	(npc NIL)
-	(dark NIL))
+	(dark NIL)
+	(function ""))
 
 ;;; WORK IN PROGRESS >>>
 
@@ -63,6 +64,13 @@
 	(money 0)
 	(experience 0))
 
+(defstruct game-function
+	(name "")
+	(docstring "")
+	(place NIL)
+	(player NIL)
+	(print ""))
+
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"
 	;; Here follows Lisp magic :D      (that took ages to get right...)
@@ -79,29 +87,35 @@
 	"Remove 'value' from the attribute 'property' in 'game-object'"
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))
-		(eval `(if (listp (,command ,game-object))
-				   (setf (,command ,game-object)
-					   (remove-first-if #'(lambda (x) (equalp x ,value))
-						   (,command ,game-object)))
-				   ;; TODO set numbers to 0, strings to ""
-				   (setf (,command ,game-object) NIL)))))
+		(eval `(cond ((listp (,command ,game-object))
+						 (setf (,command ,game-object)
+							 (remove-first-if #'(lambda (x) (equalp x ,value))
+								 (,command ,game-object))))
+				   ((numberp (,command ,game-object))
+					   (setf (,command ,game-object) 0))
+				   ((stringp (,command ,game-object))
+					   (setf (,command ,game-object) ""))
+				   (t (setf (,command ,game-object) NIL))))))
 
 (defun objectify-name-list (object-type name-list)
 	"Turn all the string names in name-list into instances of the object type"
 	;; Basically the inverse of a make-list-function function (cf. util.lisp)
-	(let ((objects NIL))
+	(let ((objects NIL) (copy-fn (build-symbol "copy-" object-type)))
 		(dolist (n name-list objects)
-			(setf objects (cons (get-game-object object-type n) objects)))))
+			(if (stringp n)
+				(setf objects
+					(cons (funcall copy-fn (get-game-object object-type n))
+							  objects))
+				(setf objects (cons n objects))))))
 
 (defun objectify-place-monsters (place)
 	"Objectify all the monsters in this place"
-	;; XXX This introduces a side effect!
-	(let* ((p (if (place-p place) place (get-game-object 'place place)))
-			  (monster-list (objectify-name-list 'monster (place-monster p))))
-		(if (monster-p (first (place-monster p)))
-			(return-from objectify-place-monsters place)
-			(setf (place-monster p) monster-list))))
+	(let* ((p (if (place-p place) place (get-game-object 'place place))))
+		(setf (place-monster p)
+			(objectify-name-list 'monster (place-monster p)))
+		p))
 		
+	
 (let ((list-function (make-list-function 'place NIL)))
 	(defun list-place-objects (object-type place)
 		"Get a list of the names of all the place's objects of this type."
@@ -118,3 +132,28 @@
 				(npc-description (get-game-object 'npc object-name)))
 			(t NIL))))
 		
+(defun run-game-function (function player)
+	"Execute this game function"
+	(let* ((fn (if (game-function-p function) function
+				   (get-game-object 'game-function function)))
+			  (player (if (player-p player) player
+						  (get-game-object 'player player)))
+			  (place (get-game-object 'place (player-place player))))
+		(dolist (game-obj (list player place))
+			;; Iterate through each element in the function that modifies
+			;; this game object
+			(dolist (element (funcall (build-symbol "game-function-"
+										  (type-of game-obj)) fn))
+				(let* ((element (if (listp element) element (list element)))
+						  (attr (first element)) (value (second element))
+						  ;; FIXME +1 gets transformed to "1"...
+						  (mod (aref (to-string value) 0))
+						  (orig-value (funcall (build-symbol (type-of game-obj)
+												   #\- attr) game-obj)))
+					;; Update the value of the specified attribute
+					(if (= (length element) 1)
+						(set-object-attribute game-obj attr T)
+						(if (or (eq mod #\+) (eq mod #\-))
+							(set-object-attribute game-obj attr
+								(+ orig-value value))
+							(set-object-attribute game-obj attr value))))))))
