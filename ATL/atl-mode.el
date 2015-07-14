@@ -14,9 +14,9 @@
 	'("define-place" "define-item" "define-monster" "define-npc"
 		 "define-race" "define-place" "define-weapon"
 		 "define-class" "define-player" "define-quest"
-		 "define-function" "name-world" "load-file")
+		 "define-function" "name-world" "load-file" "load")
 	'() ;; other commands (adjust this?)
 	'("\\.atl$") ;; files for which to activate this mode 
-	'(linum-mode)   ;; other functions to call
+	'(linum-mode)   ;; other functions to call - doesn't work for some reason
 	"An Emacs mode for the ATL game description language" ;; doc string 
 )

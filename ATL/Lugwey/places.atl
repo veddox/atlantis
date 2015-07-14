@@ -15,6 +15,7 @@ define-place "Gate"
 
 	A monk is sitting in the gate house, obviously bored."
 	neighbour "Forest track"
+	neighbour "Forest"
 	neighbour "Monastery grounds"
 	npc "Gatekeeper"
 
@@ -25,15 +26,27 @@ define-place "Monastery grounds"
 	and agricultural outhouses speak of a simple working life."
 	neighbour "Gate"
 	neighbour "Chapel"
-	neighbour "Dormitory"
 	neighbour "Gardens"
 	neighbour "Stable"
+	neighbour "Kitchen"
+	neighbour "Cloister"
+	neighbour "Guest house"
 
 define-place "Forest track"
 	description "A rutted track, scarred by the wheels of many carts, leads
 	through the forest from the monastery to the near-by village."
 	neighbour "Gate"
+	neighbour "Forest"
 	item "Signet ring"
+
+define-place "Forest"
+	description "Firs stretch all around you. A rabbit darts away from you as
+	a wood pecker starts hammering away. In the dim light reaching
+	you from above, the world looks a whole lot calmer..."
+	neighbour "Forest track"
+	neighbour "Gate"
+	item "Herbs"
+	monster "Fox"
 
 define-place "Chapel"
 	description "Soft light filters in through the stained glass window,
@@ -45,6 +58,7 @@ define-place "Chapel"
 	neighbour "Dormitory"
 	neighbour "Cloister"
 	neighbour "Crypt"
+	npc "Priest"
 
 define-place "Crypt"
 	description "Your steps echo in the cold, vaulted chamber. Here, underneath
@@ -53,13 +67,28 @@ define-place "Crypt"
 	neighbour "Chapel"
 	dark
 
-
 define-place "Dormitory"
-	description ""
-	neighbour "Monastery grounds"
+	description "The dormitory houses the monks' cells. It is a stone house
+	like all the others, no frills, showing signs of age. Plain
+	corridors lead to similarly plain rooms. A few monks are talking
+	in their rooms, but in general it is very quiet.
+
+	The abbot has his own suite, it lies at the back of the main dormitory."
+	neighbour "Abbot's suite"
 	neighbour "Chapel"
 	neighbour "Dining hall"
 	neighbour "Cloister"
+
+define-place "Abbot's suite"
+	description "While perhaps not quite luxurious, the abbot's suite is
+	definitely more comfortable than the rooms of the common
+	brothers. Rugs soften your footsteps on the floor, wall
+	hangings provide decoration. The abbot himself is standing
+	by the window."
+	neighbour "Dormitory"
+	item "Bible"
+	item "Candle"
+	npc "Abbot"
 
 define-place "Cloister"
 	description "Inside the main monastery building, a colonnade surrounds a
@@ -71,37 +100,70 @@ define-place "Cloister"
 	neighbour "Dining hall"
 	neighbour "Infirmary"
 	neighbour "Scriptorium"
+	neighbour "Monastery grounds"
 
 define-place "Dining hall"
-	description ""
+	description "The dining hall is large enough for all the monks (about 100
+	of them) to eat in all together. Tables and chairs are set up,
+	the monks on kitchen duty can be heard through the door at the
+	far end. There is an elevated pulpit half-way along the wall,
+	from whence a devotion is read every meal time."
 	neighbour "Dormitory"
 	neighbour "Cloister"
 	neighbour "Kitchen"
 
 define-place "Infirmary"
-	description ""
+	description "The infirmary is the monastery clinic. The healers here treat
+	everyone: monks, locals, travellers. The main room offers a dozen
+	sick beds, especially severe cases are treated in an isolated room.
+	A few patients are lying around, with two monks tending to them."
 	neighbour "Cloister"
+	npc "Patient"
+	npc "Healer"
 
 define-place "Scriptorium"
-	description ""
+	description "The Scriptorium is the book room. Several monks are at work,
+	bending over their desks, carefully copying out ancient
+	manuscripts with goose quills. Others are simply reading,
+	concentrating on the precious books available here."
 	neighbour "Cloister"
+	npc "Scribe"
+	item "Quill"
+	item "Parchment"
+	item "Bible"
+	item "Book of Lore"
 
 define-place "Kitchen"
-	description ""
+	description "The large monastery kitchen has to cater for five score monks
+	every day, apart from any visitors. Accordingly, it's pretty busy
+	in here, not to mention loud and hot."
 	neighbour "Dining Hall"
 	neighbour "Storeroom"
 	neighbour "Beer cellar"
+	neighbour "Monastery grounds"
+	npc "Cook"
+	npc "Kitchen helper"
 	item "Cup of water"
 
 define-place "Storeroom"
-	description ""
+	description "All the monastery's food stores are kept here, in a nice cool
+	cellar underground. Loaves of bread, rolls of cheese, bottles of
+	wine, sacks full of flour... Everything goes in here."
 	neighbour "Kitchen"
 	neighbour "Beer cellar"
+	item "Bread"
+	item "Cheese"
+	item "Wine bottle"
+	npc "Store keeper"
 
 define-place "Beer cellar"
-	description ""
+	description "Like any self-respecting monastery, Lugwey brews its own beer.
+	This cellar is brewery and storage space in one - hundreds of
+	casks are stacked around the wall, a large fermenting vat
+	stands in the center."
 	neighbour "Kitchen"
 	neighbour "Storeroom"
+	npc "Brewer"
 
 define-place "Gardens"
 	description "Plots of lettuce, tomatoes, beans, and many more vegetables
@@ -123,3 +185,10 @@ define-place "Stable"
 	item "Whip"
 	item "Saddle"
 	item "Lantern"
+
+define-place "Guest house"
+	description "Like most monasteries, Lugwey welcomes guests and travellers.
+	They are quartered here, in the guest house - a plain, but clean
+	and pleasant cottage on the monastery grounds."
+	neighbour "Monastery grounds"
+	npc "Caretaker"

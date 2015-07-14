@@ -21,3 +21,68 @@ define-quest "Bring water"
 	say-after "Thank you very much for this water, I appreciate that!"
 	proof-item "Cup of water"
 	experience 15
+
+define-npc "Priest"
+	description "One of the monks who have been elevated to priesthood, dressed
+	in the robes of his role."
+	says "Peace to you, brother."
+
+define-npc "Patient"
+	description "Quite obviously a peasant, the man's face is grey and sunk."
+	says "Ooooooh, please don't leave me! Please don't leave me!!"
+
+define-npc "Healer"
+	description "His sleeves rolled up, a towel over his arm and a bowl in his
+	hand, this monk looks rather puffed from scuttling around so much."
+	says "Where is that blasted Brother Fred? He was supposed to be helping us!"
+	quest "Find herbs"
+
+define-quest "Find herbs"
+	say-before "We've run out of some herbs, and urgently need more. Can you get
+	us some? They grow in the forest."
+	say-after "Oh thank goodness, you're a heaven-sent! Here is a small reward
+	for your pains. But where is Brother Fred?!"
+	proof-item "Herbs"
+	experience 20
+	money 10
+
+define-npc "Scribe"
+	description "A monk copying out a manuscript with utmost care."
+	says "Don't disturb me!"
+
+define-npc "Cook"
+	description "A fat, red-faced monk wearing a white apron and swinging a
+	ladel - don't get in his way!"
+	says "Shoo, out of my way! No disturbance in the kitchen!"
+
+define-npc "Kitchen helper"
+	description "A young monk, obviously assigned as assistant to the cook."
+	says "Sorry, I don't have time to talk, I need to run! The cook is already
+	upset! See you later!"
+
+define-npc "Store keeper"
+	description "This is the monk in charge of the supplies and the store room."
+	says "Nobody takes anything without my knowing about it, clear?"
+
+define-npc "Brewer"
+	description "A monk in a leather apron, stirring the vat."
+	says "Hello brother, nice to see someone here! Care to join me for a drink?"
+
+define-npc "Caretaker"
+	description "A friendly-looking monk in his late forties with greyish hair."
+	says "Welcome, traveller! Do you want to stay for the night?"
+
+define-npc "Abbot"
+	description "An elderly, well-fed cleric, the abbot of Lugwey wears a white
+	habit with a heavy gold cross on a chain around his neck."
+	says "Who are you? How dare you intrude in my room?"
+	quest "Find signet ring"
+
+define-quest "Find signet ring"
+	say-before "But while you're here, you might as well help me. I've lost my
+	signet ring - can you help me find it? I have no clue where it
+	is... I'll pay you handsomely!"
+	say-after "Oh thank you, thank you! Now you may go."
+	proof-item "signet ring"
+	money 90
+	experience 30

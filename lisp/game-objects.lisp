@@ -39,6 +39,7 @@
 	(dexterity 0)
 	(aggression 0)
 	(spawn-probability 0)
+	(item NIL)
 	(weapon "")
 	(armour-class 0))
 

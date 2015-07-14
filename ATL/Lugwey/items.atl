@@ -58,3 +58,58 @@ define-item "Bucket"
 
 define-item "Cup of water"
 	description "A cup brimming full of nice, cool water..."
+
+define-item "Herbs"
+	description "Small, seemingly insignificant herbs. And yet, who knows what
+	healing powers here lie hid?"
+
+define-item "Quill"
+	description "A goose-feather quill, sharpened at the end and dipped in ink."
+	cost 5
+
+define-item "Parchment"
+	description "A sheet of paper made from animal hides."
+	cost 5
+
+define-item "Bible"
+	description "A thick, precious, illustrated Bible."
+	cost 150
+
+define-item "Book of Lore"
+	description "A book full of nature lore: plants, animals, seasons..."
+	cost 60
+
+define-item "Bread"
+	description "A loaf of rich brown bread, fresh out of the oven."
+
+define-item "Cheese"
+	description "A large round cheese. Hm, smells delicious!"
+
+define-item "Wine bottle"
+	description "Red wine in a glass bottle, looks tempting!"
+
+define-item "Candle"
+	description "A tallow candle, not bright, but sufficient for a bit of light."
+	cost 2
+	function "light"
+
+define-monster "Fox"
+	description "A fox watching you out of yellow eyes. He is foaming around the
+	lips - watch out, rabies!"
+	health 7
+	strength 3
+	dexterity 5
+	aggression 75
+	spawn-probability 40
+	weapon "Teeth"
+	item "Foxhide"
+	armour-class 0
+
+define-weapon "Teeth"
+	description "A carnivore's teeth can do quite a bit of damage!"
+	type "body"
+	damage 2
+
+define-item "Foxhide"
+	description "The hide of a red fox - looks good on your wall!"
+	cost 40

@@ -35,6 +35,11 @@ define-player "Leonardo"
 	item "Lantern"
 ;	night-vision
 
+define-function "light"
+	docstring "Gives the player night vision"
+	player night-vision
+	print "You now have night vision!"
+
 load-file "places.atl"
 load-file "items.atl"
 load-file "npcs.atl"

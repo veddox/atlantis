@@ -413,9 +413,9 @@ save <game-file> -  Save the game to file")
 (defun calculate-damage (att-str att-weapon def-dex def-ac)
 	"A private function to calculate the damage caused by an attack"
 	(let ((damage 0))
-		(incf damage (random att-str))
+		(incf damage (if (zerop att-str) 0 (random att-str)))
 		(incf damage (weapon-damage att-weapon))
-		(decf damage (random def-dex))
+		(decf damage (if (zerop def-dex) 0 (random def-dex)))
 		(decf damage def-ac)
 		(if (minusp damage) 0 damage)))
 
