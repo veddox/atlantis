@@ -19,6 +19,7 @@
 	(item NIL)
 	(monster NIL)
 	(npc NIL)
+	(spawns NIL)
 	(dark NIL)
 	(function ""))
 
@@ -38,7 +39,7 @@
 	(strength 0)
 	(dexterity 0)
 	(aggression 0)
-	(spawn-probability 0)
+	(spawn 0)
 	(item NIL)
 	(weapon "")
 	(armour-class 0))
@@ -47,7 +48,7 @@
 	(name "")
 	(description "")
 	(cost 0)
-	(weapon "no")
+	(weapon)
 	(function NIL))
 
 (defstruct weapon
@@ -115,7 +116,14 @@
 		(setf (place-monster p)
 			(objectify-name-list 'monster (place-monster p)))
 		p))
-		
+
+(defun spawn-monsters (place)
+	"Spawn monsters in this location"
+	(let ((p (if (stringp place) (get-game-object 'place place) place)))
+		(dolist (m (place-spawns p) p)
+			(let ((monster (get-game-object 'monster m)))
+				(when (< (random 100) (monster-spawn monster))
+					(set-object-attribute p 'monster (copy-monster monster)))))))
 	
 (let ((list-function (make-list-function 'place NIL)))
 	(defun list-place-objects (object-type place)
