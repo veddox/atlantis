@@ -27,7 +27,7 @@
 	(level 0)
 	(max-health 50)
 	(health 50)
-	(night-vision NIL) ;This needs to be shifted into a list of abilities
+	(abilities '(night-vision))
 	(game-admin NIL))
 
 ;; How many XP are needed to level up?
@@ -74,6 +74,10 @@
 	(defun list-player-objects (object-type player)
 		"Get a list of the names of all the player's objects of this type."
 		(funcall list-function object-type player)))
+
+(defun player-has-ability (ability player)
+	"Check whether a player has the given ability"
+	(member ability (player-abilities player) :test #'equalp))
 
 (defun change-player-health (player amount)
 	"Change the player's health points"

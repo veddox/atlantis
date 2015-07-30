@@ -9,8 +9,15 @@ define-monster "Fury"
 	dexterity 20
 	strength 10
 	aggression 30
+	spawn 50
 	armour-class 3
 	weapon "fire-whip"
+	item "fire-whip"
+
+define-item "fire-whip"
+	description "A 10-foot long whip, blazing with magical fire"
+	cost 180
+	weapon
 
 define-weapon "fire-whip"
 	description "A 10-foot long whip, blazing with magical fire"
@@ -19,11 +26,11 @@ define-weapon "fire-whip"
 
 define-item "Anaklusmos"
 	description "Riptide, a sword for heroes!"
-	weapon "yes"
+	weapon
 
 define-item "Lightning bolt"
 	description "Zeus lightning bolt - the most powerful weapon of the universe!"
-	weapon "yes"
+	weapon
 
 define-weapon "Anaklusmos"
 	description "Riptide, a sword for heroes!"

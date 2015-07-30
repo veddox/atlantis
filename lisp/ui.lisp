@@ -25,7 +25,7 @@
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
-			(describe-place place (player-night-vision player))
+			(describe-place place (player-has-ability "night-vision" player))
 			(input-string command)
 			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
@@ -153,7 +153,8 @@ save <game-file> -  Save the game to file")
 ;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
 	"Describe the player's current location (wrapper function)"
-	(describe-place (player-place player) (player-night-vision player)))
+	(describe-place (player-place player)
+		(player-has-ability "night-vision" player)))
 
 (defun player (p)
 	"Print a description of this player"
@@ -169,7 +170,7 @@ save <game-file> -  Save the game to file")
 		(format t "~&Constitution: ~A~ADexterity: ~A"
 			(player-constitution p) tab (player-dexterity p))
 		(format t "~&Night vision: ~A"
-			(if (player-night-vision p) "yes" "no"))
+			(if (player-has-ability "night-vision" p) "yes" "no"))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
 		;; XXX This will need adjusting for large item numbers
@@ -216,7 +217,7 @@ save <game-file> -  Save the game to file")
 	(change-player-location player location)
 	(spawn-monsters location)
 	(add-player-experience player 1)
-	(describe-place location (player-night-vision player)))
+	(describe-place location (player-has-ability "night-vision" player)))
 
 (defun about (player &optional object-name)
 	"Print a description of this object"

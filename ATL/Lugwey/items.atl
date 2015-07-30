@@ -17,7 +17,7 @@ define-item "Quill"
 
 define-item "Dagger"
 	description "A long, sharp knife, useful for self defence."
-	weapon "Yes"
+	weapon
 	cost 20
 
 define-weapon "Dagger"
@@ -31,7 +31,7 @@ define-item "Signet ring"
 
 define-item "Whip"
 	description "A horse-whip."
-	weapon "yes"
+	weapon
 	cost 10
 
 define-weapon "Whip"
@@ -100,7 +100,7 @@ define-monster "Fox"
 	strength 3
 	dexterity 5
 	aggression 75
-	spawn-probability 40
+	spawn 40
 	weapon "Teeth"
 	item "Foxhide"
 	armour-class 0

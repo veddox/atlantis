@@ -15,6 +15,7 @@ define-place "Nowhere"
 You are in the void, the space between the worlds. Around you is black. 
 Black, except for one tiny pin-prick of light to the north."
 	neighbour "Styx"
+	dark
 
 define-place "Elysium"
 	description "This is where you want to be when you are six feet under..."
@@ -29,6 +30,7 @@ define-place "Fields of Punishment"
 	neighbour "Elysium"
 	neighbour "Fields of Asphodel"
 	monster "Fury"
+	spawns "Fury"
 
 define-place "Fields of Asphodel"
 	description "Nothing special. Really, nothing special at all. 
@@ -45,10 +47,10 @@ define-place "Styx"
 	item "Anaklusmos"
 	npc "Charon"
 
-define-function "Light"
-	docstring "Gives a player night-vision"
-	player night-vision T
-	print "You can now see in the dark!"
+; define-function "Light"
+; 	docstring "Gives a player night-vision"
+; 	player night-vision T
+; 	print "You can now see in the dark!"
 
 define-function "Spawn Fury"
 	docstring "Spawn a Fury in this place"

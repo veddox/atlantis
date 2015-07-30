@@ -66,6 +66,7 @@
 	(money 0)
 	(experience 0))
 
+;; TODO Needs a complete overhaul
 (defstruct game-function
 	(name "")
 	(docstring "")
