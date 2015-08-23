@@ -38,7 +38,6 @@
 (defcommand define-item item)
 (defcommand define-npc npc)
 (defcommand define-quest quest)
-(defcommand define-function game-function)
 
 
 (let ((world-directory NIL)
@@ -99,11 +98,6 @@
 								   (first options) T))
 							(2 (set-object-attribute current-object
 								   (first options) (second options)))
-							(3 (if (game-function-p current-object)
-								   (set-object-attribute current-object
-									   (first options) (cdr options))
-								   (error "~&ERROR: too many arguments: '~A'"
-									   line)))
 							;; FIXME gives problems with lines like this:
 							;; "    ;commented"
 							(t (error "~&ERROR: too many arguments: '~A'"

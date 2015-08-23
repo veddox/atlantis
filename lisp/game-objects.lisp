@@ -66,13 +66,6 @@
 	(money 0)
 	(experience 0))
 
-;; TODO Needs a complete overhaul
-(defstruct game-function
-	(name "")
-	(docstring "")
-	(place NIL)
-	(player NIL)
-	(print ""))
 
 (defun set-object-attribute (game-object property value)
 	"Set the attribute 'property' of 'game-object' to 'value'"
@@ -141,29 +134,3 @@
 			((member object-name (list-place-objects 'npc p) :test #'equalp)
 				(npc-description (get-game-object 'npc object-name)))
 			(t NIL))))
-		
-(defun run-game-function (function player)
-	"Execute this game function"
-	(let* ((fn (if (game-function-p function) function
-				   (get-game-object 'game-function function)))
-			  (player (if (player-p player) player
-						  (get-game-object 'player player)))
-			  (place (get-game-object 'place (player-place player))))
-		(dolist (game-obj (list player place))
-			;; Iterate through each element in the function that modifies
-			;; this game object
-			(dolist (element (funcall (build-symbol "game-function-"
-										  (type-of game-obj)) fn))
-				(let* ((element (if (listp element) element (list element)))
-						  (attr (first element)) (value (second element))
-						  ;; FIXME +1 gets transformed to "1"...
-						  (mod (aref (to-string value) 0))
-						  (orig-value (funcall (build-symbol (type-of game-obj)
-												   #\- attr) game-obj)))
-					;; Update the value of the specified attribute
-					(if (= (length element) 1)
-						(set-object-attribute game-obj attr T)
-						(if (or (eq mod #\+) (eq mod #\-))
-							(set-object-attribute game-obj attr
-								(+ orig-value value))
-							(set-object-attribute game-obj attr value))))))))
