@@ -36,7 +36,7 @@
 	"The user creates a new player"
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let* ((start-player (get-game-object 'player "Start"))
-			  (player (if start-player (copy-player start-player)
+			  (player (if start-player (copy-player start-player) ;adjust the name
 						  (make-player :name player-name
 							  :place (random-elt (list-world-objects 'place)))))
 			  (char-attr
@@ -169,8 +169,10 @@ save <game-file> -  Save the game to file")
 			(player-intelligence p) tab (player-strength p))
 		(format t "~&Constitution: ~A~ADexterity: ~A"
 			(player-constitution p) tab (player-dexterity p))
-		(format t "~&Night vision: ~A"
-			(if (player-has-ability "night-vision" p) "yes" "no"))
+		(format t "~&=====~&Abilities:")
+		(dolist (a (player-abilities p))
+			(when (player-has-ability a p)
+				(format t "~&~A" (string-downcase (to-string a)))))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
 		;; XXX This will need adjusting for large item numbers
@@ -326,8 +328,6 @@ save <game-file> -  Save the game to file")
 		(if (member item-name (place-item place) :test #'equalp)
 			(progn
 				(set-object-attribute player 'item item-name)
-				(when (item-function item)
-					(funcall (item-function item)))
 				(remove-object-attribute place 'item item-name)
 				(format t "~&You have picked up: ~A" item-name))
 			(format t "~&Sorry, this item is not here!"))))
@@ -340,7 +340,7 @@ save <game-file> -  Save the game to file")
 	(if (member item (player-item player) :test #'equalp)
 		(progn
 			(remove-object-attribute player 'item item)
-			(when (equalp (item-weapon (get-game-object 'item item)) "yes")
+			(when (item-weapon (get-game-object 'item item))
 				(set-object-attribute player 'weapon ""))
 			(set-object-attribute
 				(get-game-object 'place (player-place player)) 'item item)
@@ -422,16 +422,3 @@ save <game-file> -  Save the game to file")
 		(decf damage (if (zerop def-dex) 0 (random def-dex)))
 		(decf damage def-ac)
 		(if (minusp damage) 0 damage)))
-
-(defun spell (player &optional spell)
-	"Call this game function"
-	;; TODO Remove this/change it so that not all game-functions can be called
-	(cond ((null spell)
-			  (format t "~&Please specify a spell to cast!")
-			  (return-from spell))
-		((not (member spell (list-world-objects 'game-function) :test #'equalp))
-			(format t "~&This spell does not exist!")
-			(return-from spell))
-		(t (format t "~&~A" (game-function-print
-								(get-game-object 'game-function spell)))
-			(run-game-function spell player))))

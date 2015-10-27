@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 1 4))
+(defconstant ATLANTIS-VERSION '(0 1 5))
 
 (load "util.lisp")
 (load "game-objects.lisp")
