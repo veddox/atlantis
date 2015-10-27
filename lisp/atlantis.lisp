@@ -34,61 +34,6 @@
 		(add-player player)
 		(play-game (player-name player))))
 
-(defun not-available ()
-	"Before I tackle networking..."
-	(format t "~&Sorry, multiplayer is currently not supported!")
-	(format t "~&Please press ENTER")
-	(y-or-n-p "~&OK?")
-	(start-menu))
-
-(defun start-server ()
-	"Start a new game on a server"
-	;; TODO Doesn't actually start a server yet
-	(format t "~&What world file do you want to load?")
-	(input-string world-file) 
-	(format t "~&What port should the game run on?")
-	(while (not (numberp (input port)))
-		(format t "~&Not a number: ~A. Please reenter:" port))
-	(debugging "~&Loading file ~S on port ~A" world-file port)
-	(load-file world-file))
-
-(defun join-game ()
-	"Join a running game on the server"
-	(format t "~&What is the IP address of the server you want to join?")
-	(input-string server-ip)
-	(while (not (= (count-instances #\. server-ip) 3))
-		(format t "~&Not an IP address: ~A. Please reenter:" server-ip)
-		(input-string server-ip))
-	;(setf (cassoc ip *server-address*) server-ip)
-	(format t "~&What port does the game run on?")
-	(while (not (numberp (input server-port)))
-		(format t "~&Not a number: ~A. Please reenter:" server-port))
-	;(setf (cassoc port *server-address*) server-port)
-	(format t "~&What is your player name?")
-	(input-string name)
-	(debugging "~&Joining game on ~A:~A as ~A" server-ip server-port name)
-	(play-game name))
-
-
-(defun single-player ()
-	"Start a single-player game"
-	(format t "~&What do you want to do?")
-	(setf options '("Start a new game" "Load a game" "Back to menu"))
-	(case (choose-number-option options)
-		(0 (format t "~&What world file do you want to load?")
-			(input-string world-file)
-			(format t "~&What is your name?")
-			(input-string name)
-			(load-file world-file)
-			(play-game name))
-		(1 (format t "~&What game file do you want to load?")
-			(input-string game)
-			(format t "~&What is your name?")
-			(input-string name)
-			(load-game game)
-			(play-game name))
-		(2 (start-menu))))
-
 (defun print-version ()
 	(format t "~&Atlantis ~A.~A.~A"
 		(first ATLANTIS-VERSION)
@@ -102,19 +47,28 @@
 	(clear-screen)
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
-	(setf options '("Start a server" "Join a game" "Play single-player"
+	(setf options '("Start a new game" "Load a game"
 					   "Create worlds" "Develop" "About" "Exit"))
 	(case (choose-number-option options)
-		(0 (not-available))
-		(1 (not-available))
-		(2 (single-player))
-		(3 (world-creator))
-		(4 (development))
-		(5 (print-version)
+		(0 (format t "~&What world file do you want to load?")
+			(input-string world-file)
+			(format t "~&What is your name?")
+			(input-string name)
+			(load-file world-file)
+			(play-game name))
+		(1 (format t "~&What game file do you want to load?")
+			(input-string game)
+			(format t "~&What is your name?")
+			(input-string name)
+			(load-game game)
+			(play-game name))
+		(2 (world-creator))
+		(3 (development))
+		(4 (print-version)
 			(when (y-or-n-p "Show the license text?")
 				(print-text-file "../LICENSE"))
 			(start-menu))
-		(6 (format t "~&Goodbye!")
+		(5 (format t "~&Goodbye!")
 			(quit))))
  
 (defun cmd-parameter (name &optional truth-value)
@@ -131,11 +85,7 @@ Commandline options:
 -v --version          Show the version number and exit
 -h --help             Show this help text and exit
 --license             Show the license text
---debugging           Switch on debug mode
---single-player       Start a single-player game
---server <port>       Start a server on <port> (requires --world)
---world <world-file>  The ATL file to load (requires --server)
---client <ip>:<port>  Connect to the game server at <ip>:<port>")
+--debugging           Switch on debug mode")
 	(format t "~A" help-text))
 
 (defun parse-commandline-args ()
@@ -149,17 +99,8 @@ Commandline options:
 				(unless (null line) (format t "~%~A" line)))
 			(quit))
 		((cmd-parameter "--debugging")
-			(setf *debugging* T))
-		((cmd-parameter "--single-player" T)
-			(single-player)))
-	(let ((server (cmd-parameter "--server"))
-			 (world-file (cmd-parameter "--world"))
-			 (client (cmd-parameter "--client")))
-		(unless (or server world-file client)
-			(format t "~&Invalid commandline parameter!") (quit))
-		(if (and world-file server)
-			(load-file world-file)
-			(join-game))))
+			(setf *debugging* T)))
+	(start-menu))
 
 
 ;; Initialize the random state (which would otherwise not be very random...)

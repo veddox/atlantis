@@ -36,7 +36,7 @@
 	"The user creates a new player"
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let* ((start-player (get-game-object 'player "Start"))
-			  (player (if start-player (copy-player start-player) ;adjust the name
+			  (player (if start-player (copy-player start-player) ;FIXME adjust the name
 						  (make-player :name player-name
 							  :place (random-elt (list-world-objects 'place)))))
 			  (char-attr
