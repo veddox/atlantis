@@ -28,7 +28,7 @@
 					  :place "Fields of Punishment"
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14
-					  :money 100 :game-admin T
+					  :money 100
 					  :item '("Anaklusmos" "Lightning bolt")
 					  :weapon "Lightning bolt")))
 		(add-player player)

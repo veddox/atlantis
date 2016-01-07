@@ -25,8 +25,9 @@
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
-			(describe-place place (player-has-ability "night-vision" player))
+			(describe-place place)
 			(input-string command)
+			;; TODO Ask for confirmation before quitting
 			(while (not (or (equalp command "quit") (equalp command "exit")))
 				(game-command command player)
 				(input-string command))
@@ -34,6 +35,7 @@
 
 (defun create-player (player-name)
 	"The user creates a new player"
+	;; TODO Rewrite this if possible
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let* ((start-player (get-game-object 'player "Start"))
 			  (player (if start-player (copy-player start-player) ;FIXME adjust the name
@@ -42,7 +44,7 @@
 			  (char-attr
 				  '((strength 0) (dexterity 0)
 					   (constitution 0) (intelligence 0)))
-			  (items NIL) (weapon "")
+			  (item NIL) (weapon "")
 			  (character-points NIL))
 		(format t "~&The name you have chosen is not registered on this game.")
 		(unless (y-or-n-p "~&Create a new player?") (start-menu) (quit))
@@ -55,6 +57,12 @@
 		(dolist (i (character-class-special-item
 					   (get-game-object 'character-class (player-class player))))
 			(set-object-attribute player 'item i))
+		(dolist (ac (character-class-special-ability
+					   (get-game-object 'character-class (player-class player))))
+			(set-object-attribute player 'ability ac))
+		(dolist (ac (race-special-ability
+						(get-game-object 'race (player-race player))))
+			(set-object-attribute player 'ability ar))
 		;; Set character attributes
 		(while (or (< (reduce #'+ character-points) 24) ; XXX magic number!
 				   (not (set-p character-points)))
@@ -81,23 +89,19 @@ you may assign one number to each of the following attributes:")
 			(setf character-points
 				(remove-if #'(lambda (x) (= x val)) character-points)))))
 
-(defun describe-place (p &optional (show-dark t))
+(defun describe-place (p)
 	"Print out a complete description of place p"
-	;; XXX This has become slightly ugly with the addition of darkness...
 	(when (stringp p) (setf p (get-game-object 'place p)))
 	(objectify-place-monsters p)
 	(format t "~&~A" (string-upcase (place-name p)))
-	(format t "~&~%~A" (if (and (place-dark p) (not show-dark))
-						   "You do not see a thing in here. It's too dark!"
-						   (place-description p)))
+	(format t "~&~%~A" (place-description p))
 	(format t "~&~%Neighbouring places: ~A"
 		(string-from-list (place-neighbour p)))
-	(unless (and (place-dark p) (not show-dark))
-		(format t "~&Players present: ~A" (string-from-list (place-player p)))
-		(format t "~&Items: ~A" (string-from-list (place-item p)))
-		(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
-		(format t "~&Monsters: ~A" (string-from-list
-									   (list-place-objects 'monster p)))))
+	(format t "~&Players present: ~A" (string-from-list (place-player p)))
+	(format t "~&Items: ~A" (string-from-list (place-item p)))
+	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
+	(format t "~&Monsters: ~A" (string-from-list
+								   (list-place-objects 'monster p))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -153,26 +157,26 @@ save <game-file> -  Save the game to file")
 ;; identical with the struct name) Probably not, but best to be aware.
 (defun place (player)
 	"Describe the player's current location (wrapper function)"
-	(describe-place (player-place player)
-		(player-has-ability "night-vision" player)))
+	(describe-place (player-place player)))
 
 (defun player (p)
 	"Print a description of this player"
+	;; TODO update
 	(let ((tab (string #\tab)))
 		(when (stringp p) (setf p (get-game-object 'player p)))
 		(format t "~&Player ~A:" (player-name p))
 		(format t "~&~%Current place: ~A" (player-place p))
 		(format t "~&Race: ~A~AClass: ~A" (player-race p) tab (player-class p))
-		(format t "~&=====")
-		(format t "~&Attributes:")
+		(format t "~&=====~&Attributes:")
 		(format t "~&Intelligence: ~A~AStrength: ~A"
 			(player-intelligence p) tab (player-strength p))
 		(format t "~&Constitution: ~A~ADexterity: ~A"
 			(player-constitution p) tab (player-dexterity p))
-		(format t "~&=====~&Abilities:")
-		(dolist (a (player-abilities p))
-			(when (player-has-ability a p)
-				(format t "~&~A" (string-downcase (to-string a)))))
+		(format t "~&=====~&Abilities:~&~A"
+			(let ((abilities (player-ability p)))
+				(dolist (i (player-item p) (string-from-list abilities))
+					(let ((ia (item-ability (get-game-object 'item i))))
+						(when ia (setf abilities (append abilities ia)))))))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
 		;; XXX This will need adjusting for large item numbers
@@ -189,8 +193,6 @@ save <game-file> -  Save the game to file")
 (let ((last-save NIL))
 	(defun save (player &optional game-file)
 		"Save a game to file (wrapper method around save-world)"
-		;; XXX Include a permissions check (only allow admins to save)?
-		;; Could give problems in single-player mode.
 		(cond (game-file (setf last-save game-file))
 			((and last-save (not game-file)) (setf game-file last-save))
 			((not (or last-save game-file))
@@ -207,19 +209,25 @@ save <game-file> -  Save the game to file")
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
-	(when (not (member location
-				   (place-neighbour (get-game-object 'place
-										(player-place player)))
-				   :test #'equalp))
+	(unless (member location
+				(place-neighbour (get-game-object 'place
+									 (player-place player)))
+				:test #'equalp)
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
+	(let ((req (place-requires (get-game-object 'place location))))
+		(unless (equalp req "")
+			(unless (or (player-has-ability req player)
+						(member req (player-item player) :test #'equalp))
+				(format t "~&You cannot enter this place unless you have: ~A" req)
+				(return-from goto))))
 	;; Change places
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(change-player-location player location)
 	(spawn-monsters location)
 	(add-player-experience player 1)
-	(describe-place location (player-has-ability "night-vision" player)))
+	(describe-place location))
 
 (defun about (player &optional object-name)
 	"Print a description of this object"
@@ -327,6 +335,8 @@ save <game-file> -  Save the game to file")
 			 (item (get-game-object 'item item-name)))
 		(if (member item-name (place-item place) :test #'equalp)
 			(progn
+				;; XXX Shouldn't the item's function be executed here?
+				;; Or should item functions be disabled entirely?
 				(set-object-attribute player 'item item-name)
 				(remove-object-attribute place 'item item-name)
 				(format t "~&You have picked up: ~A" item-name))
@@ -340,7 +350,8 @@ save <game-file> -  Save the game to file")
 	(if (member item (player-item player) :test #'equalp)
 		(progn
 			(remove-object-attribute player 'item item)
-			(when (item-weapon (get-game-object 'item item))
+			(when (and (item-weapon (get-game-object 'item item))
+					  (equalp (player-weapon player) item))
 				(set-object-attribute player 'weapon ""))
 			(set-object-attribute
 				(get-game-object 'place (player-place player)) 'item item)
@@ -349,7 +360,10 @@ save <game-file> -  Save the game to file")
 
 (defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
-	(when (or (not new-weapon) (equalp new-weapon "none"))
+	(unless new-weapon
+		(format t "~&Please specify a weapon to be equipped!")
+		(return-from equip))
+	(when (equalp new-weapon "none")
 		(setf (player-weapon player) "")
 		(format t "~&You no longer have any weapon equipped.")
 		(return-from equip))

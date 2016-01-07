@@ -9,6 +9,10 @@
 
 name-world "Lugwey"
 
+load-file "places.atl"
+load-file "items.atl"
+load-file "npcs.atl"
+
 define-player "Start"
 	money 50
 	place "Gate"
@@ -33,8 +37,5 @@ define-player "Leonardo"
 	money 60
 	place "Chapel"
 	item "Lantern"
-;	night-vision
-
-load-file "places.atl"
-load-file "items.atl"
-load-file "npcs.atl"
+	ability "memory"
+	ability "deduction"

@@ -9,6 +9,8 @@
 ;;; date: 09/05/2015
 ;;;
 
+;; TODO Replace this with the cl-structparse library
+
 ;; A list of ATL language constructs
 ;; (Note: not complete - each (defcommand) appends to this list)
 (defvar *atl-commands* '(load-file name-world))

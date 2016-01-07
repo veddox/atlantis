@@ -65,7 +65,7 @@ define-place "Crypt"
 	the chapel, is where the monastery's abbots lie buried. Generations
 	of clerics resting in their stony graves..."
 	neighbour "Chapel"
-	dark
+	requires "night-vision"
 
 define-place "Dormitory"
 	description "The dormitory houses the monks' cells. It is a stone house

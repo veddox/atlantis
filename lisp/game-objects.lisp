@@ -20,8 +20,8 @@
 	(monster NIL)
 	(npc NIL)
 	(spawns NIL)
-	(dark NIL)
-	(function ""))
+	(requires "") ;Can be an ability or an item
+	(function "")) ;XXX Get rid of functions?
 
 ;;; WORK IN PROGRESS >>>
 
@@ -49,7 +49,8 @@
 	(description "")
 	(cost 0)
 	(weapon)
-	(function NIL))
+	(function NIL) ;XXX Dike out the function?
+	(ability NIL))
 
 (defstruct weapon
 	(name "")

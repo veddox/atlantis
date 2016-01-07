@@ -19,6 +19,7 @@
 	(constitution 0)
 	(intelligence 0)
 	(money 0)
+	(ability NIL)
 	(item NIL)
 	(weapon "")
 	(armour-class 0)
@@ -26,11 +27,10 @@
 	(experience 0)
 	(level 0)
 	(max-health 50)
-	(health 50)
-	(abilities '(night-vision))
-	(game-admin NIL))
+	(health 50))
 
 ;; How many XP are needed to level up?
+;; And what do levels do anyway?
 ;; XXX Make this configurable in ATL?
 (defvar *level-experience* 100)
 
@@ -52,8 +52,6 @@
 
 (defun add-player (player)
 	"Add this player to the game world"
-	(when (null (list-world-objects 'player))
-		(setf (player-game-admin player) T))
 	(change-player-location player (player-place player))
 	(add-game-object player))
 
@@ -77,13 +75,16 @@
 
 (defun player-has-ability (ability player)
 	"Check whether a player has the given ability"
-	(member ability (player-abilities player) :test #'equalp))
+	(or	(member ability (player-ability player) :test #'equalp)
+		(dolist (i (player-item player) NIL)
+			(when (member ability (item-ability (get-game-object 'item i))
+					  :test #'equalp) (return T)))))
 
 (defun change-player-health (player amount)
 	"Change the player's health points"
 	(incf (player-health player) amount)
 	(when (> 1 (player-health player))
-		(error "You died!"))) ;; TODO adjust this (especially for multiplayer)
+		(error "You died!"))) ;; TODO adjust this
 
 (defun add-player-experience (player amount)
 	"The player gains experience points"
