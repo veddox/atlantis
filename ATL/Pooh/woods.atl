@@ -12,6 +12,7 @@ define-place "Pooh's home"
 	delicious honey..."
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
+	neighbour "Western woods"
 	item "Hunny"
 
 define-place "Pooh's porch"
@@ -27,3 +28,13 @@ define-place "Pooh's branch"
 	keeps an emergency ration of honey handy."
 	neighbour "Pooh's home"
 	item "Hunny"
+
+define-place "Western woods"
+	description "This is the western part of the 100 Acre Wood. As you would
+	expect in a wood, it is full of trees. Here, however, there are
+	not quite that many - mainly young birches."
+	neighbour "Pooh's porch"
+	neighbour "Central woods"
+	neighbour "Northern woods"
+	neighbour "Southern woods"
+	neighbour "Piglet's porch"

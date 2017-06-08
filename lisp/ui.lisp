@@ -19,6 +19,7 @@
 	(let ((player (get-game-object 'player player-name)))
 		(clear-screen)
 		;; Initialize the player if necessary
+		;; FIXME Shouldn't be necessary after the adjustment
 		(unless player
 			(setf player (create-player player-name))
 			(add-player player))
@@ -35,6 +36,7 @@
 
 (defun create-player (player-name)
 	"The user creates a new player"
+	;; FIXME Remove this entirely. Game authors should define all playable characters.
 	;; TODO Rewrite this if possible
 	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let* ((start-player (get-game-object 'player "Start"))
@@ -136,11 +138,11 @@ Commands:
 help             -  Show this list of game commands
 quit/exit        -  Exit the game
 clear            -  Clear the screen
-place            -  Describe the current location
+look [here]      -  Describe the current location
 player           -  Describe your player
 goto <place>     -  Go to a neighbouring location
-about <object>   -  Show a description of this entity
-talk to <npc>    -  Talk to an NPC
+look <object>    -  Show a description of this entity
+talk [to] <npc>  -  Talk to an NPC
 pickup <item>    -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
@@ -198,6 +200,7 @@ save <game-file> -  Save the game to file")
 			((not (or last-save game-file))
 				(format t "~&Where do you want to save the game?")
 				(input-string game-file)
+				(setf game-file (concatenate 'string "../saves/" game-file))
 				(setf last-save game-file)))
 		(when (y-or-n-p "Save game to ~A?" game-file)
 			(save-world game-file)
@@ -229,11 +232,11 @@ save <game-file> -  Save the game to file")
 	(add-player-experience player 1)
 	(describe-place location))
 
-(defun about (player &optional object-name)
+(defun look (player &optional object-name)
 	"Print a description of this object"
 	(unless object-name
-		(format t "~&Please specify the object you wish to inspect!")
-		(return-from about))
+		(describe-place (player-place player))
+		(return-from look))
 	;; A bit of syntactic sugar...
 	(cond ((equalp object-name "me") (player player) (return-from about))
 		((equalp object-name "here") (place player) (return-from about)))

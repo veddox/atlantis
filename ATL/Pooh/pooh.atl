@@ -16,4 +16,3 @@ define-player "Winnie the Pooh"
 	place "Pooh's home"
 	max-health 50
 	health 50
-

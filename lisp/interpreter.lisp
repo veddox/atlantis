@@ -67,6 +67,7 @@
 		;; otherwise, parse the ATL file
 		(do* ((line-nr 0 (1+ line-nr)) (source (load-text-file file-name))
 				 (line (nth line-nr source) (nth line-nr source))
+				 (trimmed-line (trim-whitespace line) (trim-whitespace line))
 				 (current-object NIL))
 			((= line-nr (length source)) NIL)
 			;; concatenate string arguments spanning several lines
@@ -74,10 +75,10 @@
 				(incf line-nr)
 				(setf line (concatenate 'string line (to-string #\Newline)
 							   (trim-whitespace (nth line-nr source)))))
-			(cond ((zerop (length line))
+			(cond ((or (zerop (length trimmed-line)) (zerop (length line)))
 					  (when current-object (add-game-object current-object))
 					  (setf current-object NIL))
-				((eql (aref line 0) #\;)) ;Comments are ignored
+				((eql (aref trimmed-line 0) #\;)) ;Comments are ignored
 			    ;; interpret a define command
 				((not (or (eql (aref line 0) #\;)
 						  (eql (aref line 0) #\SPACE)
@@ -101,7 +102,7 @@
 							(2 (set-object-attribute current-object
 								   (first options) (second options)))
 							;; FIXME gives problems with lines like this:
-							;; "    ;commented"
+							;; "    ;commented" - should be fixed
 							(t (error "~&ERROR: too many arguments: '~A'"
 								   line)))))
 				(T ;; can't happen

@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 1 5))
+(defconstant ATLANTIS-VERSION '(0 2 1))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -50,17 +50,23 @@
 	(setf options '("Start a new game" "Load a game"
 					   "Create worlds" "Develop" "About" "Exit"))
 	(case (choose-number-option options)
+		;;FIXME Present the player with a choice of saved games
 		(0 (format t "~&What world file do you want to load?")
 			(input-string world-file)
+			(setf world-file (concatenate 'string "../saves/" world-file))
+			;;FIXME Allowing only one player per world eliminates the need
+			;; to ask for a player name
 			(format t "~&What is your name?")
 			(input-string name)
 			(load-file world-file)
 			(play-game name))
+		;;FIXME Present the player with a choice of game worlds
 		(1 (format t "~&What game file do you want to load?")
 			(input-string game)
+			(load-game game)
+			;;FIXME Present the player with a choice of predefined characters
 			(format t "~&What is your name?")
 			(input-string name)
-			(load-game game)
 			(play-game name))
 		(2 (world-creator))
 		(3 (development))
@@ -89,7 +95,6 @@ Commandline options:
 	(format t "~A" help-text))
 
 (defun parse-commandline-args ()
-	;; TODO clean this up? (should give error message with unknown params)
 	(cond ((or (cmd-parameter "--version" T) (cmd-parameter "-v" T))
 			  (print-version) (quit))
 		((or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
