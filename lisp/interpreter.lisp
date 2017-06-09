@@ -32,8 +32,6 @@
 ;;; (defcommand <command-name> <created-object>)
 
 (defcommand define-place place)
-(defcommand define-race race)
-(defcommand define-class character-class)
 (defcommand define-player player)
 (defcommand define-monster monster)
 (defcommand define-weapon weapon)

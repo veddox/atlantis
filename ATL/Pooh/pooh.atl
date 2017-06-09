@@ -8,11 +8,9 @@
 
 name-world "100 Acre Wood"
 
-load-file "woods.atl"
 load-file "objects.atl"
+load-file "woods.atl"
 	
 define-player "Winnie the Pooh"
-	money 0
+	description "A small but very lovable bear of very little brain."
 	place "Pooh's home"
-	max-health 50
-	health 50

@@ -5,3 +5,19 @@
 ;
 ; author: Daniel Vedder
 ; date: 07/06/2017
+
+define-item "Hunny"
+	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
+
+define-item "Pooh's sign"
+	description "
+	SANDERS
+	"
+
+define-item "Piglet's sign"
+	description "
+	____________________
+	|                   \\_
+	|   TRESPASSERS  WILL >
+	|____________________<
+	"

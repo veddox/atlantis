@@ -37,8 +37,6 @@
 (defun create-player (player-name)
 	"The user creates a new player"
 	;; FIXME Remove this entirely. Game authors should define all playable characters.
-	;; TODO Rewrite this if possible
-	;; XXX This function feels somewhat ugly - any possibility of a cleanup?
 	(let* ((start-player (get-game-object 'player "Start"))
 			  (player (if start-player (copy-player start-player) ;FIXME adjust the name
 						  (make-player :name player-name
@@ -50,21 +48,6 @@
 			  (character-points NIL))
 		(format t "~&The name you have chosen is not registered on this game.")
 		(unless (y-or-n-p "~&Create a new player?") (start-menu) (quit))
-		;; Chose race and class
-		(format t "~&Please chose a race:")
-		(setf (player-race player) (choose-option (list-world-objects 'race)))
-		(format t "~&Please chose a class:")
-		(setf (player-class player)
-			(choose-option (list-world-objects 'character-class)))
-		(dolist (i (character-class-special-item
-					   (get-game-object 'character-class (player-class player))))
-			(set-object-attribute player 'item i))
-		(dolist (ac (character-class-special-ability
-					   (get-game-object 'character-class (player-class player))))
-			(set-object-attribute player 'ability ac))
-		(dolist (ac (race-special-ability
-						(get-game-object 'race (player-race player))))
-			(set-object-attribute player 'ability ar))
 		;; Set character attributes
 		(while (or (< (reduce #'+ character-points) 24) ; XXX magic number!
 				   (not (set-p character-points)))
@@ -99,7 +82,6 @@ you may assign one number to each of the following attributes:")
 	(format t "~&~%~A" (place-description p))
 	(format t "~&~%Neighbouring places: ~A"
 		(string-from-list (place-neighbour p)))
-	(format t "~&Players present: ~A" (string-from-list (place-player p)))
 	(format t "~&Items: ~A" (string-from-list (place-item p)))
 	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
 	(format t "~&Monsters: ~A" (string-from-list
@@ -123,11 +105,10 @@ you may assign one number to each of the following attributes:")
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help place player
-		 goto pickup drop
-		 talk trade
+	'(help player goto pickup
+		 drop talk trade
 		 equip attack spell
-		 about save clear))
+		 look save clear))
 
 ;;; The following commands don't take any arguments except for a player
 
@@ -168,7 +149,6 @@ save <game-file> -  Save the game to file")
 		(when (stringp p) (setf p (get-game-object 'player p)))
 		(format t "~&Player ~A:" (player-name p))
 		(format t "~&~%Current place: ~A" (player-place p))
-		(format t "~&Race: ~A~AClass: ~A" (player-race p) tab (player-class p))
 		(format t "~&=====~&Attributes:")
 		(format t "~&Intelligence: ~A~AStrength: ~A"
 			(player-intelligence p) tab (player-strength p))
@@ -235,11 +215,11 @@ save <game-file> -  Save the game to file")
 (defun look (player &optional object-name)
 	"Print a description of this object"
 	(unless object-name
-		(describe-place (player-place player))
+		(place player)
 		(return-from look))
 	;; A bit of syntactic sugar...
-	(cond ((equalp object-name "me") (player player) (return-from about))
-		((equalp object-name "here") (place player) (return-from about)))
+	(cond ((equalp object-name "me") (player player) (return-from look))
+		((equalp object-name "here") (place player) (return-from look)))
 	(let ((description (get-object-description object-name
 						   (player-place player))))
 		;; Don't forget items the player is carrying

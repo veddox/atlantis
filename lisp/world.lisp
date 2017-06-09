@@ -19,8 +19,6 @@
 (defstruct world
 	(name "")
 	(players NIL)
-	(character-classs NIL) ;Bad English because of parsing issues
-	(races NIL)
 	(places NIL)
 	(monsters NIL)
 	(npcs NIL)

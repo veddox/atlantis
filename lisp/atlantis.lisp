@@ -24,7 +24,6 @@
 	(setf *debugging* T)
 	(load-file "../ATL/test/lisp-test.atl")
 	(let ((player (make-player :name "Bilbo"
-					  :race "Hobbit" :class "Burglar"
 					  :place "Fields of Punishment"
 					  :strength 6 :constitution 12
 					  :dexterity 19 :intelligence 14
@@ -53,7 +52,6 @@
 		;;FIXME Present the player with a choice of saved games
 		(0 (format t "~&What world file do you want to load?")
 			(input-string world-file)
-			(setf world-file (concatenate 'string "../saves/" world-file))
 			;;FIXME Allowing only one player per world eliminates the need
 			;; to ask for a player name
 			(format t "~&What is your name?")
@@ -63,6 +61,7 @@
 		;;FIXME Present the player with a choice of game worlds
 		(1 (format t "~&What game file do you want to load?")
 			(input-string game)
+			(setf game (concatenate 'string "../saves/" game))
 			(load-game game)
 			;;FIXME Present the player with a choice of predefined characters
 			(format t "~&What is your name?")

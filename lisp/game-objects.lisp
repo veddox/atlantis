@@ -15,7 +15,6 @@
 	(description "")
 	;; Missing 's' in the following list names due to parsing issues
 	(neighbour NIL)
-	(player NIL)
 	(item NIL)
 	(monster NIL)
 	(npc NIL)

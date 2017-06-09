@@ -12,7 +12,6 @@ define-place "Pooh's home"
 	delicious honey..."
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
-	neighbour "Western woods"
 	item "Hunny"
 
 define-place "Pooh's porch"
@@ -20,13 +19,16 @@ define-place "Pooh's porch"
 	the name 'Sanders', as anyone can see by the old sign planted 
 	beside the door. A comfy-looking bench stands in the sun, inviting 
 	you to a well-earned rest."
+	item "Pooh's sign"
 	neighbour "Pooh's home"
+	neighbour "Western woods"
 
 define-place "Pooh's branch"
 	description "This is a thick branch above Pooh's home. Once, on a very
 	blustery day, Pooh had to escape to up here. Since then, he
 	keeps an emergency ration of honey handy."
 	neighbour "Pooh's home"
+	neighbour "Pooh's porch"
 	item "Hunny"
 
 define-place "Western woods"

@@ -12,8 +12,7 @@
 
 (defstruct player
 	(name "")
-	(race "")
-	(class "")
+	(description "")
 	(strength 0)
 	(dexterity 0)
 	(constitution 0)
@@ -34,21 +33,6 @@
 ;; XXX Make this configurable in ATL?
 (defvar *level-experience* 100)
 
-(defstruct race
-	(name "")
-	(description "")
-	(strength-bonus 0)
-	(dexterity-bonus 0)
-	(constitution-bonus 0)
-	(intelligence-bonus 0)
-	(special-ability NIL))
-
-(defstruct character-class
-	(name "")
-	(description "")
-	(special-item NIL)
-	(special-ability NIL))
-
 
 (defun add-player (player)
 	"Add this player to the game world"
@@ -59,12 +43,7 @@
 	"Change the player's location and do housekeeping"
 	(setf location (to-string location))
 	(objectify-place-monsters location)
-	(when (player-place player)
-		(remove-object-attribute (get-game-object 'place (player-place player))
-			'player (player-name player)))
-	(set-object-attribute player 'place location)
-	(set-object-attribute (get-game-object 'place location)
-		'player (player-name player)))
+	(set-object-attribute player 'place location))
 
 ;; XXX This function is probably superfluous, as the player struct should only 
 ;; store names of game objects (the actual objects are stored in *world*)
