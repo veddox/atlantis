@@ -18,6 +18,7 @@
 
 (defstruct world
 	(name "")
+	(main-player "")
 	(players NIL)
 	(places NIL)
 	(monsters NIL)

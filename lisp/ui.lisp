@@ -14,15 +14,9 @@
 ;; (This module should be purely UI)
 
 
-(defun play-game (player-name)
+(defun play-game ()
 	"The main game loop"
-	(let ((player (get-game-object 'player player-name)))
-		(clear-screen)
-		;; Initialize the player if necessary
-		;; FIXME Shouldn't be necessary after the adjustment
-		(unless player
-			(setf player (create-player player-name))
-			(add-player player))
+	(let ((player (get-game-object 'player (world-main-player *world*))))
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
@@ -33,46 +27,6 @@
 				(game-command command player)
 				(input-string command))
 			(format t "~&Goodbye!"))))
-
-(defun create-player (player-name)
-	"The user creates a new player"
-	;; FIXME Remove this entirely. Game authors should define all playable characters.
-	(let* ((start-player (get-game-object 'player "Start"))
-			  (player (if start-player (copy-player start-player) ;FIXME adjust the name
-						  (make-player :name player-name
-							  :place (random-elt (list-world-objects 'place)))))
-			  (char-attr
-				  '((strength 0) (dexterity 0)
-					   (constitution 0) (intelligence 0)))
-			  (item NIL) (weapon "")
-			  (character-points NIL))
-		(format t "~&The name you have chosen is not registered on this game.")
-		(unless (y-or-n-p "~&Create a new player?") (start-menu) (quit))
-		;; Set character attributes
-		(while (or (< (reduce #'+ character-points) 24) ; XXX magic number!
-				   (not (set-p character-points)))
-			(set-list (1+ (random 20)) a b c d)
-			(setf character-points (list a b c d)))
-		(setf text "
-Now distribute your attribute points. Random numbers have been chosen, 
-you may assign one number to each of the following attributes:")
-		(format t "~&~A~%~A~%~%The numbers are:"
-			text (string-from-list (keys char-attr)))
-		;; XXX I should replace simple-input with something offering 'magic' (?)
-		(do* ((i 0 (1+ i)) (attr (safe-nth i (keys char-attr))
-							   (safe-nth i (keys char-attr)))
-				 (val (cassoc attr char-attr) (cassoc attr char-attr)))
-			((= i (length char-attr)) player)
-			(format t "~&~A" (string-from-list character-points))
-			(simple-input val (concatenate 'string (symbol-name attr) ":"))
-			(while (not (member val character-points))
-				(format t "~&Sorry, invalid number chosen. Please reenter:")
-				(simple-input val (concatenate 'string (symbol-name attr) ":")))
-			(let ((player-fn (build-symbol "player-" attr)))
-				;; XXX Kludge ?!
-				(eval `(setf (,player-fn ,player) ,val)))
-			(setf character-points
-				(remove-if #'(lambda (x) (= x val)) character-points)))))
 
 (defun describe-place (p)
 	"Print out a complete description of place p"

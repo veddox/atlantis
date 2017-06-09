@@ -19,6 +19,12 @@
 
 (defvar *debugging* NIL)
 
+;; Game worlds must be registered in this list with a display name
+;; and a path relative to ../ATL
+(defvar *games* '(("Lugwey" "Lugwey/lugwey.atl")
+					 ("Winnie the Pooh" "Pooh/pooh.atl")
+					 ("Development" "dev/test.atl")))
+
 (defun development ()
 	"A method to easily test whatever feature I am currently developing"
 	(setf *debugging* T)
@@ -49,26 +55,33 @@
 	(setf options '("Start a new game" "Load a game"
 					   "Create worlds" "Develop" "About" "Exit"))
 	(case (choose-number-option options)
+		(0 (format t "~&Which world do you want to play?")
+			;; let the player choose one of the game worlds
+			(let ((world (choose-option
+							 (append (keys *games*) '("Other" "Back")))))
+				(cond ((equalp world "Back") (start-menu))
+					((equalp world "Other")
+						(format t "~&What world file do you want to load?")
+						(input-string world-file))
+					(T (setf world-file (cassoc world *games*))))
+				(setf world-file (concatenate 'string "../ATL/" world-file))
+				(load-file world-file)
+				;; let the player choose a character
+				(format t "~&Which character do you want to play?")
+				(let* ((char-nr (choose-number-option
+									(list-world-objects 'player)))
+						  (char-name (nth char-nr (list-world-objects 'player))))
+					(set-main-player char-name)
+					(play-game))))
 		;;FIXME Present the player with a choice of saved games
-		(0 (format t "~&What world file do you want to load?")
-			(input-string world-file)
-			;;FIXME Allowing only one player per world eliminates the need
-			;; to ask for a player name
-			(format t "~&What is your name?")
-			(input-string name)
-			(load-file world-file)
-			(play-game name))
-		;;FIXME Present the player with a choice of game worlds
-		(1 (format t "~&What game file do you want to load?")
+		(1 ;(choose-number-option *games*) ;;XXXXXX
+			(format t "~&What game file do you want to load?")
 			(input-string game)
 			(setf game (concatenate 'string "../saves/" game))
 			(load-game game)
-			;;FIXME Present the player with a choice of predefined characters
-			(format t "~&What is your name?")
-			(input-string name)
-			(play-game name))
+			(play-game))
 		(2 (world-creator))
-		(3 (development))
+		(3 (development)) ;; XXX Remove this
 		(4 (print-version)
 			(when (y-or-n-p "Show the license text?")
 				(print-text-file "../LICENSE"))

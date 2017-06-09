@@ -39,6 +39,10 @@
 	(change-player-location player (player-place player))
 	(add-game-object player))
 
+(defun set-main-player (player-name)
+	"Set the main player for this game"
+	(setf (world-main-player *world*) player-name))
+
 (defun change-player-location (player location)
 	"Change the player's location and do housekeeping"
 	(setf location (to-string location))

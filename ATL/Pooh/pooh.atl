@@ -14,3 +14,7 @@ load-file "woods.atl"
 define-player "Winnie the Pooh"
 	description "A small but very lovable bear of very little brain."
 	place "Pooh's home"
+
+define-player "Christopher Robin"
+	description "Pooh's best friend."
+	place "Western woods"

@@ -99,8 +99,8 @@
 								   (first options) T))
 							(2 (set-object-attribute current-object
 								   (first options) (second options)))
-							;; FIXME gives problems with lines like this:
-							;; "    ;commented" - should be fixed
+							;; XXX gives problems with lines like this:
+							;; "    ;commented" - should be fixed now ?
 							(t (error "~&ERROR: too many arguments: '~A'"
 								   line)))))
 				(T ;; can't happen
