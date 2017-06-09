@@ -18,3 +18,4 @@ define-player "Winnie the Pooh"
 define-player "Christopher Robin"
 	description "Pooh's best friend."
 	place "Western woods"
+

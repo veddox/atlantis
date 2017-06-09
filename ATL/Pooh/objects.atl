@@ -6,6 +6,8 @@
 ; author: Daniel Vedder
 ; date: 07/06/2017
 
+; ITEMS
+	
 define-item "Hunny"
 	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
 
@@ -21,3 +23,78 @@ define-item "Piglet's sign"
 	|   TRESPASSERS  WILL >
 	|____________________<
 	"
+
+define-item "Bellrope"
+	description "This rope looks perfectly designed to be pulled. The designer
+	even tried to give it a natural flair by shaping it like a
+	tail. Hm, that does look very much like a tail!"
+	
+	
+; NPCs
+
+define-npc "Piglet"
+	description "Piglet is Pooh's best friend. He is always cheerful (except
+	when he's scared) and always ready for a bit of fun."
+	says "Oh hello Pooh, good to see you!"
+
+define-npc "Kanga"
+	description "Kanga is Roo's mother. She is very responsible, but also
+	very loving and affectionate. Don't disobey her, though!"
+	says "Hello Pooh, have you come to play with Roo?"
+
+define-npc "Roo"
+	description "Roo is Pooh's youngest friend. He loves a good romp, especially
+	with his friend Tigger."
+	says "Hey Pooh, Tigger and I want to play catch. Do you want to join?"
+
+define-npc "Tigger"
+	description "Tigger is the most hyperactive animal you could imagine. His
+	constant bouncing can be incredibly irritating, but he
+	is very loyal and too friendly to really dislike."
+	says "Watch out, HERE I COME!!!"
+
+define-npc "Owl"
+	description "Owl is a wise, old bird. He is ever so clever and uses many
+	big words - if you can understand him, it's usually worth listening."
+	says "The climatic conditions appear to foreshadow a certain amount of
+	precipitation tonight, don't you agree?"
+
+define-npc "Christopher Robin"
+	description "Christopher Robin is Pooh's oldest friend. He's known him for
+	as long as he can remember. If you need advice or help, 
+	Christopher Robin is sure to be of service."
+	says "Hey Pooh, remember that time we went on an expedition together?"
+
+define-npc "Eeyoree"
+	description "Eeyoree the Donkey is always feeling blue. Somehow he got the
+	idea that nobody likes him. It isn't true, but hearing him
+	complaining all day isn't particularly cheering."
+	says "I'm sure it's going to rain today. Just when I needed to go and search
+	for my tail. It always rains when it's most inconvenient. 
+	Oh, hello Pooh. You haven't come to see me for a while! 
+	Well, I suppose you had better things to do."
+	quest "Find the tail"
+
+define-npc "Rabbit"
+	description "Rabbit is a Very Important Person, because he has ever so
+	many friends-and-relations. So many in fact, that he never
+	seems to have time for any of them. He is always on the move,
+	always busy, and not particularly fond of bears who happen
+	to stop by his home for teatime."
+	says "Hello Pooh, how are you? Oh, would you look at the time, I really
+	must be getting a move on. Catch you later!"
+
+; QUESTS
+	
+define-quest "Find the tail"
+	say-before "If you're here already, perhaps you could help me find my tail?
+	I really only feel like half a donkey without it. I really don't
+	know where to look. Perhaps one of Rabbit's friends-and-relations
+	has nicked it, or the Heffalump stole it. That would be just like
+	them, don't you think?"
+	say-after "Well, would you have a look, you actually found it. I suppose I
+	ought to give you something for your troubles, though I really
+	don't have much to give. But here, take this pot of honey."
+	proof-item "Bellrope"
+	reward-item "Hunny"
+	experience 10

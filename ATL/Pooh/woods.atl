@@ -40,3 +40,64 @@ define-place "Western woods"
 	neighbour "Northern woods"
 	neighbour "Southern woods"
 	neighbour "Piglet's porch"
+
+define-place "Central woods"
+	description "This is the oldest part of the 100 Acre Wood. The oaks you see
+	around you are truly ancient, hundreds of years old. Even Owl
+	can't remember when they were planted. It's very peaceful here."
+	neighbour "Northern woods"
+	neighbour "Eastern woods"
+	neighbour "Southern woods"
+	neighbour "Western woods"
+	neighbour "Deep forest"
+	neighbour "Hill"
+
+define-place "Northern woods"
+	description "TODO"
+	neighbour "Central woods"
+	neighbour "Eastern woods"
+	neighbour "Western woods"
+
+define-place "Southern woods"
+	description "TODO"
+	neighbour "Central woods"
+	neighbour "Eastern woods"
+	neighbour "Western woods"
+	neighbour "Bridge"
+
+define-place "Eastern woods"
+	description "TODO"
+	neighbour "Central woods"
+	neighbour "Northern woods"
+	neighbour "Southern woods"
+
+define-place "Deep forest"
+	description "Thick firs and spruces grow here, shutting out the light with
+	their branches. Broken branches lie about on the ground and
+	cob webs span the spaces between the trees. Watch your steps,
+	you never know what you may meet in here. And don't get lost!"
+	neighbour "Deep forest"
+	neighbour "Central woods"
+
+define-place "Hill"
+	description "From this hill you can see the entire 100 Acre Wood and
+	beyond. You can see Christopher Robin's house, Pooh's house,
+	the tree with the bees' nest, Owl's home, Kanga's and Roo's
+	home and the stream that marks the edge of the woods."
+	neighbour "Central woods"
+
+define-place "Bridge"
+	description "A simple wooden bridge spans the stream that marks the edge of
+	the 100 Acre Wood. For all practical purposes, the world ends here."
+	neighbour "Southern woods"
+
+define-place "Piglet's porch"
+	description "TODO"
+	neighbour "Western woods"
+	neighbour "Piglet's home"
+	item "Piglet's sign"
+
+define-place "Piglet's home"
+	description "TODO"
+	neighbour "Piglet's porch"
+	npc "Piglet"
