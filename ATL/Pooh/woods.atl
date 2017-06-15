@@ -74,7 +74,7 @@ define-place "Southern woods"
 	neighbour "Western woods"
 	neighbour "Piglet's porch"
 	neighbour "Woozle hideout"
-	neighbour "Eeeyore's gloomy place"
+	neighbour "Eeyore's gloomy place"
 	neighbour "Floody place"
 	neighbour "Bridge"
 

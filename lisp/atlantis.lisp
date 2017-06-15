@@ -73,13 +73,12 @@
 						  (char-name (nth char-nr (list-world-objects 'player))))
 					(set-main-player char-name)
 					(play-game))))
-		;;FIXME Present the player with a choice of saved games
-		(1 ;(choose-number-option *games*) ;;XXXXXX
-			(format t "~&What game file do you want to load?")
-			(input-string game)
-			(setf game (concatenate 'string "../saves/" game))
-			(load-game game)
-			(play-game))
+		(1 (format t "~&What game file do you want to load?")
+			(let ((game (choose-option (mapcar #'pathname-name
+										   (directory "../saves/*")))))
+				(setf game (concatenate 'string "../saves/" game))
+				(load-game game)
+				(play-game)))
 		(2 (world-creator))
 		(3 (development)) ;; XXX Remove this
 		(4 (print-version)
