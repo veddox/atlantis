@@ -13,15 +13,28 @@ define-item "Hunny"
 
 define-item "Pooh's sign"
 	description "
-	SANDERS
+	+--------------+
+	|  Mr SANDERS  |
+	+--------------+
 	"
 
 define-item "Piglet's sign"
 	description "
-	____________________
-	|                   \\_
-	|   TRESPASSERS  WILL >
-	|____________________<
+	_________________
+	|                \\_
+	|   TRESPASSERS  W >
+	|_________________<
+	"
+
+define-item "North Pole"
+	description "
+	=============================
+	||                         ||
+	||        NORTH POLE       ||
+	||    DISCOVERED BY POOH   ||
+	||      POOH FOUND IT      ||
+	||                         ||
+	=============================
 	"
 
 define-item "Bellrope"
@@ -65,8 +78,8 @@ define-npc "Christopher Robin"
 	Christopher Robin is sure to be of service."
 	says "Hey Pooh, remember that time we went on an expedition together?"
 
-define-npc "Eeyoree"
-	description "Eeyoree the Donkey is always feeling blue. Somehow he got the
+define-npc "Eeyore"
+	description "Eeyore the Donkey is always feeling blue. Somehow he got the
 	idea that nobody likes him. It isn't true, but hearing him
 	complaining all day isn't particularly cheering."
 	says "I'm sure it's going to rain today. Just when I needed to go and search
