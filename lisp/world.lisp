@@ -25,8 +25,7 @@
 	(npcs NIL)
 	(items NIL)
 	(weapons NIL)
-	(quests NIL)
-	(game-functions NIL))
+	(quests NIL))
 
 (setf *world* (make-world)) ;XXX Move this to another module?
 

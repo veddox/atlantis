@@ -44,8 +44,8 @@
 		(first ATLANTIS-VERSION)
 		(second ATLANTIS-VERSION)
 		(third ATLANTIS-VERSION))
-	(format t "~&Copyright (c) 2015 Daniel Vedder")
-	(format t "~&Licensed under the terms of the MIT license.~%"))
+	(format t "~&Copyright (c) 2015-2017 Daniel Vedder")
+	(format t "~&Licensed under the terms of the GNU GPLv3.~%"))
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
@@ -76,14 +76,13 @@
 		(1 (format t "~&What game file do you want to load?")
 			(let ((game (choose-option (mapcar #'pathname-name
 										   (directory "../saves/*")))))
-				(setf game (concatenate 'string "../saves/" game))
+				(setf game (concatenate 'string "../saves/" game ".world"))
 				(load-game game)
 				(play-game)))
 		(2 (world-creator))
 		(3 (development)) ;; XXX Remove this
 		(4 (print-version)
-			(when (y-or-n-p "Show the license text?")
-				(print-text-file "../LICENSE"))
+			(read-line)
 			(start-menu))
 		(5 (format t "~&Goodbye!")
 			(quit))))
@@ -111,7 +110,7 @@ Commandline options:
 		((or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
 			(print-help) (quit))
 		((cmd-parameter "--license" T)
-			(dolist (line (load-text-file "../LICENSE"))
+			(dolist (line (load-text-file "../COPYING"))
 				(unless (null line) (format t "~%~A" line)))
 			(quit))
 		((cmd-parameter "--debugging")
