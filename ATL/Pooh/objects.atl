@@ -41,7 +41,29 @@ define-item "Bellrope"
 	description "This rope looks perfectly designed to be pulled. The designer
 	even tried to give it a natural flair by shaping it like a
 	tail. Hm, that does look very much like a tail!"
-	
+
+define-item "Lamp"
+	description "This lamp has a bowl at the bottom for the oil, a glass casing 
+	to protect the wick and a metal grip by which to carry it. It's
+	very useful for dark places."
+
+define-item "Life"
+	description "
+	...................................
+	...................................
+	.........Congratulations!..........
+	...................................
+	....You have finished the game!....
+	...................................
+	...................................
+	"
+
+define-item "Magic map"
+	description "This is a strange map. It always seems to be changing. One
+	moment it will show you one thing, the next something completely
+	different. Yet, looking at it, you have the very distinct
+	impression that it wants you to walk up a hill."
+	cost 50		
 	
 ; NPCs
 
@@ -97,6 +119,35 @@ define-npc "Rabbit"
 	says "Hello Pooh, how are you? Oh, would you look at the time, I really
 	must be getting a move on. Catch you later!"
 
+define-npc "Mr Milne"
+	description "Alan Alexander Milne is sitting at the table, staring very
+	hard at a piece of paper before him and chewing on his pen.
+	He seems to be about forty years old, judging by the first
+	grey hairs that are beginning to show on his head.
+	When he hears you approaching, he looks up and smiles at you."
+	says "Hello Pooh, how very good to see you! I heard you are looking for my
+	son, Christopher Robin? You are a brave bear to be looking all the way
+	down here! Perhaps we can help you."
+	quest "Bring honey"
+
+define-npc "Mr Shepard"
+	description "Ernest H. Shepard looks like a man with plenty of humour.
+	Right now he is holding a pencil and scribbling around on
+	what would appear to be a map of some sort. Every now and again
+	he laughs quietly to himself, as if enjoying a good joke."
+	says "Well well well, Pooh the Bear! Hello there, my young friend! 
+	Welcome to our little club! You look rather lost. I think I 
+	know just what you need..."
+	sells "Magic map"
+
+define-npc "Daniel"
+	description "You really can't tell how old this boy is. Sometimes he looks
+	like a young man, but at other times his face is still very
+	boyish. What you can say is that he has red hair, freckles, and
+	rather big ears. His fingers are drumming around on some strange
+	black box that is lying open in front of him."
+	says "Hi Pooh, pleased to meet you at last!"
+
 ; QUESTS
 	
 define-quest "Find the tail"
@@ -111,3 +162,14 @@ define-quest "Find the tail"
 	proof-item "Bellrope"
 	reward-item "Hunny"
 	experience 10
+
+define-quest "Bring honey"
+	say-before "The three of us are really hungry. Perhaps you could bring us
+	some of that delicious honey of yours? We'll reward you well.
+	And if you bring us enough, perhaps you can even persuade Mr
+	Shepard to give you his map."
+	say-after "Wow, thank you very much, Pooh! That honey was very good! I
+	appreciate your sacrifice. Here, take this."
+	proof-item "Hunny"
+	experience 5
+	money 5

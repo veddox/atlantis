@@ -13,6 +13,7 @@ define-place "Pooh's home"
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
 	item "Hunny"
+	item "Lamp" ;XXX development
 
 define-place "Pooh's porch"
 	description "You are standing in front of Pooh's home. Here he lives under
@@ -93,7 +94,28 @@ define-place "Deep forest"
 	cob webs span the spaces between the trees. Watch your steps,
 	you never know what you may meet in here. And don't get lost!"
 	neighbour "Deep forest"
+	neighbour "Tunnel"
 	neighbour "Central woods"
+
+define-place "Tunnel"
+	description "A dark, musty tunnel opens up before you. Worms crawl about the
+	earthen floor and something scuttles away before you can see it
+	properly. Are you sure you want to go further?"
+	requires "Lamp"
+	neighbour "Deep forest"
+	neighbour "Cave"
+
+define-place "Cave"
+	description "The tunnel suddenly opens out into a huge cavern. The walls are
+	of stone here, and glint with the light of hundreds of crystals.
+	A clear, cold stream runs through the middle of the cave, flanked
+	by rocky pillars that support the roof. In the center, somebody
+	has set up lights and a table. Three people, two men and a boy,
+	are sitting around it."
+	neighbour "Tunnel"
+	npc "Mr Milne"
+	npc "Mr Shepard"
+	npc "Daniel" 
 
 define-place "Hill"
 	description "From this hill you can see the entire 100 Acre Wood and
@@ -101,6 +123,16 @@ define-place "Hill"
 	the tree with the bees' nest, Owl's home, Kanga's and Roo's
 	home and the stream that marks the edge of the woods."
 	neighbour "Central woods"
+	neighbour "Galleons lap"
+
+define-place "Galleons lap"
+	description "At the very top of the hill, an enchanted place opens up to
+	you. The floor is of soft, green grass, surrounded on all sides
+	by sixty-something trees. Sitting here, you can see not only the
+	whole forest, but the entire world spreading out until it reaches
+	the sky."
+	neighbour "Hill"
+	requires "Magic map"
 
 define-place "Bridge"
 	description "A simple wooden bridge spans the stream that marks the edge of
@@ -108,6 +140,7 @@ define-place "Bridge"
 	neighbour "Southern woods"
 	neighbour "Eastern woods"
 	neighbour "Floody place"
+	neighbour "The World"
 
 define-place "Piglet's porch"
 	description "TODO"
@@ -198,3 +231,13 @@ define-place "Woozle hideout"
 define-place "Misty forest"
 	description "TODO"
 	neighbour "Sandy pit"
+
+define-place "The World"
+	description "Well, so you have dared it at last. With the 100 Acre Wood at
+	your back, you face the Great Unknown. Many adventures lie behind
+	you, but the greatest one is still to come. Will you brave it?
+
+	It is called: Life."
+	requires "Maturity"
+	neighbour "Bridge"
+	item "Life"
