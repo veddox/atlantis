@@ -59,7 +59,7 @@
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help player goto pickup
+	'(help player goto take
 		 drop talk trade
 		 equip attack spell
 		 look save clear))
@@ -78,7 +78,7 @@ player           -  Describe your player
 goto <place>     -  Go to a neighbouring location
 look <object>    -  Show a description of this entity
 talk [to] <npc>  -  Talk to an NPC
-pickup <item>    -  Pick up an item lying around
+take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
@@ -132,9 +132,10 @@ save <game-file> -  Save the game to file")
 		(cond (game-file (setf last-save game-file))
 			((and last-save (not game-file)) (setf game-file last-save))
 			((not (or last-save game-file))
-				(format t "~&Where do you want to save the game?")
+				(format t "~&What do you want to call the save file?")
 				(input-string game-file)
-				(setf game-file (concatenate 'string "../saves/" game-file))
+				(setf game-file (concatenate 'string
+									"../saves/" game-file ".world"))
 				(setf last-save game-file)))
 		(when (y-or-n-p "Save game to ~A?" game-file)
 			(save-world game-file)
@@ -263,11 +264,11 @@ save <game-file> -  Save the game to file")
 	(if (y-or-n-p "Buy something else?")
 		(trade player npc) (clear player)))
 
-(defun pickup (player &optional item-name)
+(defun take (player &optional item-name)
 	"The player picks up an item"
 	(unless item-name
 		(format t "~&Please specify an item to pick up!")
-		(return-from pickup))
+		(return-from take))
 	(let ((place (get-game-object 'place (player-place player)))
 			 (item (get-game-object 'item item-name)))
 		(if (member item-name (place-item place) :test #'equalp)

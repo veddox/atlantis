@@ -19,8 +19,11 @@
 	(monster NIL)
 	(npc NIL)
 	(spawns NIL)
-	(requires "") ;Can be an ability or an item
-	(function "")) ;XXX Get rid of functions?
+	;(entry-hook NIL)
+	;(exit-hook NIL)
+	;; XXX Get rid of the following? (If hooks are available)
+	(requires "")) ;Can be an ability or an item
+
 
 ;;; WORK IN PROGRESS >>>
 
@@ -30,6 +33,7 @@
 	(says "")
 	(sells NIL)
 	(quest ""))
+	;(interaction-hook NIL))
 
 (defstruct monster
 	(name "")
@@ -42,14 +46,17 @@
 	(item NIL)
 	(weapon "")
 	(armour-class 0))
+	;(attack-hook NIL)
+	;(meet-hook NIL))
 
 (defstruct item
 	(name "")
 	(description "")
 	(cost 0)
 	(weapon)
-	(function NIL) ;XXX Dike out the function?
-	(ability NIL))
+	;(pickup-hook NIL)
+	;(drop-hook NIL)
+	(ability NIL)) ;XXX Remove abilities again?
 
 (defstruct weapon
 	(name "")
