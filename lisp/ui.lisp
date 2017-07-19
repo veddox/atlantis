@@ -247,16 +247,15 @@ save <game-file> -  Save the game to file")
 	(let* ((choice (choose-option (append (npc-sells npc) (list "None"))))
 			  (item (get-game-object 'item choice))
 			  (cost (if item (item-cost item) NIL)))
+		;; TODO The cost should be displayed alongside every item.
 		(cond ((equalp choice "None") NIL)
-			;; XXX Do we have to insure that every object referenced by the
-			;; world exists, or is that the responsibility of the person
-			;; who writes the ATL code?
 			((not item)
 				(format t "~&This object does not exist!")
-				(format t "(Talk to the world creator)")
+				(format t "~&(This is a bug in the game world.)")
 				NIL)
 			((< (player-money player) cost)
-				(format t "~&You do not have enough money!"))
+				(format t "~&This costs ~S. You do not have enough money!"
+					cost))
 			((y-or-n-p "Buy ~A for ~S?" choice cost)
 				(decf (player-money player) cost)
 				(set-object-attribute player 'item choice)
@@ -272,12 +271,14 @@ save <game-file> -  Save the game to file")
 	(let ((place (get-game-object 'place (player-place player)))
 			 (item (get-game-object 'item item-name)))
 		(if (member item-name (place-item place) :test #'equalp)
-			(progn
-				;; XXX Shouldn't the item's function be executed here?
-				;; Or should item functions be disabled entirely?
-				(set-object-attribute player 'item item-name)
-				(remove-object-attribute place 'item item-name)
-				(format t "~&You have picked up: ~A" item-name))
+			(if (item-fixed item)
+				(format t "~&You cannot pick this up!")
+				(progn
+					;; XXX Shouldn't the item's function be executed here?
+					;; Or should item functions be disabled entirely?
+					(set-object-attribute player 'item item-name)
+					(remove-object-attribute place 'item item-name)
+					(format t "~&You have picked up: ~A" item-name)))
 			(format t "~&Sorry, this item is not here!"))))
 
 (defun drop (player &optional item)

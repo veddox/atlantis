@@ -54,6 +54,7 @@
 	(description "")
 	(cost 0)
 	(weapon)
+	(fixed)
 	;(pickup-hook NIL)
 	;(drop-hook NIL)
 	(ability NIL)) ;XXX Remove abilities again?
