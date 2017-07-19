@@ -13,6 +13,7 @@ define-place "Pooh's home"
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
 	item "Hunny"
+	item "Letter"
 	item "Lamp" ;XXX development
 
 define-place "Pooh's porch"
@@ -33,9 +34,10 @@ define-place "Pooh's branch"
 	item "Hunny"
 
 define-place "Western woods"
-	description "This is the western part of the 100 Acre Wood. As you would
-	expect in a wood, it is full of trees. Here, however, there are
-	not quite that many - mainly young birches."
+	description "The western forest is dominated by tall coniferous trees,
+	firs and pines and the like. Bushes grow between the
+	trunks, forming patches of dense undergrowth."
+	;XXX Add berry bushes?
 	neighbour "Pooh's porch"
 	neighbour "Central woods"
 	neighbour "Northern woods"
@@ -57,7 +59,10 @@ define-place "Central woods"
 	neighbour "Hill"
 
 define-place "Northern woods"
-	description "TODO"
+	description "Trees become sparse towards the north of the 100 Acre Wood,
+	eventually giving out completely to a scraggly heathland.
+	A quick, bubbling stream flows through the grass, coming
+	from the rapids in the north."
 	neighbour "Central woods"
 	neighbour "Eastern woods"
 	neighbour "Western woods"
@@ -67,9 +72,13 @@ define-place "Northern woods"
 	neighbour "Rabbit's house"
 	neighbour "Rabbit's friends and relations"
 	neighbour "Rapids"
+	neighbour "Stream"
 
 define-place "Southern woods"
-	description "TODO"
+	description "You can feel the ground becoming soft underneath your feet as
+	you approach the marshes and bogs to the south of the
+	100 Acre wood. Plenty of moss grows around the roots of
+	the trees. Here and there, are willow bends its branches."
 	neighbour "Central woods"
 	neighbour "Eastern woods"
 	neighbour "Western woods"
@@ -80,7 +89,9 @@ define-place "Southern woods"
 	neighbour "Bridge"
 
 define-place "Eastern woods"
-	description "TODO"
+	description "This is the eastern part of the 100 Acre Wood. As you would
+	expect in a wood, it is full of trees. In this case you 
+	mainly see young birches around you."
 	neighbour "Central woods"
 	neighbour "Northern woods"
 	neighbour "Southern woods"
@@ -153,6 +164,7 @@ define-place "Piglet's home"
 	description "TODO"
 	neighbour "Piglet's porch"
 	npc "Piglet"
+	item "Grandfather's cane"
 
 define-place "Kanga's house"
 	description "TODO"
@@ -172,8 +184,13 @@ define-place "Six pine trees"
 	neighbour "Heffalump trap"
 
 define-place "Heffalump trap"
-	description "TODO"
+	description "This is a Very Deep Pit that you once dug together with Piglet,
+	when you were both out to catch a heffalump. Only you didn't
+	succeed, because Somebody ate the bait before any heffalump
+	could turn up... But wait - do you see something moving in
+	the shadows, down in the pit?"
 	neighbour "Six pine trees"
+	monster "Heffalump"
 
 define-place "Bee tree"
 	description "TODO"
@@ -194,10 +211,17 @@ define-place "Rapids"
 	description "TODO"
 	item "North Pole"
 	neighbour "Northern woods"
+	neighbour "Stream"
+
+define-place "Stream"
+	description "Whoops! You fell in! Brrr, this water is cold! Better get out
+	quickly. But that is easier said than done, the current here
+	is pretty strong..."
+	neighbour "Floody place"
 
 define-place "Christopher Robin's house"
 	description "TODO"
-	npc "Christopher Robin"
+	npc "Christopher Robin" ;TODO Move him somewhere else
 	neighbour "Eastern woods"
 
 define-place "Owl's porch"

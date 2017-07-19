@@ -50,6 +50,7 @@
 	;(meet-hook NIL))
 
 (defstruct item
+	;; XXX Items containing items?
 	(name "")
 	(description "")
 	(cost 0)

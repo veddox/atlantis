@@ -11,6 +11,11 @@
 define-item "Hunny"
 	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
 
+define-item "Letter"
+	description "A closed letter, addressed to Somebody in Christopher Robin's
+	handwriting. You think it's a letter to you, but as you are just
+	a Bear of Very Little Brain, you have no way of reading it..."
+	
 define-item "Pooh's sign"
 	description "
 	+--------------+
@@ -38,6 +43,7 @@ define-item "North Pole"
 	||                         ||
 	=============================
 	"
+	fixed
 
 define-item "Bellrope"
 	description "This rope looks perfectly designed to be pulled. The designer
@@ -65,7 +71,18 @@ define-item "Magic map"
 	moment it will show you one thing, the next something completely
 	different. Yet, looking at it, you have the very distinct
 	impression that it wants you to walk up a hill."
-	cost 50		
+	cost 50
+
+define-item "Grandfather's cane"
+	description "Piglet's grandfather used to carry this cane around with him.
+	And woe to any young animal who dared to be disrespectful!"
+	weapon
+
+define-weapon "Grandfather's cane"
+	description "Piglet's grandfather used to carry this cane around with him.
+	And woe to any young animal who dared to be disrespectful!"
+	type "Cane"
+	damage 3
 	
 ; NPCs
 
@@ -95,6 +112,7 @@ define-npc "Owl"
 	big words - if you can understand him, it's usually worth listening."
 	says "The climatic conditions appear to foreshadow a certain amount of
 	precipitation tonight, don't you agree?"
+	quest "Reading material"
 
 define-npc "Christopher Robin"
 	description "Christopher Robin is Pooh's oldest friend. He's known him for
@@ -158,9 +176,10 @@ define-quest "Find the tail"
 	know where to look. Perhaps one of Rabbit's friends-and-relations
 	has nicked it, or the Heffalump stole it. That would be just like
 	them, don't you think?"
-	say-after "Well, would you have a look, you actually found it. I suppose I
-	ought to give you something for your troubles, though I really
-	don't have much to give. But here, take this pot of honey."
+	say-after "Well, would you have a look, you actually found my tail. I 
+	suppose I ought to give you something for your troubles, 
+	though I really don't have much to give. But here, take 
+	this pot of honey."
 	proof-item "Bellrope"
 	reward-item "Hunny"
 	experience 10
@@ -175,3 +194,29 @@ define-quest "Bring honey"
 	proof-item "Hunny"
 	experience 5
 	money 5
+
+define-quest "Reading material"
+	say-before "I feel in dire need of intellectual stimulation, yet I fear that
+	my library has few novelties left. If you bring me something
+	new to read, I shall thank you by reading it to you - after
+	all, you do not always wish to remain a Bear of Very Little
+	Brain, do you?"
+	say-after "Well, you actually found something for me to read! Let's see, 
+	what have we here? A letter? Let's see what it says:
+	Hmm, harrumph. 'Dear Pooh', hm, this is bad handwriting,
+	'Dear Pooh, I have something Very Important to tell you. Come
+	and meet me quickly at the Galleon's Lap. Your's sinsirly,
+	Christopher Robin.'"
+	proof-item "Letter"
+	experience 5
+
+; MONSTERS
+
+define-monster "Heffalump"
+	description "It's too dark to see the heffalump properly, but you get the
+	impression that it is pretty big. Not as big as you expected
+	a full-grown heffalump to be, though. Looking closer, you see
+	four legs - or is that five? - waving around. The thing has
+	a huge head. Unless those are simply its ears?"
+	health 10
+	item "Hunny"
