@@ -229,3 +229,4 @@ define-monster "Heffalump"
 	strength 1
 	dexterity 1
 	item "Hunny"
+	death-msg "The Heffalump runs away." ;TODO

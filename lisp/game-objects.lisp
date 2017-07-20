@@ -19,21 +19,17 @@
 	(monster NIL)
 	(npc NIL)
 	(spawns NIL)
-	;(entry-hook NIL)
-	;(exit-hook NIL)
-	;; XXX Get rid of the following? (If hooks are available)
+	(entry-hook "")
+	(exit-hook "")
 	(requires "")) ;Can be an ability or an item
-
-
-;;; WORK IN PROGRESS >>>
 
 (defstruct npc
 	(name "")
 	(description "")
 	(says "")
 	(sells NIL)
-	(quest ""))
-	;(interaction-hook NIL))
+	(quest "")
+	(interaction-hook ""))
 
 (defstruct monster
 	(name "")
@@ -45,9 +41,9 @@
 	(spawn 0)
 	(item NIL)
 	(weapon "")
-	(armour-class 0))
-	;(attack-hook NIL)
-	;(meet-hook NIL))
+	(armour-class 0)
+	(attack-hook "")
+	(death-msg ""))
 
 (defstruct item
 	;; XXX Items containing items?

@@ -12,6 +12,7 @@
 
 ;; TODO Out-source all game logic to other modules
 ;; (This module should be purely UI)
+;; Yeah, probably not going to happen ;-)
 
 
 (defun play-game ()
@@ -166,10 +167,14 @@ Some items may provide additional commands.")
 				(format t "~&You cannot enter this place unless you have: ~A" req)
 				(return-from goto))))
 	;; Change places
+	(let ((hook (place-exit-hook (get-game-object 'place location)))) ;exit hook
+		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(change-player-location player location)
 	(spawn-monsters location)
+	(let ((hook (place-entry-hook (get-game-object 'place location)))) ;entry hook
+		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(add-player-experience player 1)
 	(describe-place location))
 
@@ -193,7 +198,6 @@ Some items may provide additional commands.")
 
 (defun talk (player &optional npc-name)
 	"Talk to the desired NPC"
-	;; TODO Add interactive facility
 	(unless npc-name
 		(format t "~&Please specify an NPC to talk to!")
 		(return-from talk))
@@ -209,6 +213,10 @@ Some items may provide additional commands.")
 			(format t "~&~A is not here!" npc-name)
 			(return-from talk))
 		(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+		;; Interaction hook
+		(let ((hook (npc-interaction-hook npc)))
+			(unless (zerop (length hook))
+				(funcall (read-from-string hook) player)))
 		;; Trade with the NPC
 		(when (and (npc-sells npc)
 				  (y-or-n-p "Trade with ~A?" npc-name))
@@ -348,14 +356,20 @@ Some items may provide additional commands.")
 			  (m-str (monster-strength monster))
 			  (m-dex (monster-dexterity monster))
 			  (m-ac (monster-armour-class monster))
-			  (m-weapon (get-game-object 'weapon (monster-weapon monster)))
+			  (m-weapon (if (not (equalp (monster-weapon monster) "")) ;lbyl
+							(get-game-object 'weapon (monster-weapon monster))
+							(make-weapon :name "Fists" :damage 0)))
 			  (p-str (player-strength player))
 			  (p-dex (player-dexterity player))
 			  (p-ac (player-armour-class player))
 			  (p-weapon (if (not (equalp (player-weapon player) "")) ;lbyl
 							(get-game-object 'weapon (player-weapon player))
 							(make-weapon :name "Fists" :damage 0)))
+			  (monster-hook (monster-attack-hook monster))
 			  (damage 0))
+		;; Call the monster's attack hook
+		(unless (zerop (length monster-hook))
+			(funcall (read-from-string monster-hook) player))
 		;; Print information about the combattants
 		(format t "~&Health ~A: ~A    Health ~A: ~A" (player-name player)
 			(player-health player) opponent (monster-health monster))
@@ -374,8 +388,10 @@ Some items may provide additional commands.")
 						  (remove-object-attribute place
 							  'monster monster)
 						  (add-player-experience player experience)
-						  (format t "~&You killed the monster! ")
-						  (format t "~A points experience." experience))))
+						  (if (monster-death-msg monster)
+							  (format t "~&~A" (monster-death-msg monster))
+							  (format t "~&You killed the monster!"))
+						  (format t "~&~A points experience." experience))))
 			((minusp damage)
 				(change-player-health player damage)
 				(format t "~&You missed. Your opponent hit! ")
