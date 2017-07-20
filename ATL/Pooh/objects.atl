@@ -45,6 +45,11 @@ define-item "North Pole"
 	"
 	fixed
 
+define-item "Berries"
+	description "Scrumptious, fresh wild berries: blueberries, blackberries,
+	strawberries... Just don't eat too many!"
+	infinite
+	
 define-item "Bellrope"
 	description "This rope looks perfectly designed to be pulled. The designer
 	even tried to give it a natural flair by shaping it like a
@@ -82,7 +87,7 @@ define-weapon "Grandfather's cane"
 	description "Piglet's grandfather used to carry this cane around with him.
 	And woe to any young animal who dared to be disrespectful!"
 	type "Cane"
-	damage 3
+	damage 4
 	
 ; NPCs
 
@@ -114,6 +119,8 @@ define-npc "Owl"
 	precipitation tonight, don't you agree?"
 	quest "Reading material"
 
+;TODO Christopher Robin needs to say something else
+; (he's on Galleon's Lap now, not in his home)
 define-npc "Christopher Robin"
 	description "Christopher Robin is Pooh's oldest friend. He's known him for
 	as long as he can remember. If you need advice or help, 
@@ -219,4 +226,6 @@ define-monster "Heffalump"
 	four legs - or is that five? - waving around. The thing has
 	a huge head. Unless those are simply its ears?"
 	health 10
+	strength 1
+	dexterity 1
 	item "Hunny"

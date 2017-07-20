@@ -12,12 +12,12 @@ load-file "objects.atl"
 load-file "woods.atl"
 	
 define-player "Winnie the Pooh"
-	description "A small but very lovable bear of very little brain."
+	description "A small but lovable bear of Very Little Brain."
 	place "Pooh's home"
-	health 10
-	strength 5
-	dexterity 5
-	constitution 5
+	health 20
+	strength 1
+	dexterity 4
+	constitution 4
 
 ;; XXX Created during development
 ;define-player "Christopher Robin"

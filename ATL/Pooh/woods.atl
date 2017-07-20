@@ -37,7 +37,7 @@ define-place "Western woods"
 	description "The western forest is dominated by tall coniferous trees,
 	firs and pines and the like. Bushes grow between the
 	trunks, forming patches of dense undergrowth."
-	;XXX Add berry bushes?
+	item "Berries"
 	neighbour "Pooh's porch"
 	neighbour "Central woods"
 	neighbour "Northern woods"
@@ -143,6 +143,7 @@ define-place "Galleons lap"
 	whole forest, but the entire world spreading out until it reaches
 	the sky."
 	neighbour "Hill"
+	npc "Christopher Robin"
 	requires "Magic map"
 
 define-place "Bridge"
@@ -179,7 +180,9 @@ define-place "Sandy pit"
 	neighbour "Misty forest"
 
 define-place "Six pine trees"
-	description "TODO"
+	description "The Six Pine Trees are a group of particularly tall pines
+	standing off by themselves. You often go by them on your
+	way through the forest."
 	neighbour "Western woods"
 	neighbour "Heffalump trap"
 
@@ -199,6 +202,7 @@ define-place "Bee tree"
 define-place "Rabbit's house"
 	description "TODO"
 	npc "Rabbit"
+	item "Hunny"
 	neighbour "Northern woods"
 	neighbour "Rabbit's friends and relations"
 
@@ -221,7 +225,6 @@ define-place "Stream"
 
 define-place "Christopher Robin's house"
 	description "TODO"
-	npc "Christopher Robin" ;TODO Move him somewhere else
 	neighbour "Eastern woods"
 
 define-place "Owl's porch"
