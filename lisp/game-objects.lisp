@@ -56,8 +56,10 @@
 	(cost 0)
 	(weapon)
 	(fixed)
-	;(pickup-hook NIL)
-	;(drop-hook NIL)
+	(infinite)
+	(pickup-hook "")
+	(drop-hook "")
+	(command NIL)
 	(ability NIL)) ;XXX Remove abilities again?
 
 (defstruct weapon

@@ -45,13 +45,17 @@
 	"Execute a typed-in game command"
 	(let* ((command (read-from-string cmd))
 			  (space (position #\Space cmd))
-			  (arg (if space (second (cut-string cmd (1+ space))) NIL)))
-		(if (member command *commands*)
-			(if space (funcall command player arg)
-				(funcall command player))
+			  (arg (if space (second (cut-string cmd (1+ space))) NIL))
+			  (cmd-fn (when (member command *commands* :test #'eq) command)))
+		(dolist (i (objectify-name-list 'item (player-item player)))
+			(when (member (to-string command) (item-command i) :test #'equalp)
+				(setf cmd-fn command)
+				(return)))
+		(if cmd-fn
+			(if space (funcall cmd-fn player arg)
+				(funcall cmd-fn player))
 			(progn (format t "~&Sorry, this command does not exist!")
 				(format t "~&Type 'help' for a list of commands.")))))
-		
 
 ;;;
 ;;; Here follow the functions that define the in-game commands.
@@ -82,7 +86,9 @@ take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
-save <game-file> -  Save the game to file")
+save <game-file> -  Save the game to file
+
+Some items may provide additional commands.")
 	(format t "~A" help-text))
 
 (defun clear (player)
@@ -274,11 +280,16 @@ save <game-file> -  Save the game to file")
 			(if (item-fixed item)
 				(format t "~&You cannot pick this up!")
 				(progn
-					;; XXX Shouldn't the item's function be executed here?
-					;; Or should item functions be disabled entirely?
 					(set-object-attribute player 'item item-name)
-					(remove-object-attribute place 'item item-name)
-					(format t "~&You have picked up: ~A" item-name)))
+					(unless (item-infinite item)
+						(remove-object-attribute place 'item item-name))
+					(format t "~&You have picked up: ~A" item-name)
+					(when (item-command item)
+						(format t "~&This item provides commands: ~A"
+							(string-from-list (item-command item))))
+					(when (item-pickup-hook item)
+						(funcall (read-from-string
+									 (item-pickup-hook item)) player))))
 			(format t "~&Sorry, this item is not here!"))))
 
 (defun drop (player &optional item)
@@ -294,7 +305,11 @@ save <game-file> -  Save the game to file")
 				(set-object-attribute player 'weapon ""))
 			(set-object-attribute
 				(get-game-object 'place (player-place player)) 'item item)
-			(format t "~&You have dropped: ~A" item))
+			(format t "~&You have dropped: ~A" item)
+			(when (item-drop-hook (get-game-object 'item item))
+				(funcall (read-from-string
+							 (item-drop-hook (get-game-object 'item item)))
+					player)))
 		(format t "~&You do not possess this item!")))
 
 (defun equip (player &optional new-weapon)
