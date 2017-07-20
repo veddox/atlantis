@@ -257,6 +257,7 @@ define-place "Woozle hideout"
 
 define-place "Misty forest"
 	description "TODO"
+	item "Berries"
 	neighbour "Sandy pit"
 
 define-place "The World"

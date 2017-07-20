@@ -8,19 +8,16 @@
 
 name-world "100 Acre Wood"
 
+load-file "pooh-extensions.lisp"
 load-file "objects.atl"
 load-file "woods.atl"
 	
 define-player "Winnie the Pooh"
 	description "A small but lovable bear of Very Little Brain."
 	place "Pooh's home"
+	max-health 20
 	health 20
 	strength 1
 	dexterity 4
 	constitution 4
-
-;; XXX Created during development
-;define-player "Christopher Robin"
-;	description "Pooh's best friend."
-;	place "Western woods"
 

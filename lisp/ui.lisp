@@ -55,7 +55,7 @@
 		(if cmd-fn
 			(if space (funcall cmd-fn player arg)
 				(funcall cmd-fn player))
-			(progn (format t "~&Sorry, this command does not exist!")
+			(progn (format t "~&Sorry, this command is not available!")
 				(format t "~&Type 'help' for a list of commands.")))))
 
 ;;;
@@ -295,7 +295,7 @@ Some items may provide additional commands.")
 					(when (item-command item)
 						(format t "~&This item provides commands: ~A"
 							(string-from-list (item-command item))))
-					(when (item-pickup-hook item)
+					(unless (zerop (length (item-pickup-hook item)))
 						(funcall (read-from-string
 									 (item-pickup-hook item)) player))))
 			(format t "~&Sorry, this item is not here!"))))
@@ -314,7 +314,7 @@ Some items may provide additional commands.")
 			(set-object-attribute
 				(get-game-object 'place (player-place player)) 'item item)
 			(format t "~&You have dropped: ~A" item)
-			(when (item-drop-hook (get-game-object 'item item))
+			(unless (zerop (length (item-drop-hook (get-game-object 'item item))))
 				(funcall (read-from-string
 							 (item-drop-hook (get-game-object 'item item)))
 					player)))

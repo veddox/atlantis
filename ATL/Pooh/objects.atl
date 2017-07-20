@@ -10,6 +10,7 @@
 	
 define-item "Hunny"
 	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
+	command "eat"
 
 define-item "Letter"
 	description "A closed letter, addressed to Somebody in Christopher Robin's
@@ -48,6 +49,7 @@ define-item "North Pole"
 define-item "Berries"
 	description "Scrumptious, fresh wild berries: blueberries, blackberries,
 	strawberries... Just don't eat too many!"
+	command "eat"
 	infinite
 	
 define-item "Bellrope"
@@ -70,6 +72,7 @@ define-item "Life"
 	...................................
 	...................................
 	"
+	fixed
 
 define-item "Magic map"
 	description "This is a strange map. It always seems to be changing. One
@@ -100,6 +103,7 @@ define-npc "Kanga"
 	description "Kanga is Roo's mother. She is very responsible, but also
 	very loving and affectionate. Don't disobey her, though!"
 	says "Hello Pooh, have you come to play with Roo?"
+	interaction-hook "kanga-healing"
 
 define-npc "Roo"
 	description "Roo is Pooh's youngest friend. He loves a good romp, especially
