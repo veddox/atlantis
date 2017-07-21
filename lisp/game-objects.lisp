@@ -28,6 +28,7 @@
 	(description "")
 	(says "")
 	(sells NIL)
+	(buys NIL)
 	(quest "")
 	(interaction-hook ""))
 
@@ -71,7 +72,8 @@
 	(proof-item NIL)
 	(reward-item NIL)
 	(money 0)
-	(experience 0))
+	(experience 0)
+	(infinite))
 
 
 (defun set-object-attribute (game-object property value)

@@ -205,6 +205,7 @@ define-quest "Bring honey"
 	proof-item "Hunny"
 	experience 5
 	money 5
+	infinite
 
 define-quest "Reading material"
 	say-before "I feel in dire need of intellectual stimulation, yet I fear that
