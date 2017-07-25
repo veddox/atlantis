@@ -104,9 +104,9 @@ define-place "Deep forest"
 	their branches. Broken branches lie about on the ground and
 	cob webs span the spaces between the trees. Watch your steps,
 	you never know what you may meet in here. And don't get lost!"
-	neighbour "Deep forest"
-	neighbour "Tunnel"
 	neighbour "Central woods"
+	neighbour "Tunnel"
+	exit-hook "deep-forest"
 
 define-place "Tunnel"
 	description "A dark, musty tunnel opens up before you. Worms crawl about the
@@ -259,6 +259,7 @@ define-place "Misty forest"
 	description "TODO"
 	item "Berries"
 	neighbour "Sandy pit"
+	exit-hook "misty-forest"
 
 define-place "The World"
 	description "Well, so you have dared it at last. With the 100 Acre Wood at

@@ -19,6 +19,7 @@
 	(monster NIL)
 	(npc NIL)
 	(spawns NIL)
+	(command NIL)
 	(entry-hook "")
 	(exit-hook "")
 	(requires "")) ;Can be an ability or an item

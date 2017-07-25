@@ -25,7 +25,8 @@
 	(npcs NIL)
 	(items NIL)
 	(weapons NIL)
-	(quests NIL))
+	(quests NIL)
+	(extension-files NIL))
 
 (setf *world* (make-world)) ;XXX Move this to another module?
 
@@ -65,7 +66,9 @@
 				(format t "~&WARNING: The loaded game was saved by a ")
 				(format t "different version of Atlantis!"))
 			(if (world-p loaded-world)
-				(setf *world* loaded-world)
+				(progn (setf *world* loaded-world)
+					(dolist (lisp-file (world-extension-files *world*))
+						(load lisp-file)))
 				(error "World file ~A is corrupted!" game-file)))))
 
 (defun save-world (game-file)

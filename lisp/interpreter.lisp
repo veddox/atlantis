@@ -60,6 +60,8 @@
 			(setf loaded-files (cons file-name loaded-files)))
 		;; check if this is a Lisp extension file
 		(when (equalp (pathname-type file-name) "lisp")
+			(setf (world-extension-files *world*)
+				(cons file-name (world-extension-files *world*)))
 			(load file-name)
 			(return-from load-file))
 		;; otherwise, parse the ATL file

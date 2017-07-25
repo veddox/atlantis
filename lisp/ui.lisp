@@ -40,18 +40,28 @@
 	(format t "~&Items: ~A" (string-from-list (place-item p)))
 	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
 	(format t "~&Monsters: ~A" (string-from-list
-								   (list-place-objects 'monster p))))
+								   (list-place-objects 'monster p)))
+	(when (place-command p)
+		(format t "~&Commands: ~A" (string-from-list (place-command p)))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
 	(let* ((command (read-from-string cmd))
 			  (space (position #\Space cmd))
 			  (arg (if space (second (cut-string cmd (1+ space))) NIL))
+			  ;; Check default commands
 			  (cmd-fn (when (member command *commands* :test #'eq) command)))
+		;; Search for place commands
+		(when (member cmd
+				  (place-command (get-game-object 'place (player-place player)))
+				  :test #'equalp)
+			(setf cmd-fn command))
+		;; Search for item commands (highest priority)
 		(dolist (i (objectify-name-list 'item (player-item player)))
 			(when (member (to-string command) (item-command i) :test #'equalp)
 				(setf cmd-fn command)
 				(return)))
+		;; If found, execute the command
 		(if cmd-fn
 			(if space (funcall cmd-fn player arg)
 				(funcall cmd-fn player))
@@ -89,7 +99,7 @@ equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
 save <game-file> -  Save the game to file
 
-Some items may provide additional commands.")
+Some places and items may provide additional commands.")
 	(format t "~A" help-text))
 
 (defun clear (player)
@@ -167,7 +177,7 @@ Some items may provide additional commands.")
 				(format t "~&You cannot enter this place unless you have: ~A" req)
 				(return-from goto))))
 	;; Change places
-	(let ((hook (place-exit-hook (get-game-object 'place location)))) ;exit hook
+	(let ((hook (place-exit-hook (get-game-object 'place (player-place player))))) ;exit hook
 		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(clear-screen)
 	(debugging "~&~A is going to ~A." (player-name player) location)
@@ -176,7 +186,7 @@ Some items may provide additional commands.")
 	(let ((hook (place-entry-hook (get-game-object 'place location)))) ;entry hook
 		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(add-player-experience player 1)
-	(describe-place location))
+	(describe-place (player-place player)))
 
 (defun look (player &optional object-name)
 	"Print a description of this object"
