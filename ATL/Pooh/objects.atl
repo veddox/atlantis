@@ -81,6 +81,14 @@ define-item "Magic map"
 	impression that it wants you to walk up a hill."
 	cost 50
 
+define-item "Golden ring"
+	description "A beautiful golden ring that lies heavily in your hand.
+	Its smooth surface appears to conceal strange letters,
+	but you can't be sure, you may just be imagining things."
+	command "wear"
+	pickup-hook "ring-of-destiny"
+	drop-hook "annoying-ring"
+
 define-item "Grandfather's cane"
 	description "Piglet's grandfather used to carry this cane around with him.
 	And woe to any young animal who dared to be disrespectful!"

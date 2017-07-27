@@ -136,6 +136,7 @@ define-place "Hill"
 	home and the stream that marks the edge of the woods."
 	neighbour "Central woods"
 	neighbour "Galleons lap"
+	hidden "berries"
 
 define-place "Galleons lap"
 	description "At the very top of the hill, an enchanted place opens up to
@@ -203,7 +204,7 @@ define-place "Bee tree"
 define-place "Rabbit's house"
 	description "TODO"
 	npc "Rabbit"
-	item "Hunny"
+	hidden "Hunny"
 	neighbour "Northern woods"
 	neighbour "Rabbit's friends and relations"
 
@@ -224,6 +225,7 @@ define-place "Stream"
 	quickly. But that is easier said than done, the current here
 	is pretty strong..."
 	neighbour "Floody place"
+	hidden "Golden ring"
 
 define-place "Christopher Robin's house"
 	description "TODO"

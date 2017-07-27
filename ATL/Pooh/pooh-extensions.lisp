@@ -70,3 +70,23 @@
 	"A wrapper function for lost-in-the-forest for the deep forest location"
 	(lost-in-the-forest player "Deep forest" 40))
 
+;; The golden ring is an easter egg referencing, of course,
+;; The Lord of the Rings.
+
+(defun wear (player &optional arg)
+	"Wear the mystical golden ring..."
+	(if (and arg (member 'ring (extract-elements arg)))
+		(progn
+			(format t "~&You slip the golden ring on your finger.")
+			(format t "~&You feel something ought to happen.~&Nothing does."))
+		(format t "~&What do you want to wear?")))
+
+(defun ring-of-destiny (player)
+	"When the ring is picked up"
+	(format t "~&You feel a strange stirring of destiny."))
+
+(defun annoying-ring (player)
+	"The ring cannot be dropped!"
+	(format t "~&You feel a stab of pain in your heart as you watch the ring drop.")
+	(format t "~&On second thoughts, you pick it up again.~%~%")
+	(take player "Golden ring"))
