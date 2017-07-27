@@ -110,7 +110,7 @@ define-npc "Piglet"
 define-npc "Kanga"
 	description "Kanga is Roo's mother. She is very responsible, but also
 	very loving and affectionate. Don't disobey her, though!"
-	says "Hello Pooh, have you come to play with Roo?"
+	says "Hello Pooh, have you come to play with Roo? He's at the sandy pit."
 	interaction-hook "kanga-healing"
 
 define-npc "Roo"
@@ -123,6 +123,7 @@ define-npc "Tigger"
 	constant bouncing can be incredibly irritating, but he
 	is very loyal and too friendly to really dislike."
 	says "Watch out, HERE I COME!!!"
+	interaction-hook "bouncy-tigger"
 
 define-npc "Owl"
 	description "Owl is a wise, old bird. He is ever so clever and uses many

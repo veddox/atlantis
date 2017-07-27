@@ -23,9 +23,9 @@
 	"Jump off Pooh's branch onto his porch."
 	(format t "~&You look down nervously, then jump off the branch.")
 	(if (> 50 (random 100))
-		(progn (format t "~&You land safely. That was fun!")
+		(progn (format t "~&You land safely. That was fun! You gain 3 XP.")
 			(add-player-experience player 3))
-		(progn (format t "~&Ouch! That hurt! You take 3 fall damage.")
+		(progn (format t "~&Ouch! That hurt! You take 3 HP fall damage.")
 			(change-player-health player -3)))
 	(read-line)
 	(goto player "Pooh's porch"))
@@ -36,6 +36,18 @@
 		(format t "~&KANGA: Oh my dear, you look hurt! Here, let me take care of you.")
 		(format t "~&~%Kanga bandages your wounds. You feel better.")
 		(setf (player-health player) (player-max-health player))))
+
+(defun bouncy-tigger (player)
+	"Tigger bounces the player, then moves on to a random location"
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (neighbour (get-game-object 'place
+							 (random-elt (place-neighbour place)))))
+		(format t "~&~%A large yellow-and-black object comes flying out of nowhere")
+		(format t "~&and knocks you over. When you sit up again, you see Tigger")
+		(format t "~&grinning widely at you.")
+		(format t "~&~%Tigger bounces away toward ~A." (place-name neighbour))
+		(remove-object-attribute place 'npc "Tigger")
+		(set-object-attribute neighbour 'npc "Tigger")))
 
 (let ((lost-in NIL))
 	(defun lost-in-the-forest (player place prob)

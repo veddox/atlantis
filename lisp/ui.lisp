@@ -215,7 +215,7 @@ Some places and items may provide additional commands.")
 			  (items (place-item place))
 			  (hidden (place-hidden place)))
 		(dolist (h hidden)
-			(when (> 33 (random 100))
+			(when (> 50 (random 100))
 				(format t "~&You find: ~A"
 					(item-name (get-game-object 'item h)))
 				(set-object-attribute place 'item h)

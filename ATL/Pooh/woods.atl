@@ -74,6 +74,7 @@ define-place "Northern woods"
 	neighbour "Rabbit's friends and relations"
 	neighbour "Rapids"
 	neighbour "Stream"
+	npc "Tigger"
 
 define-place "Southern woods"
 	description "You can feel the ground becoming soft underneath your feet as
@@ -180,6 +181,7 @@ define-place "Sandy pit"
 	neighbour "Northern woods"
 	neighbour "Kanga's house"
 	neighbour "Misty forest"
+	npc "Roo"
 
 define-place "Six pine trees"
 	description "The Six Pine Trees are a group of particularly tall pines
