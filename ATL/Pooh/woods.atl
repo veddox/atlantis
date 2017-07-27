@@ -202,6 +202,7 @@ define-place "Heffalump trap"
 define-place "Bee tree"
 	description "TODO"
 	neighbour "Northern woods"
+	monster "Bees"
 
 define-place "Rabbit's house"
 	description "TODO"

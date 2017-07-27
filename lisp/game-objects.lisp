@@ -28,7 +28,7 @@
 (defstruct npc
 	(name "")
 	(description "")
-	(says "")
+	(says NIL)
 	(sells NIL)
 	(buys NIL)
 	(quest "")

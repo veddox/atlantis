@@ -189,7 +189,12 @@ Some places and items may provide additional commands.")
 	(let ((hook (place-entry-hook (get-game-object 'place location)))) ;entry hook
 		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(add-player-experience player 1)
-	(describe-place (player-place player)))
+	(describe-place (player-place player))
+	;; Aggressive monsters attack
+	(dolist (m (place-monster (get-game-object 'place (player-place player))))
+		(when (> (monster-aggression m) (random 100))
+			(format t "~&~%You are attacked by ~A!" (monster-name m))
+			(attack player (monster-name m)))))
 
 (defun look (player &optional object-name)
 	"Print a description of this object"
@@ -206,7 +211,7 @@ Some places and items may provide additional commands.")
 			(setf description
 				(item-description (get-game-object 'item object-name))))
 		(if description
-			(format t "~&(~A) ~A" object-name description)
+			(format t "~&(~A) ~A" (string-capitalize object-name) description)
 			(format t "~&Could not find ~A!" object-name))))
 
 (defun search (player &optional arg)
@@ -231,14 +236,17 @@ Some places and items may provide additional commands.")
 	(let ((split-name (cut-string npc-name 3)))
 		(when (equalp (first split-name) "to ")
 			(setf npc-name (second split-name))))
-	(let* ((place (get-game-object 'place (player-place player)))
+	(let* ((npc-name (string-capitalize npc-name))
+			  (place (get-game-object 'place (player-place player)))
 			  (npc (when (member npc-name (place-npc place) :test #'equalp)
 					   (get-game-object 'npc npc-name))))
 		;; Check if the NPC is here
 		(unless npc
 			(format t "~&~A is not here!" npc-name)
 			(return-from talk))
-		(format t "~&~A: ~A" (string-upcase npc-name) (npc-says npc))
+		;; The NPC says one of its lines
+		(format t "~&~A: ~A" (string-upcase npc-name)
+			(random-elt (npc-says npc)))
 		;; Interaction hook
 		(let ((hook (npc-interaction-hook npc)))
 			(unless (zerop (length hook))

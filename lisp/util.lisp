@@ -117,6 +117,7 @@
 
 ;; TODO change &optional to &key (and figure out why the heck that doesn't
 ;; work - clisp bug?), add null-filler keyword
+;; TODO Add a maximum line length after which a newline is inserted
 (defun string-from-list (lst &optional (separator " - "))
 	"Put all elements of lst into a single string, separated by the separator"
 	(cond ((null lst) "")

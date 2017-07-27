@@ -123,6 +123,7 @@ define-npc "Tigger"
 	constant bouncing can be incredibly irritating, but he
 	is very loyal and too friendly to really dislike."
 	says "Watch out, HERE I COME!!!"
+	says "Heads up! Tigger coming through!"
 	interaction-hook "bouncy-tigger"
 
 define-npc "Owl"
@@ -244,3 +245,12 @@ define-monster "Heffalump"
 	dexterity 1
 	item "Hunny"
 	death-msg "The Heffalump runs away." ;TODO
+
+define-monster "Bees"
+	description "A swarm of hundreds of fiercely buzzing bees. You don't want
+	to mess with them!"
+	health 5
+	strength 5
+	dexterity 10
+	aggression 80
+	
