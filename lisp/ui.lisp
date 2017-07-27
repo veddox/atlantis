@@ -77,7 +77,7 @@
 	'(help player goto take
 		 drop talk trade
 		 equip attack spell
-		 look save clear))
+		 look search save clear))
 
 ;;; The following commands don't take any arguments except for a player
 
@@ -89,6 +89,7 @@ help             -  Show this list of game commands
 quit/exit        -  Exit the game
 clear            -  Clear the screen
 look [here]      -  Describe the current location
+search           -  Search for hidden items
 player           -  Describe your player
 goto <place>     -  Go to a neighbouring location
 look <object>    -  Show a description of this entity
@@ -146,17 +147,19 @@ Some places and items may provide additional commands.")
 (let ((last-save NIL))
 	(defun save (player &optional game-file)
 		"Save a game to file (wrapper method around save-world)"
-		(cond (game-file (setf last-save game-file))
-			((and last-save (not game-file)) (setf game-file last-save))
-			((not (or last-save game-file))
-				(format t "~&What do you want to call the save file?")
-				(input-string game-file)
-				(setf game-file (concatenate 'string
-									"../saves/" game-file ".world"))
+		(if (and last-save (not game-file))
+			(setf game-file last-save)
+			(progn
+				(when (not (or last-save game-file))
+					(format t "~&What do you want to call the save file?")
+					(input-string game-file))
+				(setf game-file (concatenate 'string "../saves/"
+									game-file ".world"))
 				(setf last-save game-file)))
-		(when (y-or-n-p "Save game to ~A?" game-file)
-			(save-world game-file)
-			(format t "~&Game saved."))))
+		(if (y-or-n-p "Save game to ~A?" game-file)
+			(progn (save-world game-file)
+				(format t "~&Game saved."))
+			(setf last-save NIL))))
 
 (defun goto (player &optional location)
 	"Go to the specified location"
@@ -205,6 +208,19 @@ Some places and items may provide additional commands.")
 		(if description
 			(format t "~&(~A) ~A" object-name description)
 			(format t "~&Could not find ~A!" object-name))))
+
+(defun search (player &optional arg)
+	"Search for hidden items in the current room"
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (items (place-item place))
+			  (hidden (place-hidden place)))
+		(dolist (h hidden)
+			(when (> 33 (random 100))
+				(format t "~&You find: ~A"
+					(item-name (get-game-object 'item h)))
+				(set-object-attribute place 'item h)
+				(remove-object-attribute place 'hidden h))))
+	(format t "~&You finish searching."))
 
 (defun talk (player &optional npc-name)
 	"Talk to the desired NPC"

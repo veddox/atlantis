@@ -14,7 +14,7 @@ define-place "Pooh's home"
 	neighbour "Pooh's branch"
 	item "Hunny"
 	item "Letter"
-	item "Lamp" ;XXX development
+	hidden "Lamp" ;XXX development
 
 define-place "Pooh's porch"
 	description "You are standing in front of Pooh's home. Here he lives under
