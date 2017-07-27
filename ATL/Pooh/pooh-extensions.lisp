@@ -19,6 +19,17 @@
 			(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later."))
 		(T (format t "~&You can't eat that!"))))
 
+(defun jump (player &optional arg)
+	"Jump off Pooh's branch onto his porch."
+	(format t "~&You look down nervously, then jump off the branch.")
+	(if (> 50 (random 100))
+		(progn (format t "~&You land safely. That was fun!")
+			(add-player-experience player 3))
+		(progn (format t "~&Ouch! That hurt! You take 3 fall damage.")
+			(change-player-health player -3)))
+	(read-line)
+	(goto player "Pooh's porch"))
+
 (defun kanga-healing (player)
 	"If the player is hurt, Kanga looks after him."
 	(when (< (player-health player) (player-max-health player))

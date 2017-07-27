@@ -66,6 +66,8 @@
 (defun change-player-health (player amount)
 	"Change the player's health points"
 	(incf (player-health player) amount)
+	(when (> (player-health player) (player-max-health player))
+		(setf (player-health player) (player-max-health player)))
 	(when (> 1 (player-health player))
 		(error "You died!"))) ;; TODO adjust this
 
