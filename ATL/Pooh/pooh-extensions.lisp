@@ -10,13 +10,23 @@
 (defun eat (player &optional arg)
 	"Allow the player to eat something."
 	(cond ((null arg) (format t "~&What do you want to eat?"))
+		;; Berries can be eaten any time, but don't have any effect
 		((and (equalp arg "berries")
 			 (member "berries" (player-item player) :test #'equalp))
 			(format t "~&Mmmh, these berries are really delicious!")
 			(remove-object-attribute player 'item "berries"))
+		;; Honey is reserved as medicine :-)
 		((and (or (equalp arg "hunny") (equalp arg "honey"))
 			 (member "Hunny" (player-item player) :test #'equalp))
-			(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later."))
+			(if (> (player-health player) 10)
+				(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later.")
+				(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.")
+					(format t "~&You stick your paw deeply into the jar, then draw it out again.")
+					(format t "~&Smooth golden honey runs into your mouth, making you feel much better.")
+					(format t "~&+10 HP")
+					(change-player-health player 10)
+					(remove-object-attribute player 'item "Hunny")
+					(set-object-attribute player 'item "Jar"))))
 		(T (format t "~&You can't eat that!"))))
 
 (defun jump (player &optional arg)
@@ -25,8 +35,8 @@
 	(if (> 50 (random 100))
 		(progn (format t "~&You land safely. That was fun! You gain 3 XP.")
 			(add-player-experience player 3))
-		(progn (format t "~&Ouch! That hurt! You take 3 HP fall damage.")
-			(change-player-health player -3)))
+		(progn (format t "~&Ouch! That hurt! You take 2 HP fall damage.")
+			(change-player-health player -2)))
 	(read-line)
 	(goto player "Pooh's porch"))
 
@@ -82,12 +92,69 @@
 	"A wrapper function for lost-in-the-forest for the deep forest location"
 	(lost-in-the-forest player "Deep forest" 40))
 
+(let ((climbed NIL))
+	(defun climb (player &optional arg)
+		"Try to climb the bee tree. Warning: bees sting, and trees are tall ;-)"
+		(let ((place (get-game-object 'place (player-place player))))
+			(when climbed
+				(if (member 'down (extract-elements arg))
+					(climb-down player)
+					(format t "~&You are already sitting up the tree."))
+				(return-from climb))
+			(format t "~&You start climbing up the tree.")
+			;; The player has a 60% chance of success.
+			(if (> 60 (random 100))
+				(progn (setf climbed T) (add-player-experience player 2)
+					(format t "~&You make it to the top."))
+				(progn (format t "~&A branch breaks beneath you! You fall into a gorse bush.")
+					(format t "~&You take 4 HP fall damage.")
+					(change-player-health player -4)))
+			;; The bees attack if they are still present
+			(dolist (m (place-monster place))
+				(when (> (monster-aggression m) (random 100))
+					(format t "~&~%You are attacked by ~A!" (monster-name m))
+					(attack player (monster-name m))))))
+
+	(defun collect (player &optional arg)
+		"Collect honey from the bees' nest (requires an empty jar)"
+		(cond ((not (member "Jar" (player-item player) :test #'equalp))
+				  (format t "~&If you want to collect honey, you need an empty jar!"))
+			((not climbed)
+				(format t "~&The honey is up in the tree. You're going to need to climb it first."))
+			(T  ;; Collect the honey
+				(remove-object-attribute player 'item "Jar")
+				(set-object-attribute player 'item "Hunny")
+				(format t "~&You fill your jar with honey.")
+				;; The bees attack if they are still present
+				(dolist (m (place-monster (get-game-object 'place (player-place player))))
+					(when (> (monster-aggression m) (random 100))
+						(format t "~&~%You are attacked by ~A!" (monster-name m))
+						(attack player (monster-name m)))))))
+
+	(defun climb-down (player)
+		"Climb down the tree."
+		(if climbed
+			(progn (format t "~&Slowly you climb back down the tree.")
+				(if (> 60 (random 100))
+					(format t "~&You reach the ground safely.")
+					(progn (format t "~&You lose your grip!")
+						(format t "~&Well, that was rather faster than expected.")
+						(format t "~&You take 4 HP fall damage.")
+						(change-player-health player -4)))
+				(setf climbed NIL))
+			(format t "~&You are already on the ground.")))
+
+	(defun leave-bee-tree (player)
+		"Make sure you've climbed down before leaving the bee tree."
+		(when climbed (climb-down player))
+		(read-line)))
+
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.
 
 (defun wear (player &optional arg)
 	"Wear the mystical golden ring..."
-	(if (and arg (member 'ring (extract-elements arg)))
+	(if (member 'ring (extract-elements arg))
 		(progn
 			(format t "~&You slip the golden ring on your finger.")
 			(format t "~&You feel something ought to happen.~&Nothing does."))

@@ -52,7 +52,7 @@
 			  ;; Check default commands
 			  (cmd-fn (when (member command *commands* :test #'eq) command)))
 		;; Search for place commands
-		(when (member cmd
+		(when (member (to-string command)
 				  (place-command (get-game-object 'place (player-place player)))
 				  :test #'equalp)
 			(setf cmd-fn command))
@@ -119,7 +119,7 @@ Some places and items may provide additional commands.")
 	;; TODO update
 	(let ((tab (string #\tab)))
 		(when (stringp p) (setf p (get-game-object 'player p)))
-		(format t "~&Player ~A:" (player-name p))
+		(format t "~&~A" (string-upcase (player-name p)))
 		(format t "~&~%Current place: ~A" (player-place p))
 		(format t "~&=====~&Attributes:")
 		(format t "~&Intelligence: ~A~AStrength: ~A"
@@ -180,6 +180,7 @@ Some places and items may provide additional commands.")
 				(format t "~&You cannot enter this place unless you have: ~A" req)
 				(return-from goto))))
 	;; Change places
+	(setf location (string-capitalize location))
 	(let ((hook (place-exit-hook (get-game-object 'place (player-place player))))) ;exit hook
 		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(clear-screen)
@@ -340,6 +341,7 @@ Some places and items may provide additional commands.")
 		(format t "~&Please specify an item to pick up!")
 		(return-from take))
 	(let ((place (get-game-object 'place (player-place player)))
+			 (item-name (string-capitalize item-name))
 			 (item (get-game-object 'item item-name)))
 		(if (member item-name (place-item place) :test #'equalp)
 			(if (item-fixed item)
@@ -362,6 +364,7 @@ Some places and items may provide additional commands.")
 	(unless item
 		(format t "~&Please specify an item to drop!")
 		(return-from drop))
+	(setf item (string-capitalize item))
 	(if (member item (player-item player) :test #'equalp)
 		(progn
 			(remove-object-attribute player 'item item)

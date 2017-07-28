@@ -13,6 +13,7 @@ define-place "Pooh's home"
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
 	item "Hunny"
+	item "Jar"
 	item "Letter"
 	hidden "Lamp" ;XXX development
 
@@ -200,9 +201,15 @@ define-place "Heffalump trap"
 	monster "Heffalump"
 
 define-place "Bee tree"
-	description "TODO"
+	description "In an open place in the middle of the forest, a large oak stands
+	all by itself. A loud buzzing fills the air. Looking up, you see
+	a lot of bees flying in and out of a hole far up the tree trunk.
+	If you could get up there, there's sure to be some honey there!"
 	neighbour "Northern woods"
 	monster "Bees"
+	command "climb"
+	command "collect"
+	exit-hook "leave-bee-tree"
 
 define-place "Rabbit's house"
 	description "TODO"

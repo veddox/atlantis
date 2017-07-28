@@ -161,6 +161,7 @@
 
 (defun extract-elements (str)
 	"Extract all Lisp elements (strings, symbols, numbers, etc.) from str"
+	(when (null str) (return-from extract-elements))
 	(multiple-value-bind (next-element i) (read-from-string str nil)
 		(if (null next-element) NIL
 			(cons next-element

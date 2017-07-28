@@ -12,6 +12,11 @@ define-item "Hunny"
 	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
 	command "eat"
 
+define-item "Jar"
+	description "You can tell that this jar used to hold honey, but try as you
+	might, you can't get any more out of it now. What a shame.
+	Perhaps you should refill it."
+
 define-item "Letter"
 	description "A closed letter, addressed to Somebody in Christopher Robin's
 	handwriting. You think it's a letter to you, but as you are just
