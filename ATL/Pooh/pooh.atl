@@ -21,4 +21,7 @@ define-player "Winnie the Pooh"
 	strength 1
 	dexterity 4
 	constitution 4
-	
+
+define-player "Christopher Robin"
+	description "Just debugging..."
+	;place "Christopher Robin's house"

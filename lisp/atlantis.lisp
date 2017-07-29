@@ -25,20 +25,6 @@
 					 ("Winnie the Pooh" "Pooh/pooh.atl")
 					 ("Development" "dev/test.atl")))
 
-(defun development ()
-	"A method to easily test whatever feature I am currently developing"
-	(setf *debugging* T)
-	(load-file "../ATL/test/lisp-test.atl")
-	(let ((player (make-player :name "Bilbo"
-					  :place "Fields of Punishment"
-					  :strength 6 :constitution 12
-					  :dexterity 19 :intelligence 14
-					  :money 100
-					  :item '("Anaklusmos" "Lightning bolt")
-					  :weapon "Lightning bolt")))
-		(add-player player)
-		(play-game (player-name player))))
-
 (defun print-version ()
 	(format t "~&Atlantis ~A.~A.~A"
 		(first ATLANTIS-VERSION)
@@ -53,7 +39,7 @@
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a new game" "Load a game"
-					   "Create worlds" "Develop" "About" "Exit"))
+					   "Create worlds" "About" "Exit"))
 	(case (choose-number-option options)
 		(0 (format t "~&Which world do you want to play?")
 			;; let the player choose one of the game worlds
@@ -67,10 +53,11 @@
 				(setf world-file (concatenate 'string "../ATL/" world-file))
 				(load-file world-file)
 				;; let the player choose a character
-				(format t "~&Which character do you want to play?")
-				(let* ((char-nr (choose-number-option
-									(list-world-objects 'player)))
-						  (char-name (nth char-nr (list-world-objects 'player))))
+				(let* ((chars (list-world-objects 'player))
+						  (char-name (first chars)))
+					(when (< 1 (length chars))
+						(format t "~&Which character do you want to play?")
+						(setf char-name (choose-option chars)))
 					(set-main-player char-name)
 					(play-game))))
 		(1 (format t "~&What game file do you want to load?")
@@ -80,11 +67,10 @@
 				(load-game game)
 				(play-game)))
 		(2 (world-creator))
-		(3 (development)) ;; XXX Remove this
-		(4 (print-version)
+		(3 (print-version)
 			(read-line)
 			(start-menu))
-		(5 (format t "~&Goodbye!")
+		(4 (format t "~&Goodbye!")
 			(quit))))
  
 (defun cmd-parameter (name &optional truth-value)

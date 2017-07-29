@@ -52,7 +52,7 @@
 	`(progn
 		 (format t "~&>>> ")
 		 (set-list (read) ,@vars)
-		 (magic (first (list ,@vars)))
+		 (magic (first (list ,@vars))) ;;TODO Remove this again
 		 (first (list ,@vars))))
 
 (defmacro input-string (&optional (var (gensym)))
@@ -60,7 +60,7 @@
 	`(progn
 		 (format t "~&>>> ")
 		 (setf ,var (read-line))
-		 (magic (read-from-string ,var))
+		 (magic (read-from-string ,var)) ;;TODO Remove this again
 		 ,var))
 
 (defmacro while (condition &body body)

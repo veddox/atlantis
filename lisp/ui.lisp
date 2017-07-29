@@ -18,13 +18,20 @@
 (defun play-game ()
 	"The main game loop"
 	(let ((player (get-game-object 'player (world-main-player *world*))))
+		;; If the player's starting position is not specified, choose at random
+		(when (zerop (length (player-place player)))
+			(format t "~&Choosing a random starting location.")
+			(setf (player-place player)
+				(random-elt (list-world-objects 'place))))
 		;; The actual game loop
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
-			;; TODO Ask for confirmation before quitting
-			(while (not (or (equalp command "quit") (equalp command "exit")))
+			;; TODO Tidy up the exit process
+			(while (not (and (or (equalp command "quit")
+								 (equalp command "exit"))
+							(y-or-n-p "~&Really quit?")))
 				(game-command command player)
 				(input-string command))
 			(format t "~&Goodbye!"))))
@@ -43,6 +50,33 @@
 								   (list-place-objects 'monster p)))
 	(when (place-command p)
 		(format t "~&Commands: ~A" (string-from-list (place-command p)))))
+
+(defun describe-player (p)
+	"Print a description of this player"
+	(let ((tab (string #\tab)))
+		(when (stringp p) (setf p (get-game-object 'player p)))
+		(format t "~&~A~%~%~A"
+			(string-upcase (player-name p)) (player-description p))
+		(format t "~&~%Current place: ~A" (player-place p))
+		(format t "~&=====~&Attributes:")
+		(format t "~&Intelligence: ~A~AStrength: ~A"
+			(player-intelligence p) tab (player-strength p))
+		(format t "~&Constitution: ~A~ADexterity: ~A"
+			(player-constitution p) tab (player-dexterity p))
+		(format t "~&=====~&Abilities:~&~A"
+			(let ((abilities (player-ability p)))
+				(dolist (i (player-item p) (string-from-list abilities))
+					(let ((ia (item-ability (get-game-object 'item i))))
+						(when ia (setf abilities (append abilities ia)))))))
+		(format t "~&=====")
+		(format t "~&Weapon: ~A" (player-weapon p))
+		;; XXX This will need adjusting for large item numbers
+		(format t "~&Items: ~A" (string-from-list (player-item p)))
+		(format t "~&=====")
+		(format t "~&Max health: ~A~ACurrent health: ~A"
+			(player-max-health p) tab (player-health p))
+		(format t "~&Experience: ~A~AMoney: ~A"
+			(player-experience p) tab (player-money p))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -74,10 +108,10 @@
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help player goto take
+	'(help look goto take
 		 drop talk trade
-		 equip attack spell
-		 look search save clear))
+		 equip attack searc
+		 save clear))
 
 ;;; The following commands don't take any arguments except for a player
 
@@ -89,16 +123,19 @@ help             -  Show this list of game commands
 quit/exit        -  Exit the game
 clear            -  Clear the screen
 look [here]      -  Describe the current location
-search           -  Search for hidden items
-player           -  Describe your player
-goto <place>     -  Go to a neighbouring location
+look me          -  Describe your character
 look <object>    -  Show a description of this entity
+search           -  Search for hidden items
+goto <place>     -  Go to a neighbouring location
 talk [to] <npc>  -  Talk to an NPC
 take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
-save <game-file> -  Save the game to file
+save [<file>]    -  Save the game to file
+
+Arguments in square brackets are optional,
+arguments in angular brackets denote place fillers.
 
 Some places and items may provide additional commands.")
 	(format t "~A" help-text))
@@ -107,40 +144,6 @@ Some places and items may provide additional commands.")
 	"Clear the screen (wrapper function)"
 	(clear-screen)
 	(place player))
-
-;; XXX Will the following two functions give problems? (Their name is
-;; identical with the struct name) Probably not, but best to be aware.
-(defun place (player)
-	"Describe the player's current location (wrapper function)"
-	(describe-place (player-place player)))
-
-(defun player (p)
-	"Print a description of this player"
-	;; TODO update
-	(let ((tab (string #\tab)))
-		(when (stringp p) (setf p (get-game-object 'player p)))
-		(format t "~&~A~%~%~A"
-			(string-upcase (player-name p)) (player-description p))
-		(format t "~&~%Current place: ~A" (player-place p))
-		(format t "~&=====~&Attributes:")
-		(format t "~&Intelligence: ~A~AStrength: ~A"
-			(player-intelligence p) tab (player-strength p))
-		(format t "~&Constitution: ~A~ADexterity: ~A"
-			(player-constitution p) tab (player-dexterity p))
-		(format t "~&=====~&Abilities:~&~A"
-			(let ((abilities (player-ability p)))
-				(dolist (i (player-item p) (string-from-list abilities))
-					(let ((ia (item-ability (get-game-object 'item i))))
-						(when ia (setf abilities (append abilities ia)))))))
-		(format t "~&=====")
-		(format t "~&Weapon: ~A" (player-weapon p))
-		;; XXX This will need adjusting for large item numbers
-		(format t "~&Items: ~A" (string-from-list (player-item p)))
-		(format t "~&=====")
-		(format t "~&Max health: ~A~ACurrent health: ~A"
-			(player-max-health p) tab (player-health p))
-		(format t "~&Experience: ~A~AMoney: ~A"
-			(player-experience p) tab (player-money p))))
 
 ;;; These next functions have to take two arguments (the argument
 ;;; to the function and a player instance).
@@ -200,12 +203,12 @@ Some places and items may provide additional commands.")
 
 (defun look (player &optional object-name)
 	"Print a description of this object"
-	(unless object-name
-		(place player)
-		(return-from look))
+	(unless object-name (setf object-name "here"))
 	;; A bit of syntactic sugar...
-	(cond ((equalp object-name "me") (player player) (return-from look))
-		((equalp object-name "here") (place player) (return-from look)))
+	(cond ((equalp object-name "me")
+			  (describe-player player) (return-from look))
+		((equalp object-name "here")
+			(describe-place (player-place player)) (return-from look)))
 	(let ((description (get-object-description object-name
 						   (player-place player))))
 		;; Don't forget items the player is carrying
