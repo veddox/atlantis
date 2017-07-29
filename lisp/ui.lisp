@@ -119,7 +119,8 @@ Some places and items may provide additional commands.")
 	;; TODO update
 	(let ((tab (string #\tab)))
 		(when (stringp p) (setf p (get-game-object 'player p)))
-		(format t "~&~A" (string-upcase (player-name p)))
+		(format t "~&~A~%~%~A"
+			(string-upcase (player-name p)) (player-description p))
 		(format t "~&~%Current place: ~A" (player-place p))
 		(format t "~&=====~&Attributes:")
 		(format t "~&Intelligence: ~A~AStrength: ~A"
@@ -389,6 +390,7 @@ Some places and items may provide additional commands.")
 		(setf (player-weapon player) "")
 		(format t "~&You no longer have any weapon equipped.")
 		(return-from equip))
+	(setf new-weapon (string-capitalze new-weapon))
 	(if (and (member new-weapon (player-item player) :test #'equalp)
 			(item-weapon (get-game-object 'item new-weapon)))
 		(progn

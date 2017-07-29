@@ -1,110 +1,11 @@
 ; The 100 Acre Wood was invented by A.A. Milne for his Winnie-the-Pooh stories.
 ; This Atlantis world is based on the novels.
 ;
-; This file holds item and NPC descriptions.
+; This file holds NPC, quest and monster descriptions.
 ;
 ; author: Daniel Vedder
-; date: 07/06/2017
+; date: 29/07/2017
 
-; ITEMS
-	
-define-item "Hunny"
-	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
-	command "eat"
-
-define-item "Jar"
-	description "You can tell that this jar used to hold honey, but try as you
-	might, you can't get any more out of it now. What a shame.
-	Perhaps you should refill it."
-
-define-item "Letter"
-	description "A closed letter, addressed to Somebody in Christopher Robin's
-	handwriting. You think it's a letter to you, but as you are just
-	a Bear of Very Little Brain, you have no way of reading it..."
-	
-define-item "Pooh's sign"
-	description "
-	+--------------+
-	|  Mr SANDERS  |
-	+--------------+
-	"
-	fixed
-
-define-item "Piglet's sign"
-	description "
-	 ________________
-	|                \\_
-	|   TRESPASSERS  W >
-	|_________________<
-	"
-	fixed
-
-define-item "North Pole"
-	description "
-	=============================
-	||                         ||
-	||        NORTH POLE       ||
-	||    DISCOVERED BY POOH   ||
-	||      POOH FOUND IT      ||
-	||                         ||
-	=============================
-	"
-	fixed
-
-define-item "Berries"
-	description "Scrumptious, fresh wild berries: blueberries, blackberries,
-	strawberries... Just don't eat too many!"
-	command "eat"
-	infinite
-	
-define-item "Bellrope"
-	description "This rope looks perfectly designed to be pulled. The designer
-	even tried to give it a natural flair by shaping it like a
-	tail. Hm, that does look very much like a tail!"
-
-define-item "Lamp"
-	description "This lamp has a bowl at the bottom for the oil, a glass casing 
-	to protect the wick and a metal grip by which to carry it. It's
-	very useful for dark places."
-
-define-item "Life"
-	description "
-	...................................
-	...................................
-	.........Congratulations!..........
-	...................................
-	....You have finished the game!....
-	...................................
-	...................................
-	"
-	fixed
-
-define-item "Magic map"
-	description "This is a strange map. It always seems to be changing. One
-	moment it will show you one thing, the next something completely
-	different. Yet, looking at it, you have the very distinct
-	impression that it wants you to walk up a hill."
-	cost 50
-
-define-item "Golden ring"
-	description "A beautiful golden ring that lies heavily in your hand.
-	Its smooth surface appears to conceal strange letters,
-	but you can't be sure, you may just be imagining things."
-	command "wear"
-	pickup-hook "ring-of-destiny"
-	drop-hook "annoying-ring"
-
-define-item "Grandfather's cane"
-	description "Piglet's grandfather used to carry this cane around with him.
-	And woe to any young animal who dared to be disrespectful!"
-	weapon
-
-define-weapon "Grandfather's cane"
-	description "Piglet's grandfather used to carry this cane around with him.
-	And woe to any young animal who dared to be disrespectful!"
-	type "Cane"
-	damage 4
-	
 ; NPCs
 
 define-npc "Piglet"
@@ -117,11 +18,15 @@ define-npc "Kanga"
 	very loving and affectionate. Don't disobey her, though!"
 	says "Hello Pooh, have you come to play with Roo? He's at the sandy pit."
 	interaction-hook "kanga-healing"
+	quest "Bring jacket"
 
 define-npc "Roo"
 	description "Roo is Pooh's youngest friend. He loves a good romp, especially
 	with his friend Tigger."
-	says "Hey Pooh, Tigger and I want to play catch. Do you want to join?"
+	says "Hey Pooh, Tigger and I were going to go looking for Christopher Robin.
+	Do you want to come along?"
+	says "Hello Pooh, have you seen Christopher Robin anywhere?"
+	quest "Bring Mushrooms"
 
 define-npc "Tigger"
 	description "Tigger is the most hyperactive animal you could imagine. His
@@ -129,6 +34,7 @@ define-npc "Tigger"
 	is very loyal and too friendly to really dislike."
 	says "Watch out, HERE I COME!!!"
 	says "Heads up! Tigger coming through!"
+	says "Out of my way! I'm off to find Christopher Robin!"
 	interaction-hook "bouncy-tigger"
 
 define-npc "Owl"
@@ -136,6 +42,9 @@ define-npc "Owl"
 	big words - if you can understand him, it's usually worth listening."
 	says "The climatic conditions appear to foreshadow a certain amount of
 	precipitation tonight, don't you agree?"
+	says "Christopher Robin appears to be Absent Without Leave. You would not,
+	perchance, happen to be aware of his current location?"
+	says "TODO - something about his grandfather"
 	quest "Reading material"
 
 ;TODO Christopher Robin needs to say something else
@@ -222,6 +131,30 @@ define-quest "Bring honey"
 	money 5
 	infinite
 
+define-quest "Bring jacket"
+	say-before "Roo forgot to take his jacket with him, but I'm afraid it's going
+	to start raining soon. Could you take it to him? And while you're
+	there, you could bring back the mushrooms I asked him to pick.
+	Would you do that for me, dear? Thank you so much!"
+	say-after "Oh, that's terrific. Thank you very much for bringing those, Pooh!
+	Here, take some honey for all your hard work."
+	proof-item "Mushrooms"
+	reward-item "Hunny"
+	experience 10
+
+define-quest "Bring mushrooms"
+	say-before "Pooh, I forgot to bring my rain jacket from home! I'm afraid mum
+	will scold me when she finds out. I can't go home to get it 
+	myself, because I still need to pick some mushrooms for her.
+	Could you do me a favour and fetch it quickly?"
+	say-after "Thanks for bringing my jacket, Pooh! And look, I've finished 
+	picking those mushrooms. Would you mind awefully taking
+	them back to my mum? I need to find Tigger so we can go
+	looking for Christopher Robin!"
+	proof-item "Jacket"
+	reward-item "Mushrooms"
+	experience 5
+	
 define-quest "Reading material"
 	say-before "I feel in dire need of intellectual stimulation, yet I fear that
 	my library has few novelties left. If you bring me something
@@ -249,7 +182,12 @@ define-monster "Heffalump"
 	strength 1
 	dexterity 1
 	item "Hunny"
-	death-msg "The Heffalump runs away." ;TODO
+	death-msg "The Heffalump panics, squealing loudly. He charges the side
+	of the pit and, with the strength of desperation, manages
+	to climb out. You hear him running away at full tilt, crashing
+	through the forest.
+	When the noise recedes, you see that he has left behind a
+	jar of honey."
 
 define-monster "Bees"
 	description "A swarm of hundreds of fiercely buzzing bees. You don't want

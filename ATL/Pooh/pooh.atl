@@ -9,14 +9,13 @@
 name-world "100 Acre Wood"
 
 load-file "pooh-extensions.lisp"
-load-file "objects.atl"
+load-file "items.atl"
+load-file "characters.atl"
 load-file "woods.atl"
 	
 define-player "Winnie the Pooh"
 	description "A small but lovable bear of Very Little Brain."
-	;place "Pooh's home"
-	item "Jar"
-	place "Northern woods"
+	place "Pooh's home"
 	max-health 20
 	health 20
 	strength 1

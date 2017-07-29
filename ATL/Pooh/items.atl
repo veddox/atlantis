@@ -1,0 +1,113 @@
+; The 100 Acre Wood was invented by A.A. Milne for his Winnie-the-Pooh stories.
+; This Atlantis world is based on the novels.
+;
+; This file holds all item descriptions.
+;
+; author: Daniel Vedder
+; date: 07/06/2017
+	
+define-item "Hunny"
+	description "A jar full to the brim of delicious, golden honey. Hmmmm..."
+	command "eat"
+
+define-item "Jar"
+	description "You can tell that this jar used to hold honey, but try as you
+	might, you can't get any more out of it now. What a shame.
+	Perhaps you should refill it."
+
+define-item "Letter"
+	description "A closed letter, addressed to Somebody in Christopher Robin's
+	handwriting. You think it's a letter to you, but as you are just
+	a Bear of Very Little Brain, you have no way of reading it..."
+	
+define-item "Pooh's sign"
+	description "
+	+--------------+
+	|  Mr SANDERS  |
+	+--------------+
+	"
+	fixed
+
+define-item "Piglet's sign"
+	description "
+	 ________________
+	|                \\_
+	|   TRESPASSERS  W >
+	|_________________<
+	"
+	fixed
+
+define-item "North Pole"
+	description "
+	=============================
+	||                         ||
+	||        NORTH POLE       ||
+	||    DISCOVERED BY POOH   ||
+	||      POOH FOUND IT      ||
+	||                         ||
+	=============================
+	"
+	fixed
+
+define-item "Berries"
+	description "Scrumptious, fresh wild berries: blueberries, blackberries,
+	strawberries... Just don't eat too many!"
+	command "eat"
+	infinite
+
+define-item "Jacket"
+	description "This is a small, bright red rain jacket. It looks about the
+	right size to fit Roo."
+
+define-item "Mushrooms"
+	description "A bowl full of freshly picked mushrooms. I'm sure they'll make
+	good eating once they've been cooked!"
+	
+define-item "Bellrope"
+	description "This rope looks perfectly designed to be pulled. The designer
+	even tried to give it a natural flair by shaping it like a
+	tail. Hm, that does look very much like a tail!"
+
+define-item "Lamp"
+	description "This lamp has a bowl at the bottom for the oil, a glass casing 
+	to protect the wick and a metal grip by which to carry it. It's
+	very useful for dark places."
+
+define-item "Life"
+	description "
+	...................................
+	...................................
+	.........Congratulations!..........
+	...................................
+	....You have finished the game!....
+	...................................
+	...................................
+	"
+	fixed
+
+define-item "Magic map"
+	description "This is a strange map. It always seems to be changing. One
+	moment it will show you one thing, the next something completely
+	different. Yet, looking at it, you have the very distinct
+	impression that it wants you to walk up a hill."
+	cost 50
+
+define-item "Golden ring"
+	description "A beautiful golden ring that lies heavily in your hand.
+	Its smooth surface appears to conceal strange letters,
+	but you can't be sure, you may just be imagining things."
+	command "wear"
+	pickup-hook "ring-of-destiny"
+	drop-hook "annoying-ring"
+
+define-item "Grandfather's cane"
+	description "Piglet's grandfather used to carry this cane around with him.
+	And woe to any young animal who dared to be disrespectful!"
+	weapon
+
+define-weapon "Grandfather's cane"
+	description "Piglet's grandfather used to carry this cane around with him.
+	And woe to any young animal who dared to be disrespectful!"
+	type "Cane"
+	damage 4
+	
