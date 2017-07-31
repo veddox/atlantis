@@ -14,6 +14,7 @@ define-place "Pooh's home"
 	neighbour "Pooh's branch"
 	item "Hunny"
 	item "Jar"
+	item "Map"
 	hidden "Lamp" ;XXX development
 
 define-place "Pooh's porch"

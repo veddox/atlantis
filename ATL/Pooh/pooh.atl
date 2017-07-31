@@ -9,6 +9,7 @@
 name-world "100 Acre Wood"
 
 load-file "pooh-extensions.lisp"
+load-file "woodland-map.lisp"
 load-file "items.atl"
 load-file "characters.atl"
 load-file "woods.atl"
@@ -22,6 +23,6 @@ define-player "Winnie the Pooh"
 	dexterity 4
 	constitution 4
 
-define-player "Christopher Robin"
-	description "Just debugging..."
-	;place "Christopher Robin's house"
+;define-player "Christopher Robin"
+;	description "Just debugging..."
+;	place "Christopher Robin's house"
