@@ -146,8 +146,17 @@
 
 	(defun leave-bee-tree (player)
 		"Make sure you've climbed down before leaving the bee tree."
-		(when climbed (climb-down player))
-		(read-line)))
+		(when climbed (climb-down player) (read-line))))
+
+(defun nap (player &optional arg)
+	(format t "~&You lie down on the bench and close your eyes.")
+	(format t "~&Slowly, you start drifting off to dream land...")
+	(format t "~&~%Zzzzz Zzzzz Zzzzz")
+	(format t "~&~%You wake up again.")
+	(when (< (player-health player) (player-max-health player))
+		(format t "~&You feel better. +1 HP")
+		(change-player-health player 1)))
+
 
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.

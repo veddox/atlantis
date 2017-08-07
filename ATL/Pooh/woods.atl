@@ -18,21 +18,21 @@ define-place "Pooh's home"
 	hidden "Lamp" ;XXX development
 
 define-place "Pooh's porch"
-	;FIXME change description to first person
-	description "You are standing in front of Pooh's home. Here he lives under
-	the name 'Sanders', as anyone can see by the old sign planted 
-	beside the door. A comfy-looking bench stands in the sun, inviting 
-	you to a well-earned rest."
+	description "You are standing in front of your very own home - Pooh's home.
+	You live here under the name 'Sanders', as anyone can see 
+	by the old sign planted beside the door. A comfy-looking 
+	bench stands in the sun, inviting you to a well-earned rest."
 	item "Pooh's sign"
 	item "Letter"
+	item "Bench"
 	neighbour "Pooh's home"
 	neighbour "Western woods"
+	command "nap"
 
 define-place "Pooh's branch"
-	;FIXME change description to first person
-	description "This is a thick branch above Pooh's home. Once, on a very
-	blustery day, Pooh had to escape to up here. Since then, he
-	keeps an emergency ration of honey handy."
+	description "This is a thick branch above your home. Once, on a very
+	blustery day, you had to escape to up here - since then,
+	you always keep an emergency ration of honey handy."
 	neighbour "Pooh's home"
 	neighbour "Pooh's porch"
 	command "jump"

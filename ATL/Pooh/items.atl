@@ -73,11 +73,17 @@ define-item "Lamp"
 	to protect the wick and a metal grip by which to carry it. It's
 	very useful for dark places."
 
+define-item "Bench"
+	description "A tree trunk was sawed in half and placed on the ground to
+	make this bench. It looks very comfy - just the spot for a
+	quick nap..."
+	fixed
+
 define-item "Map"
 	description "This is a map of the 100 Acre Wood. The woods may not be that
 	large, but it's still easy to get lost in them. So it may be
 	a good idea to carry this around with you..."
-	command "map"
+	command "study"
 
 define-item "Life"
 	description "

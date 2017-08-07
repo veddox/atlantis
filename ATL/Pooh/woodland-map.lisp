@@ -6,8 +6,11 @@
 ; author: Daniel Vedder
 ; date: 31/07/2017
 
-(defun map (player &optional arg)
+(defun study (player &optional arg)
 	"Print out the map"
+	(unless (member 'map (extract-elements arg))
+		(format t "~&What do you want to study?")
+		(return-from study))
 	(setf map-string "
 ..............................[  100 ACRE WOODS  ]..............................
 :                                                                              :

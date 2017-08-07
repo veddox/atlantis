@@ -110,7 +110,7 @@
 (defvar *commands*
 	'(help look goto take
 		 drop talk trade
-		 equip attack searc
+		 equip attack search
 		 save clear))
 
 ;;; The following commands don't take any arguments except for a player
@@ -118,7 +118,7 @@
 (defun help (player)
 	"Print out a list of in-game commands"
 	(setf help-text "
-Commands:
+COMMANDS:
 help             -  Show this list of game commands
 quit/exit        -  Exit the game
 clear            -  Clear the screen
@@ -143,7 +143,7 @@ Some places and items may provide additional commands.")
 (defun clear (player)
 	"Clear the screen (wrapper function)"
 	(clear-screen)
-	(place player))
+	(describe-place (player-place player)))
 
 ;;; These next functions have to take two arguments (the argument
 ;;; to the function and a player instance).
@@ -386,6 +386,7 @@ Some places and items may provide additional commands.")
 
 (defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
+	;;XXX Replace this with 'hold'? (Also possible for non-weapons.)
 	(unless new-weapon
 		(format t "~&Please specify a weapon to be equipped!")
 		(return-from equip))
