@@ -178,3 +178,27 @@
 	(format t "~&You feel a stab of pain in your heart as you watch the ring drop.")
 	(format t "~&On second thoughts, you pick it up again.~%~%")
 	(take player "Golden ring"))
+
+
+;; When somebody plays on my server (Helios), he can leave me a message...
+
+(defun daniel-says (player)
+	"Leave a message for the real me"
+	(unless (y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?")
+		(return-from daniel-says))
+	(setf msg "~%DANIEL:
+Hi there! This is the 'real' Daniel speaking now... Great to see that you've 
+gotten so far in the game! I've spent two years and many, many hours getting 
+it into shape, so I'm very happy to have other people actually using it :-)
+~%If you happen to be playing on my server at the moment, you can actually
+leave me a message if you like. I'll definitely read it, and would very much
+appreciate any feedback!")
+	(format t msg)
+	(when (y-or-n-p "~&~%Leave Daniel a message?")
+		(format t "~&~%What is your name?")
+		(input-string name)
+		(setf message (lisp-ed))
+		(unless (null message)
+			(write-to-file message
+				(string-from-list (list "../" name ".msg") "") T)
+			(format t "~&Thank you very much :-)"))))

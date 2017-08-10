@@ -102,6 +102,7 @@ define-npc "Daniel"
 	rather big ears. His fingers are drumming around on some strange
 	black box that is lying open in front of him."
 	says "Hi Pooh, pleased to meet you at last!"
+	interaction-hook "daniel-says"
 
 ; QUESTS
 	

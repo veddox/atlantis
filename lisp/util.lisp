@@ -214,7 +214,8 @@
 	"Write text (a string or list of strings) to the specified file"
 	(let ((text-list (if (listp text) text (list text)))
 			 (f (if append
-					(open filename :direction :output :if-exists :append)
+					(open filename :direction :output :if-exists :append
+						:if-does-not-exist :create)
 					(open filename :direction :output))))
 		(dolist (line text-list)
 			(format f "~&~A~&" line))
@@ -254,6 +255,28 @@ specified type in the container struct"
 	"Like choose-number-option, but return the value of the choice"
 	;; Basically just a utility wrapper
 	(nth (choose-number-option option-list) option-list))
+
+(defun lisp-ed ()
+	"A very, very basic line editor for inputing several lines of text."
+	(flet ((text-input ()
+			   (format t "~&$ ")
+			   (do* ((line (read-line) (read-line))
+						(text line (string-from-list
+									   (list text line) #\newline)))
+				   ((equalp line ".") (first (cut-string text
+												 (- (length text) 2))))
+				   (format t "$ "))))
+		(setf help-msg "
+Input your text below. When you are done, finish with a line that contains only
+a single fullstop. If you make a mistake, you can still edit your text later.")
+		(format t help-msg)
+		(setf text (text-input))
+		(while (not (y-or-n-p "~&Save and exit?"))
+			(when (y-or-n-p "~&Cancel and exit?")
+				(return-from lisp-ed))
+			(format t "~&Please reenter your text:")
+			(setf text (text-input)))
+		text))
 
 (defun clear-screen ()
 	"Clear the screen in an OS-dependent manner"
