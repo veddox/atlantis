@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 2 1))
+(defconstant ATLANTIS-VERSION '(0 2 2))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -21,8 +21,8 @@
 
 ;; Game worlds must be registered in this list with a display name
 ;; and a path relative to ../ATL
-(defvar *games* '(("Lugwey" "Lugwey/lugwey.atl")
-					 ("Winnie the Pooh" "Pooh/pooh.atl")
+(defvar *games* '(("Winnie the Pooh" "Pooh/pooh.atl")
+					 ("Lugwey" "Lugwey/lugwey.atl")
 					 ("Development" "dev/test.atl")))
 
 (defun print-version ()
@@ -31,7 +31,8 @@
 		(second ATLANTIS-VERSION)
 		(third ATLANTIS-VERSION))
 	(format t "~&Copyright (c) 2015-2017 Daniel Vedder")
-	(format t "~&Licensed under the terms of the GNU GPLv3.~%"))
+	(format t "~&Licensed under the terms of the GNU GPLv3.")
+	(format t "~&www.github.com/atlantis~%"))
 
 (defun start-menu ()
 	"Show the start menu and take a choice from the user"
@@ -39,7 +40,7 @@
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a new game" "Load a game"
-					   "Create worlds" "About" "Exit"))
+					   "Advanced" "Help" "About" "Exit"))
 	(case (choose-number-option options)
 		(0 (format t "~&Which world do you want to play?")
 			;; let the player choose one of the game worlds
@@ -63,17 +64,27 @@
 					(if (equalp char-name "Cancel")
 						(start-menu)
 						(play-game)))))
+		;; choose a previously saved game
 		(1 (format t "~&What game file do you want to load?")
-			(let ((game (choose-option (mapcar #'pathname-name
-										   (directory "../saves/*")))))
-				(setf game (concatenate 'string "../saves/" game ".world"))
-				(load-game game)
-				(play-game)))
-		(2 (world-creator))
-		(3 (print-version)
+			(let ((game (choose-option (append (mapcar #'pathname-name
+												   (directory "../saves/*"))
+										   '("Back")))))
+				(if (equalp game "Back") (start-menu)
+					(progn (setf game (concatenate 'string "../saves/"
+										   game ".world"))
+							   (load-game game)
+							   (play-game)))))
+		(2 (world-creator)) ;;XXX Remove this from the main menu?
+		(3 (clear-screen)
+			(print-text-file "../doc/PLAYING")
 			(read-line)
 			(start-menu))
-		(4 (format t "~&Goodbye!")
+		(4 (print-version)
+			(when (y-or-n-p "~&~%Show the license text?")
+				(print-text-file "../doc/COPYING")
+				(read-line))
+			(start-menu))
+		(5 (format t "~&Goodbye!")
 			(quit))))
  
 (defun cmd-parameter (name &optional truth-value)

@@ -1,5 +1,10 @@
 ATLANTIS TODO
 
+LISP
+* only display non-nil object lists in the place description
+* remove (magic) from the code
+	
+ATL	
 * fill in missing place descriptions
 * hide 4 more pots of honey
 * require XP minimum to finish game?

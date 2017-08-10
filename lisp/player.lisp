@@ -33,7 +33,6 @@
 ;; XXX Make this configurable in ATL?
 (defvar *level-experience* 100)
 
-
 (defun add-player (player)
 	"Add this player to the game world"
 	(change-player-location player (player-place player))
@@ -48,6 +47,8 @@
 	(setf location (to-string location))
 	(objectify-place-monsters location)
 	(set-object-attribute player 'place location))
+
+;;TODO limit the number of carryable items?
 
 ;; XXX This function is probably superfluous, as the player struct should only 
 ;; store names of game objects (the actual objects are stored in *world*)

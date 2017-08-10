@@ -31,6 +31,7 @@
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
 
+;; FIXME Remove from the code!
 ;; XXX Very useful for debugging, but represents a major security hole
 ;; when used in a network setting
 (defmacro magic (var)
@@ -257,6 +258,7 @@ specified type in the container struct"
 (defun clear-screen ()
 	"Clear the screen in an OS-dependent manner"
 	;; NOTE: only works with CLISP! (ext:shell function used)
+	;; TODO Make sure we're on clisp, otherwise do nothing
 	(cond ((member ':unix *features*) (ext:shell "clear"))
 		((member ':win32 *features*) (ext:shell "cls"))
 		(t (debugging "~&clear-screen is not supported on this operating system!"))))

@@ -1,0 +1,138 @@
+======================
+|| PLAYING ATLANTIS ||
+======================
+
+Atlantis is a platform for text-based adventure games. That means that you,
+the player, interact with the computer using nothing but the keyboard and the
+screen. (Well, and of course your imagination...)
+
+This guide aims to give you a quick run-down of what you will need to know
+to play Atlantis. If you are interested in more details, such as how to create
+your own worlds, you are hereby referred to the accompanying documentation.
+
+The current development version of Atlantis can be found at:
+www.github.com/atlantis
+
+
+THE MAIN MENU
+
+This is where you find yourself when you first start Atlantis. Your options are
+listed underneath the game banner. At the very bottom, you see the "command
+prompt" (>>>), which is the indication that the computer expects some input from
+you. In a menu like this, you can choose an option by typing the relevant number
+and pressing ENTER. (Commands to the computer must always be terminated by
+pressing ENTER.)
+
+The first option, "Start a new game", drops you into a submenu in which you can
+choose which game world you want to play. As of Atlantis 0.3, only the "Winnie
+the Pooh" world is fully functional. (You can try the others, but you won't get
+very far.)
+
+The second option, "Load a game", is for returning users who have previously
+saved their game progress in one of the worlds. Again, you will be presented
+with a submenu that lists all currently saved games.
+
+The third option is for developers and need not concern us further.
+
+The fourth option displays this help text; the fifth option shows a copyright
+notice and the Atlantis software license. The sixth option quits the game.
+
+
+BASIC GAME PLAY
+
+When you decide to start a new game in one of the game worlds, you may be
+given a choice of characters to play. (Some worlds are only intended for a
+single character. In that case, you are taken straight to the game.)
+
+Once inside the game world, you no longer navigate using a numeric menu but with
+commands. Most commands take the form <verb> <noun>, whereby <verb> is replaced
+with the actual command (e.g. look) and <noun> is replaced with the object in
+question (e.g. bed).
+
+Typing "help" (without the quotation marks) will bring up a list of the core
+commands, along with a short description. This is very useful!
+
+If you want to stop playing, you can use the commands "quit" or "exit". Don't
+forget to save your progress first, though!
+
+Note that although capitalization does not matter in Atlantis, spelling does.
+So if you get an error message telling you that a command is not available, make
+sure that you spelt it correctly.
+
+
+THE GAME SCREEN
+
+All game worlds consist of a network of distinct places. Your current location
+is always displayed at the very top of the screen. Below the location's name,
+you will find a more detailed description of your surroundings. It's worth
+reading this carefully, as it may contain important clues!
+
+Underneath the place description are various lists, starting with neighbouring
+places. There may also be items, NPCs (= non-playing characters) or even
+monsters that you can interact with.
+
+
+CORE COMMANDS
+
+Below you will find a list of the core Atlantis commands. Some places or items
+may offer additional commands that are available when you are in that place
+or in possession of the item. If any place/item provides commands, it is so
+indicated in the game.
+
+look - This is the most versatile command in the game. With it, you can inspect
+       any item, NPC or monster (e.g. look cook). You can also bring up
+       information about yourself with "look me" or about your current location
+       with "look here".
+
+goto - The second most important command in Atlantis. With "goto" you can change
+       your location to a neighbouring place. Enter the name of the place you
+       wish to go to after the actual command (e.g. goto Kitchen).
+
+search - Some rooms contain hidden items. To find them, you first need to search
+         the room. When you do so, you have a 50% chance of finding a hidden
+         object.
+
+take - This command is used to pick up an item. Most items in the game can be
+       picked up, many are useful.
+
+drop - This, obviously, is the opposite to take. If you no longer require an
+       item, just drop it.
+
+talk - This command allows you to interact with NPCs. Almost all NPCs will have
+       something to say to you, and occasionally, it's important! Some NPCs also
+       offer further options, such as buying or selling items, or quests.
+       (Quests are tasks that you can undertake for the NPC. You prove that you
+       have completed the task by returning a certain, quest-specific item to
+       the NPC, upon which you will of course receive a reward.)
+
+equip - Some items can be used as weapons. If you ever find yourself in a fight
+        with a monster, you will want to have a weapon on you. However, just
+        owning a weapon isn't enough. Before you can use it, you have to equip
+        it with this command.
+
+attack - Some places contain monsters. (In Atlantis, a "monster" is any hostile
+         non-playing character.) While some monsters attack you first, you also
+         have the choice of attacking them. After all, there may be rich
+         treasure in store for the brave adventurer... (Make sure you have a
+         weapon equipped, though!) When you attack a monster, or vice versa,
+         the computer calculates the amount of damage you both take based on
+         your various strengths and weapons. Make sure that your health doesn't
+         drop too low! If it ever reaches 0, you're dead... (You can check up
+         on your current health with the "look me" command. There may be some
+         ways in-game of healing yourself - but you'll have to find those out
+         for yourself.) Each time you use the "attack" command is equivalent to
+         one round of fighting. Eventually, you'll kill the monster, or decide
+         that discretion is the better part of valour...
+
+clear - Sometimes, your screen can get rather cluttered up with the output of
+        the various commands. With "clear" you delete all text except the place
+        description.
+
+save - If you've made good progress in a game world but cannot finish the game
+       in one sitting, you will want to save your work. The "save" command will
+       ask you for a file name to save the game under, then store it for later
+       retrieval (via the "Load a game" option in the main menu).
+
+
+Daniel Vedder
+Last modified 10/08/2017

@@ -38,6 +38,7 @@
 
 (defun describe-place (p)
 	"Print out a complete description of place p"
+	;;TODO only display non-nil lists (as with commands)
 	(when (stringp p) (setf p (get-game-object 'place p)))
 	(objectify-place-monsters p)
 	(format t "~&~A" (string-upcase (place-name p)))
