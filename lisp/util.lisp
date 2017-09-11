@@ -31,14 +31,6 @@
 		 (format t "~&~A " ,prompt)
 		 (setf ,var (read))))
 
-;; FIXME Remove from the code!
-;; XXX Very useful for debugging, but represents a major security hole
-;; when used in a network setting
-(defmacro magic (var)
-	"Execute typed-in Lisp code"
-	`(when (eq ,var 'magic)
-		 (repl)))
-
 ;; XXX potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
 	"Set each symbol in var-list to value"
@@ -53,7 +45,6 @@
 	`(progn
 		 (format t "~&>>> ")
 		 (set-list (read) ,@vars)
-		 (magic (first (list ,@vars))) ;;TODO Remove this again
 		 (first (list ,@vars))))
 
 (defmacro input-string (&optional (var (gensym)))
@@ -61,7 +52,6 @@
 	`(progn
 		 (format t "~&>>> ")
 		 (setf ,var (read-line))
-		 (magic (read-from-string ,var)) ;;TODO Remove this again
 		 ,var))
 
 (defmacro while (condition &body body)
@@ -116,15 +106,23 @@
 	(if (null assoc-list) NIL
 		(cons (car (car assoc-list)) (keys (cdr assoc-list)))))
 
-;; TODO change &optional to &key (and figure out why the heck that doesn't
-;; work - clisp bug?), add null-filler keyword
-;; TODO Add a maximum line length after which a newline is inserted
-(defun string-from-list (lst &optional (separator " - "))
-	"Put all elements of lst into a single string, separated by the separator"
-	(cond ((null lst) "")
-		((= (length lst) 1) (to-string (car lst)))
-		(T (concatenate 'string (to-string (first lst)) (to-string separator)
-			(string-from-list (cdr lst) separator)))))
+;; FIXME If (string-from-list) produces a string with linebreaks and is
+;; used in conjunction with a (format t "~A") call, (format) will insert
+;; an additional newline before the returned string. WTH?!
+(defun string-from-list (lst &key (sep " - ") line-length line-sep)
+	"Put all elements of lst into a single string, separated by sep"
+	(unless line-sep ;; set the line separator to newline+tab
+		(setf line-sep (concatenate 'string
+						   (to-string #\Newline) (to-string #\Tab))))
+	;; Iterate through the list, building the string as we go
+	(do ((l (cdr lst) (cdr l)) (current-line 1 (1+ current-line))
+			(str (to-string (first lst))))
+		((zerop (length l)) str)
+		(if (and line-length (zerop (rem current-line line-length)))
+			(setf str (concatenate 'string str (to-string sep)
+						  (to-string line-sep) (to-string (first l))))
+			(setf str (concatenate 'string str (to-string sep)
+						  (to-string (first l)))))))
 
 (defun split-string (str separator)
 	"Split the string up into a list of strings along the separator character"
@@ -223,7 +221,7 @@
 
 (defun build-symbol (&rest components)
 	"Concatenate the passed components into a single symbol"
-	(read-from-string (string-from-list components "")))
+	(read-from-string (string-from-list components :sep "")))
 
 (defun make-list-function (container-type &optional (add-s t))
 	"Return a function to return a list of the names of all objects of the
@@ -262,7 +260,7 @@ specified type in the container struct"
 			   (format t "~&$ ")
 			   (do* ((line (read-line) (read-line))
 						(text line (string-from-list
-									   (list text line) #\newline)))
+									   (list text line) :sep #\newline)))
 				   ((equalp line ".") (first (cut-string text
 												 (- (length text) 2))))
 				   (format t "$ "))))
@@ -285,22 +283,4 @@ a single fullstop. If you make a mistake, you can still edit your text later.")
 	(cond ((member ':unix *features*) (ext:shell "clear"))
 		((member ':win32 *features*) (ext:shell "cls"))
 		(t (debugging "~&clear-screen is not supported on this operating system!"))))
-
-(defun repl ()
-	"Launch a read-eval-print loop"
-	(let ((expr (simple-input expr "lisp >")))
-		(while (!= expr 'done)
-			(if (eq expr 'help)
-				(progn
-					(format t "~&You are in a read-eval-print loop.")
-					(format t "~&To escape, type done; to quit, type (quit)."))
-			(format t "~&~S" (eval expr)))
-			(simple-input expr "lisp >"))))
-
-;; XXX Interesting phenomenon of repl (security bug?):
-;; Enter two Lisp expressions that have not had a value assigned to them in the
-;; current session (e.g. 'foo ls'). The first will cause the interpreter to
-;; exit with an error. The second, however, is still printed to stdout (which is
-;; now a shell), followed by a newline. If the symbol represents a valid shell
-;; command, it is therefore executed. ('ls' in the example above.)
 

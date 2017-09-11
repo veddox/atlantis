@@ -14,6 +14,8 @@
 ;; (This module should be purely UI)
 ;; Yeah, probably not going to happen ;-)
 
+;; XXX Change to 5 once the (string-from-list) bug is fixed
+(setf *max-line-items* 10)
 
 (defun play-game ()
 	"The main game loop"
@@ -28,7 +30,6 @@
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
-			;; TODO Tidy up the exit process
 			(while (not (and (or (equalp command "quit")
 								 (equalp command "exit"))
 							(y-or-n-p "~&Really quit?")))
@@ -38,19 +39,25 @@
 
 (defun describe-place (p)
 	"Print out a complete description of place p"
-	;;TODO only display non-nil lists (as with commands)
 	(when (stringp p) (setf p (get-game-object 'place p)))
 	(objectify-place-monsters p)
 	(format t "~&~A" (string-upcase (place-name p)))
 	(format t "~&~%~A" (place-description p))
 	(format t "~&~%Neighbouring places: ~A"
-		(string-from-list (place-neighbour p)))
-	(format t "~&Items: ~A" (string-from-list (place-item p)))
-	(format t "~&NPCs: ~A" (string-from-list (place-npc p)))
-	(format t "~&Monsters: ~A" (string-from-list
-								   (list-place-objects 'monster p)))
+		(string-from-list (place-neighbour p) :line-length *max-line-items*))
+	(when (place-item p)
+		(format t "~&Items: ~A" (string-from-list (place-item p)
+									:line-length *max-line-items*)))
+	(when (place-npc p)
+		(format t "~&NPCs: ~A" (string-from-list (place-npc p)
+								    :line-length *max-line-items*)))
+	(when (place-monster p)
+		(format t "~&Monsters: ~A" (string-from-list
+									   (list-place-objects 'monster p)
+									    :line-length *max-line-items*)))
 	(when (place-command p)
-		(format t "~&Commands: ~A" (string-from-list (place-command p)))))
+		(format t "~&Commands: ~A" (string-from-list (place-command p)
+									    :line-length *max-line-items*))))
 
 (defun describe-player (p)
 	"Print a description of this player"
@@ -66,13 +73,15 @@
 			(player-constitution p) tab (player-dexterity p))
 		(format t "~&=====~&Abilities:~&~A"
 			(let ((abilities (player-ability p)))
-				(dolist (i (player-item p) (string-from-list abilities))
+				(dolist (i (player-item p) (string-from-list abilities
+											   :line-length *max-line-items*))
 					(let ((ia (item-ability (get-game-object 'item i))))
 						(when ia (setf abilities (append abilities ia)))))))
 		(format t "~&=====")
 		(format t "~&Weapon: ~A" (player-weapon p))
 		;; XXX This will need adjusting for large item numbers
-		(format t "~&Items: ~A" (string-from-list (player-item p)))
+		(format t "~&Items: ~A" (string-from-list (player-item p)
+									:line-length *max-line-items*))
 		(format t "~&=====")
 		(format t "~&Max health: ~A~ACurrent health: ~A"
 			(player-max-health p) tab (player-health p))
@@ -271,7 +280,8 @@ Some places and items may provide additional commands.")
 						(format t "~&~A: ~A" (string-upcase npc-name)
 							(quest-say-before quest)))
 					(when (y-or-n-p "~%Give to ~A: ~A?" npc-name
-							  (string-from-list (quest-proof-item quest) ", "))
+							  (string-from-list (quest-proof-item quest) :sep ", "
+								  :line-length *max-line-items*))
 						(dolist (j (quest-proof-item quest))
 							(remove-object-attribute player 'item j))
 						(dolist (k (quest-reward-item quest))
@@ -283,7 +293,8 @@ Some places and items may provide additional commands.")
 						(format t "~&~%Quest complete. You gain:")
 						(format t "~&Money: ~A Experience: ~A~&Items: ~A"
 							(quest-money quest) (quest-experience quest)
-							(string-from-list (quest-reward-item quest)))
+							(string-from-list (quest-reward-item quest)
+								 :line-length *max-line-items*))
 						(unless (quest-infinite quest)
 							(remove-object-attribute npc 'quest npc))))))))
 
@@ -358,7 +369,8 @@ Some places and items may provide additional commands.")
 					(format t "~&You have picked up: ~A" item-name)
 					(when (item-command item)
 						(format t "~&This item provides commands: ~A"
-							(string-from-list (item-command item))))
+							(string-from-list (item-command item)
+								:line-length *max-line-items*)))
 					(unless (zerop (length (item-pickup-hook item)))
 						(funcall (read-from-string
 									 (item-pickup-hook item)) player))))
