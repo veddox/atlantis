@@ -109,6 +109,7 @@
 ;; FIXME If (string-from-list) produces a string with linebreaks and is
 ;; used in conjunction with a (format t "~A") call, (format) will insert
 ;; an additional newline before the returned string. WTH?!
+;; -> Appears to be a CLISP bug? Doesn't appear with SCBL...
 (defun string-from-list (lst &key (sep " - ") line-length line-sep)
 	"Put all elements of lst into a single string, separated by sep"
 	(unless line-sep ;; set the line separator to newline+tab

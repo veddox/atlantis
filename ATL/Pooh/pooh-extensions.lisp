@@ -92,8 +92,14 @@
 	"A wrapper function for lost-in-the-forest for the deep forest location"
 	(lost-in-the-forest player "Deep forest" 40))
 
+(defun climb (player &optional arg)
+	"Climb something - currently either the bee tree or the rock at the rapids"
+	(cond ((null arg) (format t "~&What do you want to climb?"))
+		((equalp (player-place player) "Bee tree") (climb-tree player arg))
+		((equalp (player-place player) "Rapids") (climb-rock player arg))))
+
 (let ((climbed NIL))
-	(defun climb (player &optional arg)
+	(defun climb-tree (player &optional arg)
 		"Try to climb the bee tree. Warning: bees sting, and trees are tall ;-)"
 		(let ((place (get-game-object 'place (player-place player))))
 			(when climbed
@@ -148,7 +154,23 @@
 		"Make sure you've climbed down before leaving the bee tree."
 		(when climbed (climb-down player) (read-line))))
 
+(let ((honey-found NIL))
+	(defun climb-rock (player &optional arg)
+		"Climb the rock at the rapids"
+		(if (> 25 (random 100))
+			(progn (format t "~&You slip!")
+				(read-line)
+				(goto player "Stream"))
+			(progn (format t "~&You clamber up on the rock.")
+				(unless honey-found
+					(format t "~&You find a pot of honey!")
+					(set-object-attribute (get-game-object 'place (player-place player))
+						'item "Hunny")
+					(setf honey-found T))))))
+
+
 (defun nap (player &optional arg)
+	"Take a nap in front of Pooh's house"
 	(format t "~&You lie down on the bench and close your eyes.")
 	(format t "~&Slowly, you start drifting off to dream land...")
 	(format t "~&~%Zzzzz Zzzzz Zzzzz")
@@ -156,6 +178,18 @@
 	(when (< (player-health player) (player-max-health player))
 		(format t "~&You feel better. +1 HP")
 		(change-player-health player 1)))
+
+(defun ring (player &optional arg)
+	"Ring the bell at Owl's porch"
+	(let ((place (get-game-object 'place (player-place player))))
+		(if (member "bellrope" (list-place-objects 'item place) :test #'equalp)
+			(format t "~&You pull the bellrope. A loud ringing can be heard from inside.")
+			(format t "~&Try as you might, you cannot find a bellrope to pull. You knock instead.")))
+	(let ((consequences '("Nothing happens. Owl hasn't been too good of hearing lately..."
+							 "Nobody answers. Perhaps you should ring louder?"
+							 "You wait, but nobody comes. You can hear noises inside, though."
+							 "Nothing happens." "Nobody answers." "No reply.")))
+		(format t "~&~A" (random-elt consequences))))
 
 
 ;; The golden ring is an easter egg referencing, of course,

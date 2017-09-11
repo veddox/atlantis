@@ -16,7 +16,8 @@ load-file "woods.atl"
 	
 define-player "Winnie the Pooh"
 	description "A small but lovable bear of Very Little Brain."
-	place "Pooh's home"
+	;place "Pooh's home"
+	place "Rapids"
 	max-health 20
 	health 20
 	strength 1

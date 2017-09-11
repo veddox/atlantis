@@ -49,6 +49,15 @@ define-item "North Pole"
 	"
 	fixed
 
+define-item "Rock"
+	description "A large rock sitting right in the middle of the rapids. Looks like
+	a great place for a picknick!"
+	fixed
+
+define-item "Stone"
+	description "A pretty little pebble, very colourful and worn smooth by the water."
+	infinite
+	
 define-item "Berries"
 	description "Scrumptious, fresh wild berries: blueberries, blackberries,
 	strawberries... Just don't eat too many!"

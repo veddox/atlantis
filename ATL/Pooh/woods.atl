@@ -229,11 +229,16 @@ define-place "Rabbit's friends and relations"
 	neighbour "Rabbit's house"
 
 define-place "Rapids"
-	description "TODO"
+	description "The rapids are a series of pools in the stream, connected by
+	small waterfalls. The stream chatters lustily as it bubbles
+	over the many rocks. Mind you don't fall in!"
 	item "North Pole"
+	item "Rock"
+	item "Stone"
 	neighbour "Northern woods"
 	neighbour "Misty forest"
 	neighbour "Stream"
+	command "climb"
 
 define-place "Stream"
 	description "Whoops! You fell in! Brrr, this water is cold! Better get out
@@ -252,6 +257,7 @@ define-place "Owl's porch"
 	neighbour "Owl's home"
 	neighbour "Eastern woods"
 	neighbour "Central woods"
+	command "ring"
 
 define-place "Owl's home"
 	description "TODO"

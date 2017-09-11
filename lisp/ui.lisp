@@ -30,6 +30,7 @@
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
+			(while (zerop (length command)) (input-string command))
 			(while (not (and (or (equalp command "quit")
 								 (equalp command "exit"))
 							(y-or-n-p "~&Really quit?")))
