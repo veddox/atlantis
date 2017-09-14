@@ -55,6 +55,8 @@ define-place "Central woods"
 	description "This is the oldest part of the 100 Acre Wood. The oaks you see
 	around you are truly ancient, hundreds of years old. Even Owl
 	can't remember when they were planted. It's very peaceful here."
+	item "Stone"
+	item "Stick"
 	neighbour "Northern woods"
 	neighbour "Eastern woods"
 	neighbour "Southern woods"
@@ -85,6 +87,7 @@ define-place "Southern woods"
 	you approach the marshes and bogs to the south of the
 	100 Acre wood. Plenty of moss grows around the roots of
 	the trees. Here and there, are willow bends its branches."
+	item "Stick"
 	neighbour "Central woods"
 	neighbour "Eastern woods"
 	neighbour "Western woods"
@@ -98,6 +101,7 @@ define-place "Eastern woods"
 	description "This is the eastern part of the 100 Acre Wood. As you would
 	expect in a wood, it is full of trees. In this case you 
 	mainly see young birches around you."
+	item "Stick"
 	neighbour "Central woods"
 	neighbour "Northern woods"
 	neighbour "Southern woods"
@@ -160,6 +164,7 @@ define-place "Bridge"
 	neighbour "Eastern woods"
 	neighbour "Floody place"
 	neighbour "The World"
+	command "play"
 
 define-place "Piglet's porch"
 	description "TODO"
@@ -183,11 +188,14 @@ define-place "Kanga's house"
 	item "Jacket"
 
 define-place "Sandy pit"
-	description "TODO"
+	description "The sandy pit is just that - a large pit full of sand somewhere
+	in the forest. It's a great place to play in, Roo just loves it.
+	If his mother let him, he would spend all day, every day here!"
 	neighbour "Northern woods"
 	neighbour "Kanga's house"
 	neighbour "Misty forest"
 	npc "Roo"
+	command "play"
 
 define-place "Six pine trees"
 	description "The Six Pine Trees are a group of particularly tall pines
@@ -217,16 +225,26 @@ define-place "Bee tree"
 	exit-hook "leave-bee-tree"
 
 define-place "Rabbit's house"
-	description "TODO"
+	description "Rabbit's house is a warren dug into the side of a sandy bank.
+	It's very tidy, because of course it would be dreadful if
+	Rabbit's friends found his house disorderly. And he's taken
+	special care to tidy away any food. Of course, he would be
+	glad to give you any if you saw some and needed it, but even
+	gladder if he didn't have to play the generous host..."
 	npc "Rabbit"
 	hidden "Hunny"
 	neighbour "Northern woods"
 	neighbour "Rabbit's friends and relations"
 
 define-place "Rabbit's friends and relations"
-	description "TODO"
+	description "Just outside the main woods lies an area where most of Rabbit's
+	friends-and-relations live. Basically, Rabbit knows very hedgehog, 
+	beetle and jackdaw here. Unfortunately, most of them are so
+	unimportant that nobody else does."
 	neighbour "Northern woods"
 	neighbour "Rabbit's house"
+	npc "Small"
+	npc "Henry Rush"
 
 define-place "Rapids"
 	description "The rapids are a series of pools in the stream, connected by

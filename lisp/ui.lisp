@@ -261,8 +261,9 @@ Some places and items may provide additional commands.")
 			(format t "~&~A is not here!" npc-name)
 			(return-from talk))
 		;; The NPC says one of its lines
-		(format t "~&~A: ~A" (string-upcase npc-name)
-			(random-elt (npc-says npc)))
+		(when (npc-says npc)
+			(format t "~&~A: ~A" (string-upcase npc-name)
+			(random-elt (npc-says npc))))
 		;; Interaction hook
 		(let ((hook (npc-interaction-hook npc)))
 			(unless (zerop (length hook))

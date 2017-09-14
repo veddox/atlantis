@@ -71,8 +71,22 @@ define-npc "Rabbit"
 	seems to have time for any of them. He is always on the move,
 	always busy, and not particularly fond of bears who happen
 	to stop by his home for teatime."
-	says "Hello Pooh, how are you? Oh, would you look at the time, I really
-	must be getting a move on. Catch you later!"
+	says "Hello Pooh, how are you? Oh, would you look at the time, I really must
+	be getting a move on. Would you mind coming back a little later?"
+
+define-npc "Small"
+	description "Small's real name is 'Very Small Beetle', but since that name
+	is too big for him, everybody simply calls him Small. If he
+	doesn't happen to be lost, he's quite a nice fellow to have
+	around."
+	says "Bzzzzz..."
+
+define-npc "Henry Rush"
+	description "Henry Rush is one of Small's brothers. Or cousins. Or something
+	like that, anyway. He certainly is a very curious little
+	beetle. Unfortunately, he takes so long getting anywhere
+	that all the fun is always over by the time he gets there..."
+	says "Where are you going? Is there something to see there?"
 
 define-npc "Mr Milne"
 	description "Alan Alexander Milne is sitting at the table, staring very

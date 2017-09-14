@@ -20,8 +20,8 @@
 			 (member "Hunny" (player-item player) :test #'equalp))
 			(if (> (player-health player) 10)
 				(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later.")
-				(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.")
-					(format t "~&You stick your paw deeply into the jar, then draw it out again.")
+				(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.") (sleep 1)
+					(format t "~&You stick your paw deeply into the jar, then draw it out again.") (sleep 1)
 					(format t "~&Smooth golden honey runs into your mouth, making you feel much better.")
 					(format t "~&+10 HP")
 					(change-player-health player 10)
@@ -32,6 +32,7 @@
 (defun jump (player &optional arg)
 	"Jump off Pooh's branch onto his porch."
 	(format t "~&You look down nervously, then jump off the branch.")
+	(sleep 1)
 	(if (> 50 (random 100))
 		(progn (format t "~&You land safely. That was fun! You gain 3 XP.")
 			(add-player-experience player 3))
@@ -44,6 +45,7 @@
 	"If the player is hurt, Kanga looks after him."
 	(when (< (player-health player) (player-max-health player))
 		(format t "~&KANGA: Oh my dear, you look hurt! Here, let me take care of you.")
+		(sleep 1)
 		(format t "~&~%Kanga bandages your wounds. You feel better.")
 		(setf (player-health player) (player-max-health player))))
 
@@ -54,7 +56,7 @@
 							 (random-elt (place-neighbour place)))))
 		(format t "~&~%A large yellow-and-black object comes flying out of nowhere")
 		(format t "~&and knocks you over. When you sit up again, you see Tigger")
-		(format t "~&grinning widely at you.")
+		(format t "~&grinning widely at you.") (sleep 3)
 		(format t "~&~%Tigger bounces away toward ~A." (place-name neighbour))
 		(remove-object-attribute place 'npc "Tigger")
 		(set-object-attribute neighbour 'npc "Tigger")))
@@ -108,11 +110,13 @@
 					(format t "~&You are already sitting up the tree."))
 				(return-from climb))
 			(format t "~&You start climbing up the tree.")
+			(sleep 3)
 			;; The player has a 60% chance of success.
 			(if (> 60 (random 100))
 				(progn (setf climbed T) (add-player-experience player 2)
 					(format t "~&You make it to the top."))
 				(progn (format t "~&A branch breaks beneath you! You fall into a gorse bush.")
+					(sleep 1)
 					(format t "~&You take 4 HP fall damage.")
 					(change-player-health player -4)))
 			;; The bees attack if they are still present
@@ -141,9 +145,11 @@
 		"Climb down the tree."
 		(if climbed
 			(progn (format t "~&Slowly you climb back down the tree.")
+				(sleep 2)
 				(if (> 60 (random 100))
 					(format t "~&You reach the ground safely.")
 					(progn (format t "~&You lose your grip!")
+						(sleep 1)
 						(format t "~&Well, that was rather faster than expected.")
 						(format t "~&You take 4 HP fall damage.")
 						(change-player-health player -4)))
@@ -168,12 +174,50 @@
 						'item "Hunny")
 					(setf honey-found T))))))
 
+(defun play (player &optional arg)
+	"Let the player play a game"
+	(let ((place (player-place player)))
+		(cond ((equalp place "Sandy pit") (build-sandcastle))
+			((equalp place "Bridge") (poohsticks player)))))
+
+(let ((sandcastle 0))
+	(defun build-sandcastle ()
+		"The player builds a sandcastle at the sandy pit."
+		(case sandcastle
+			(0 (format t "~&You decide to build a sandcastle!")
+				(symbol-macrolet ((description (place-description (get-game-object 'place "Sandy pit"))))
+					(setf description (string-from-list (list description "Somebody has been building a sandcastle here.")
+										  :sep #\newline))))
+			(20 (format t "~&You dig a large moat and erect the walls."))
+			(40 (format t "~&You build four towers, one at each corner."))
+			(60 (format t "~&You pile up sand for a big strong keep in the center."))
+			(80 (format t "~&You decorate the castle, adding pretty little details."))
+			(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
+				(set-object-attribute (get-game-object 'place "Sandy pit") 'item "Sandcastle")))
+		(unless (= sandcastle 100) (incf sandcastle 20))))
+
+(let ((score 0))
+	(defun poohsticks (player)
+		"Play Poohsticks"
+		(if (< (count-instances "Stick" (player-item player) :test #'equalp) 2)
+			(format t "~&You need at least two sticks to play Poohsticks!")
+			(progn (remove-object-attribute player 'item "Stick")
+				(remove-object-attribute player 'item "Stick")
+				(format t "~&Which stick do you think will win?")
+				(setf choice (choose-number-option '("Stick A" "Stick B")))
+				(setf winner (random 2))
+				(format t "~&You throw both sticks into the stream on one side of the bridge.") (sleep 1)
+				(format t "~&You run to the other side and lean over the railing.") (sleep (random 4))
+				(format t "~&~A comes out first!" (nth winner '("Stick A" "Stick B"))) (sleep 1)
+				(if (= winner choice)
+					(progn (incf score) (format t "~&You win! Your score is now ~A." score))
+					(progn (decf score) (format t "~&You lose! Your score is now ~A." score)))))))
 
 (defun nap (player &optional arg)
 	"Take a nap in front of Pooh's house"
-	(format t "~&You lie down on the bench and close your eyes.")
-	(format t "~&Slowly, you start drifting off to dream land...")
-	(format t "~&~%Zzzzz Zzzzz Zzzzz")
+	(format t "~&You lie down on the bench and close your eyes.") (sleep 1)
+	(format t "~&Slowly, you start drifting off to dream land...")  (sleep 1)
+	(format t "~&~%Zzzzz Zzzzz Zzzzz")  (sleep 3)
 	(format t "~&~%You wake up again.")
 	(when (< (player-health player) (player-max-health player))
 		(format t "~&You feel better. +1 HP")
@@ -185,6 +229,7 @@
 		(if (member "bellrope" (list-place-objects 'item place) :test #'equalp)
 			(format t "~&You pull the bellrope. A loud ringing can be heard from inside.")
 			(format t "~&Try as you might, you cannot find a bellrope to pull. You knock instead.")))
+	(sleep 1)
 	(let ((consequences '("Nothing happens. Owl hasn't been too good of hearing lately..."
 							 "Nobody answers. Perhaps you should ring louder?"
 							 "You wait, but nobody comes. You can hear noises inside, though."
@@ -199,7 +244,7 @@
 	"Wear the mystical golden ring..."
 	(if (member 'ring (extract-elements arg))
 		(progn
-			(format t "~&You slip the golden ring on your finger.")
+			(format t "~&You slip the golden ring on your finger.") (sleep 1)
 			(format t "~&You feel something ought to happen.~&Nothing does."))
 		(format t "~&What do you want to wear?")))
 

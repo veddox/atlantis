@@ -194,7 +194,8 @@
 
 (defun random-elt (seq)
 	"Return a random element of this sequence"
-	(elt seq (random (length seq))))
+	(if (zerop (length seq)) NIL
+		(elt seq (random (length seq)))))
 
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"

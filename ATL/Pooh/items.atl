@@ -57,6 +57,11 @@ define-item "Rock"
 define-item "Stone"
 	description "A pretty little pebble, very colourful and worn smooth by the water."
 	infinite
+
+define-item "Stick"
+	description "Just an ordinary sort of stick. Nothing special, but fun to
+	play around with."
+	infinite
 	
 define-item "Berries"
 	description "Scrumptious, fresh wild berries: blueberries, blackberries,
@@ -64,6 +69,12 @@ define-item "Berries"
 	command "eat"
 	infinite
 
+define-item "Sandcastle"
+	description "A very impressive sandcastle. It has everything you could wish
+	for: a moat, four walls, strong towers - even small windows!
+	Somebody must have put a lot of effort into building this."
+	fixed
+	
 define-item "Jacket"
 	description "This is a small, bright red rain jacket. It looks about the
 	right size to fit Roo."
