@@ -197,6 +197,28 @@
 	(if (zerop (length seq)) NIL
 		(elt seq (random (length seq)))))
 
+(defun fuzzy-match (pattern lst &key (test #'equalp))
+	"Return the element of a list of strings that best matches the input pattern"
+	;; An element whose start matches the pattern is a better fit than an element
+	;; with a match in the middle. If there are multiple equally well-fitting
+	;; elements, the search is inconclusive and NIL is returned.
+	(do* ((result NIL) (multiple NIL) (start-match NIL) (l lst (cdr l))
+			 (next (search pattern (first l) :test test)
+				 (search pattern (first l) :test test)))
+		((null l) (if multiple NIL result))
+		(when next
+			(if result
+				(if (zerop next)
+					(if start-match
+						(return-from fuzzy-match)
+						(progn (setf result (first l))
+							(setf start-match T)
+							(setf multiple NIL)))
+					(unless start-match
+						(setf multiple T)))
+				(progn (setf result (first l))
+					(setf start-match (zerop next)))))))
+
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"
 	(with-open-file (f file-name)

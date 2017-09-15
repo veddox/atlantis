@@ -1,8 +1,7 @@
 ATLANTIS TODO
 
 LISP
-* add (expand-commands) function that guesses full commands
-	based on a user's abbreviated input (e.g. 'look' from 'l')
+* prevent illegal input characters from causing a crash
 	
 ATL	
 * fill in missing place descriptions

@@ -91,21 +91,22 @@
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
-	(let* ((command (read-from-string cmd))
+	(let* ((command (read-from-string cmd))		
 			  (space (position #\Space cmd))
 			  (arg (if space (second (cut-string cmd (1+ space))) NIL))
 			  ;; Check default commands
-			  (cmd-fn (when (member command *commands* :test #'eq) command)))
+			  (fuzzy-cmd (fuzzy-match (to-string command)
+							 (mapcar #'to-string *commands*)))
+			  (cmd-fn (when fuzzy-cmd (read-from-string fuzzy-cmd))))
 		;; Search for place commands
-		(when (member (to-string command)
-				  (place-command (get-game-object 'place (player-place player)))
-				  :test #'equalp)
-			(setf cmd-fn command))
+		(let ((place-cmd (fuzzy-match (to-string command)
+							 (place-command (get-game-object 'place
+												(player-place player))))))
+				 (when place-cmd (setf cmd-fn (read-from-string place-cmd))))
 		;; Search for item commands (highest priority)
 		(dolist (i (objectify-name-list 'item (player-item player)))
-			(when (member (to-string command) (item-command i) :test #'equalp)
-				(setf cmd-fn command)
-				(return)))
+			(let ((item-cmd (fuzzy-match (to-string command) (item-command i))))
+				(when item-cmd (setf cmd-fn (read-from-string item-cmd)) (return))))
 		;; If found, execute the command
 		(if cmd-fn
 			(if space (funcall cmd-fn player arg)
@@ -120,13 +121,13 @@
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
 	'(help look goto take
-		 drop talk trade
-		 equip attack search
-		 save clear))
+		 drop talk equip attack
+		 seek save clear))
 
-;;; The following commands don't take any arguments except for a player
+;;; Command functions have to take two arguments (a player instance and
+;;; an optional(!) argument to the function).
 
-(defun help (player)
+(defun help (player &optional arg)
 	"Print out a list of in-game commands"
 	(setf help-text "
 COMMANDS:
@@ -136,11 +137,11 @@ clear            -  Clear the screen
 look [here]      -  Describe the current location
 look me          -  Describe your character
 look <object>    -  Show a description of this entity
-search           -  Search for hidden items
 goto <place>     -  Go to a neighbouring location
-talk [to] <npc>  -  Talk to an NPC
 take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
+talk [to] <npc>  -  Talk to an NPC
+seek             -  Search for hidden items
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
 save [<file>]    -  Save the game to file
@@ -148,16 +149,16 @@ save [<file>]    -  Save the game to file
 Arguments in square brackets are optional,
 arguments in angular brackets denote place fillers.
 
+If you abbreviate commands or arguments, Atlantis will
+try to find a suitable match.
+
 Some places and items may provide additional commands.")
 	(format t "~A" help-text))
 
-(defun clear (player)
+(defun clear (player &optional arg)
 	"Clear the screen (wrapper function)"
 	(clear-screen)
 	(describe-place (player-place player)))
-
-;;; These next functions have to take two arguments (the argument
-;;; to the function and a player instance).
 
 (let ((last-save NIL))
 	(defun save (player &optional game-file)
@@ -182,10 +183,10 @@ Some places and items may provide additional commands.")
 	(unless location
 		(format t "~&Please specify a location!")
 		(return-from goto))
-	(unless (member location
-				(place-neighbour (get-game-object 'place
-									 (player-place player)))
-				:test #'equalp)
+	(setf location (fuzzy-match location
+					   (place-neighbour (get-game-object 'place
+											(player-place player)))))
+	(unless location
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
 	(let ((req (place-requires (get-game-object 'place location))))
@@ -220,18 +221,23 @@ Some places and items may provide additional commands.")
 			  (describe-player player) (return-from look))
 		((equalp object-name "here")
 			(describe-place (player-place player)) (return-from look)))
-	(let ((description (get-object-description object-name
-						   (player-place player))))
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (o-name (fuzzy-match object-name (append (place-item place)
+												   (place-npc place)
+												   (place-monster place)
+												   (player-item player))))
+			  (description (get-object-description o-name place)))
 		;; Don't forget items the player is carrying
-		(when (member object-name (player-item player) :test #'equalp)
+		(when (member o-name (player-item player) :test #'equalp)
 			(setf description
-				(item-description (get-game-object 'item object-name))))
+				(item-description (get-game-object 'item o-name))))
 		(if description
-			(format t "~&(~A) ~A" (string-capitalize object-name) description)
+			(format t "~&(~A) ~A" (string-capitalize o-name) description)
 			(format t "~&Could not find ~A!" object-name))))
 
-(defun search (player &optional arg)
+(defun seek (player &optional arg)
 	"Search for hidden items in the current room"
+	(format t "~&You start hunting around.") (sleep (random 4))
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (items (place-item place))
 			  (hidden (place-hidden place)))
