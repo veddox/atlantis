@@ -54,9 +54,10 @@
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (neighbour (get-game-object 'place
 							 (random-elt (place-neighbour place)))))
+		(sleep 1)
 		(format t "~&~%A large yellow-and-black object comes flying out of nowhere")
 		(format t "~&and knocks you over. When you sit up again, you see Tigger")
-		(format t "~&grinning widely at you.") (sleep 3)
+		(format t "~&grinning widely at you.") (sleep 4)
 		(format t "~&~%Tigger bounces away toward ~A." (place-name neighbour))
 		(remove-object-attribute place 'npc "Tigger")
 		(set-object-attribute neighbour 'npc "Tigger")))

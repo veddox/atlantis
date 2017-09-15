@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 2 2))
+(defconstant ATLANTIS-VERSION '(0 2 3))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -22,8 +22,7 @@
 ;; Game worlds must be registered in this list with a display name
 ;; and a path relative to ../ATL
 (defvar *games* '(("Winnie the Pooh" "Pooh/pooh.atl")
-					 ("Lugwey" "Lugwey/lugwey.atl")
-					 ("Development" "dev/test.atl")))
+					 ("Lugwey" "Lugwey/lugwey.atl")))
 
 (defun print-version ()
 	(format t "~&Atlantis ~A.~A.~A"
@@ -44,13 +43,9 @@
 	(case (choose-number-option options)
 		(0 (format t "~&Which world do you want to play?")
 			;; let the player choose one of the game worlds
-			(let ((world (choose-option
-							 (append (keys *games*) '("Other" "Back")))))
-				(cond ((equalp world "Back") (start-menu))
-					((equalp world "Other")
-						(format t "~&What world file do you want to load?")
-						(input-string world-file))
-					(T (setf world-file (cassoc world *games*))))
+			(let ((world (choose-option (append (keys *games*) '("Back")))))
+				(if (equalp world "Back") (start-menu)
+					(setf world-file (cassoc world *games*)))
 				(setf world-file (concatenate 'string "../ATL/" world-file))
 				(load-file world-file)
 				;; let the player choose a character
@@ -76,13 +71,11 @@
 							   (play-game)))))
 		(2 (world-creator)) ;;XXX Remove this from the main menu?
 		(3 (clear-screen)
-			(print-text-file "../doc/PLAYING")
-			(read-line)
+			(pager "../doc/PLAYING" T)
 			(start-menu))
 		(4 (print-version)
 			(when (y-or-n-p "~&~%Show the license text?")
-				(print-text-file "../doc/COPYING")
-				(read-line))
+				(pager "../doc/COPYING" T))
 			(start-menu))
 		(5 (format t "~&Goodbye!")
 			(quit))))
@@ -110,8 +103,7 @@ Commandline options:
 		((or (cmd-parameter "--help" T) (cmd-parameter "-h" T))
 			(print-help) (quit))
 		((cmd-parameter "--license" T)
-			(dolist (line (load-text-file "../COPYING"))
-				(unless (null line) (format t "~%~A" line)))
+			(print-text-file "../COPYING")
 			(quit))
 		((cmd-parameter "--debugging")
 			(setf *debugging* T)))

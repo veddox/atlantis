@@ -278,6 +278,17 @@ a single fullstop. If you make a mistake, you can still edit your text later.")
 			(setf text (text-input)))
 		text))
 
+(defun pager (file &optional help)
+	"Display a text file using an external pager"
+	(cond ((member ':win32 *features*) (print-text-file file))
+		((member ':unix *features*)
+			(if (not help) (ext:shell (concatenate 'string "less " file))
+				(progn
+					(write-to-file "Use the arrow keys to scroll and q to quit." "help.tmp")
+					(ext:shell (concatenate 'string "cat help.tmp " file " | less"))
+					(ext:shell "rm help.tmp"))))
+		(t (debugging "~&pager is not supported on this operating system!"))))
+
 (defun clear-screen ()
 	"Clear the screen in an OS-dependent manner"
 	;; NOTE: only works with CLISP! (ext:shell function used)
