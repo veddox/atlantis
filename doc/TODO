@@ -2,6 +2,8 @@ ATLANTIS TODO
 
 LISP
 * prevent illegal input characters from causing a crash
+* test all commands again after fuzzy-matching was added
+* split ui.lisp into two modules (one for interaction functions)
 	
 ATL	
 * fill in missing place descriptions

@@ -197,25 +197,26 @@
 	(if (zerop (length seq)) NIL
 		(elt seq (random (length seq)))))
 
-(defun fuzzy-match (pattern lst &key (test #'equalp))
+(defun fuzzy-match (pattern lst &key (strict NIL) (test #'equalp))
 	"Return the element of a list of strings that best matches the input pattern"
 	;; An element whose start matches the pattern is a better fit than an element
-	;; with a match in the middle. If there are multiple equally well-fitting
-	;; elements, the search is inconclusive and NIL is returned.
-	(do* ((result NIL) (multiple NIL) (start-match NIL) (l lst (cdr l))
+	;; with a match in the middle. If :strict is T, only starting matches are
+	;; considered. If there are multiple equally well-fitting elements, the search
+	;; is inconclusive and NIL is returned.
+	(do* ((result NIL) (multiple-matches NIL) (start-match NIL) (l lst (cdr l))
 			 (next (search pattern (first l) :test test)
 				 (search pattern (first l) :test test)))
-		((null l) (if multiple NIL result))
-		(when next
+		((null l) (if multiple-matches NIL result))
+		(when (and next (or (not strict) (and strict (zerop next))))
 			(if result
 				(if (zerop next)
 					(if start-match
 						(return-from fuzzy-match)
 						(progn (setf result (first l))
 							(setf start-match T)
-							(setf multiple NIL)))
+							(setf multiple-matches NIL)))
 					(unless start-match
-						(setf multiple T)))
+						(setf multiple-matches T)))
 				(progn (setf result (first l))
 					(setf start-match (zerop next)))))))
 
@@ -314,7 +315,7 @@ a single fullstop. If you make a mistake, you can still edit your text later.")
 (defun clear-screen ()
 	"Clear the screen in an OS-dependent manner"
 	;; NOTE: only works with CLISP! (ext:shell function used)
-	;; TODO Make sure we're on clisp, otherwise do nothing
+	;; Causes an error on other implementations
 	(cond ((member ':unix *features*) (ext:shell "clear"))
 		((member ':win32 *features*) (ext:shell "cls"))
 		(t (debugging "~&clear-screen is not supported on this operating system!"))))

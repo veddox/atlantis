@@ -109,7 +109,7 @@
 				(if (member 'down (extract-elements arg))
 					(climb-down player)
 					(format t "~&You are already sitting up the tree."))
-				(return-from climb))
+				(return-from climb-tree))
 			(format t "~&You start climbing up the tree.")
 			(sleep 3)
 			;; The player has a 60% chance of success.

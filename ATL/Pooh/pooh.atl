@@ -17,13 +17,13 @@ load-file "woods.atl"
 define-player "Winnie the Pooh"
 	description "A small but lovable bear of Very Little Brain."
 	place "Pooh's home"
-	;place "Sandy pit" ;Development
 	max-health 20
 	health 20
 	strength 1
 	dexterity 4
 	constitution 4
 
-;define-player "Christopher Robin"
-;	description "Just debugging..."
-;	place "Christopher Robin's house"
+define-player "Christopher Robin"
+	description "Christopher Robin is my game dev character."
+	place "Sandy pit" ;Development
+	;place "Christopher Robin's house"

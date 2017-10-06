@@ -59,7 +59,7 @@
 	(pickup-hook "")
 	(drop-hook "")
 	(command NIL)
-	(ability NIL)) ;XXX Remove abilities again?
+	(ability NIL)) ;TODO Remove abilities again
 
 (defstruct weapon
 	(name "")

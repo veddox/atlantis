@@ -1,0 +1,25 @@
+COMMANDS:
+help             -  Show this list of game commands
+manual           -  Show a detailed game manual
+quit/exit        -  Exit the game
+clear            -  Clear the screen
+look [here]      -  Describe the current location
+look <object>    -  Show a description of this entity
+look me          -  Describe your character
+inventory        -  Same as 'look me'
+goto <place>     -  Go to a neighbouring location
+take <item>      -  Pick up an item lying around
+drop <item>      -  Drop the item
+talk [to] <npc>  -  Talk to an NPC
+seek             -  Search for hidden items
+equip <weapon>   -  Equip this item as your weapon
+attack <monster> -  Fight a monster
+save [<file>]    -  Save the game to file
+
+Arguments in square brackets are optional,
+arguments in angular brackets denote place fillers.
+
+If you abbreviate commands or arguments, Atlantis will
+try to find a suitable match.
+
+Some places and items may provide additional commands.

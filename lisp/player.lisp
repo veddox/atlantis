@@ -18,6 +18,7 @@
 	(constitution 0)
 	(intelligence 0)
 	(money 0)
+	;TODO Remove abilities again
 	(ability NIL)
 	(item NIL)
 	(weapon "")

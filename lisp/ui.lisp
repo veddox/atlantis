@@ -14,6 +14,8 @@
 ;; (This module should be purely UI)
 ;; Yeah, probably not going to happen ;-)
 
+;; TODO Split module in two
+
 ;; XXX Change to 5 once the (string-from-list) bug is fixed
 (setf *max-line-items* 10)
 
@@ -101,11 +103,13 @@
 		;; Search for place commands
 		(let ((place-cmd (fuzzy-match (to-string command)
 							 (place-command (get-game-object 'place
-												(player-place player))))))
+												(player-place player)))
+							 :strict T)))
 				 (when place-cmd (setf cmd-fn (read-from-string place-cmd))))
 		;; Search for item commands (highest priority)
 		(dolist (i (objectify-name-list 'item (player-item player)))
-			(let ((item-cmd (fuzzy-match (to-string command) (item-command i))))
+			(let ((item-cmd (fuzzy-match (to-string command)
+								(item-command i) :strict T)))
 				(when item-cmd (setf cmd-fn (read-from-string item-cmd)) (return))))
 		;; If found, execute the command
 		(if cmd-fn
@@ -120,45 +124,30 @@
 
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
-	'(help look goto take
+	'(help look goto take inventory
 		 drop talk equip attack
-		 seek save clear))
+		 seek save clear manual))
 
 ;;; Command functions have to take two arguments (a player instance and
 ;;; an optional(!) argument to the function).
 
 (defun help (player &optional arg)
 	"Print out a list of in-game commands"
-	(setf help-text "
-COMMANDS:
-help             -  Show this list of game commands
-quit/exit        -  Exit the game
-clear            -  Clear the screen
-look [here]      -  Describe the current location
-look me          -  Describe your character
-look <object>    -  Show a description of this entity
-goto <place>     -  Go to a neighbouring location
-take <item>      -  Pick up an item lying around
-drop <item>      -  Drop the item
-talk [to] <npc>  -  Talk to an NPC
-seek             -  Search for hidden items
-equip <weapon>   -  Equip this item as your weapon
-attack <monster> -  Fight a monster
-save [<file>]    -  Save the game to file
+	(print-text-file "../doc/COMMANDS"))
 
-Arguments in square brackets are optional,
-arguments in angular brackets denote place fillers.
-
-If you abbreviate commands or arguments, Atlantis will
-try to find a suitable match.
-
-Some places and items may provide additional commands.")
-	(format t "~A" help-text))
+(defun manual (player &optional arg)
+	"Show the game manual in a pager"
+	(pager "../doc/PLAYING" T)
+	(clear player))
 
 (defun clear (player &optional arg)
 	"Clear the screen (wrapper function)"
 	(clear-screen)
 	(describe-place (player-place player)))
+
+(defun inventory (player &optional arg)
+	"A wrapper for 'look me'"
+	(look player "me"))
 
 (let ((last-save NIL))
 	(defun save (player &optional game-file)
@@ -251,10 +240,11 @@ Some places and items may provide additional commands.")
 
 (defun talk (player &optional npc-name)
 	"Talk to the desired NPC"
+	;; TODO Insert fuzzy-match
 	(unless npc-name
 		(format t "~&Please specify an NPC to talk to!")
 		(return-from talk))
-	;; Allow for a bit of syntactic sugar (note: interface inconsistency?)
+	;; Allow for a bit of syntactic sugar
 	(let ((split-name (cut-string npc-name 3)))
 		(when (equalp (first split-name) "to ")
 			(setf npc-name (second split-name))))
@@ -279,35 +269,43 @@ Some places and items may provide additional commands.")
 				  (y-or-n-p "Trade with ~A?" npc-name))
 			(trade player npc))
 		;; Handle quests
-		(let ((quest (get-game-object 'quest (npc-quest npc))))
-			(when quest
-				(if (dolist (i (quest-proof-item quest))
-						(unless (member i (player-item player) :test #'equalp)
-							(return T)))
-					(when (y-or-n-p "~%~A has a quest. Accept it?" npc-name)
-						(format t "~&~A: ~A" (string-upcase npc-name)
-							(quest-say-before quest)))
-					(when (y-or-n-p "~%Give to ~A: ~A?" npc-name
-							  (string-from-list (quest-proof-item quest) :sep ", "
-								  :line-length *max-line-items*))
-						(dolist (j (quest-proof-item quest))
-							(remove-object-attribute player 'item j))
-						(dolist (k (quest-reward-item quest))
-							(set-object-attribute player 'item k))
-						(add-player-experience player (quest-experience quest))
-						(add-player-money player (quest-money quest))
-						(format t "~&~A: ~A" (string-upcase npc-name)
-							(quest-say-after quest))
-						(format t "~&~%Quest complete. You gain:")
-						(format t "~&Money: ~A Experience: ~A~&Items: ~A"
-							(quest-money quest) (quest-experience quest)
-							(string-from-list (quest-reward-item quest)
-								 :line-length *max-line-items*))
-						(unless (quest-infinite quest)
-							(remove-object-attribute npc 'quest npc))))))))
+		(unless (zerop (length (npc-quest npc)))
+			(quest player npc))))
+
+(defun quest (player npc)
+	"Handle NPC quests"
+	(let ((quest (get-game-object 'quest (npc-quest npc)))
+			 (npc-name (npc-name npc)))
+		(unless quest (format t "~&This NPC doesn't have a quest!")
+			(return-from quest))
+		(if (dolist (i (quest-proof-item quest))
+				(unless (member i (player-item player) :test #'equalp)
+					(return T)))
+			(when (y-or-n-p "~%~A has a quest. Accept it?" npc-name)
+				(format t "~&~A: ~A" (string-upcase npc-name)
+					(quest-say-before quest)))
+			(when (y-or-n-p "~%Give to ~A: ~A?" npc-name
+					  (string-from-list (quest-proof-item quest) :sep ", "
+						  :line-length *max-line-items*))
+				(dolist (j (quest-proof-item quest))
+					(remove-object-attribute player 'item j))
+				(dolist (k (quest-reward-item quest))
+					(set-object-attribute player 'item k))
+				(add-player-experience player (quest-experience quest))
+				(add-player-money player (quest-money quest))
+				(format t "~&~A: ~A" (string-upcase npc-name)
+					(quest-say-after quest))
+				(format t "~&~%Quest complete. You gain:")
+				(format t "~&Money: ~A Experience: ~A~&Items: ~A"
+					(quest-money quest) (quest-experience quest)
+					(string-from-list (quest-reward-item quest)
+						:line-length *max-line-items*))
+				(unless (quest-infinite quest)
+					(remove-object-attribute npc 'quest npc))))))		
 
 (defun trade (player npc)
 	"The player trades with this NPC"
+	;; XXX This is no longer a game command - remove the leading check?
 	(when (and (stringp npc)
 			  (member npc
 				  (place-npc (get-game-object 'place (player-place player)))
@@ -364,6 +362,7 @@ Some places and items may provide additional commands.")
 	(unless item-name
 		(format t "~&Please specify an item to pick up!")
 		(return-from take))
+	;; TODO Insert fuzzy-match
 	(let ((place (get-game-object 'place (player-place player)))
 			 (item-name (string-capitalize item-name))
 			 (item (get-game-object 'item item-name)))
@@ -390,6 +389,7 @@ Some places and items may provide additional commands.")
 		(format t "~&Please specify an item to drop!")
 		(return-from drop))
 	(setf item (string-capitalize item))
+	;; TODO Insert fuzzy-match
 	(if (member item (player-item player) :test #'equalp)
 		(progn
 			(remove-object-attribute player 'item item)
@@ -408,6 +408,7 @@ Some places and items may provide additional commands.")
 (defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
 	;;XXX Replace this with 'hold'? (Also possible for non-weapons.)
+	;; TODO Insert fuzzy-match
 	(unless new-weapon
 		(format t "~&Please specify a weapon to be equipped!")
 		(return-from equip))
@@ -429,6 +430,7 @@ Some places and items may provide additional commands.")
 	(unless opponent
 		(format t "~&Please specify an opponent!")
 		(return-from attack))
+	;; TODO Insert fuzzy-match
 	(unless (member opponent
 				(list-place-objects 'monster
 					(get-game-object 'place (player-place player)))
