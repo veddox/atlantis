@@ -69,27 +69,20 @@
 		(format t "~&~A~%~%~A"
 			(string-upcase (player-name p)) (player-description p))
 		(format t "~&~%Current place: ~A" (player-place p))
-		(format t "~&=====~&Attributes:")
+		(format t "~&=====")
 		(format t "~&Intelligence: ~A~AStrength: ~A"
 			(player-intelligence p) tab (player-strength p))
 		(format t "~&Constitution: ~A~ADexterity: ~A"
 			(player-constitution p) tab (player-dexterity p))
-		(format t "~&=====~&Abilities:~&~A"
-			(let ((abilities (player-ability p)))
-				(dolist (i (player-item p) (string-from-list abilities
-											   :line-length *max-line-items*))
-					(let ((ia (item-ability (get-game-object 'item i))))
-						(when ia (setf abilities (append abilities ia)))))))
-		(format t "~&=====")
-		(format t "~&Weapon: ~A" (player-weapon p))
-		;; XXX This will need adjusting for large item numbers
-		(format t "~&Items: ~A" (string-from-list (player-item p)
-									:line-length *max-line-items*))
 		(format t "~&=====")
 		(format t "~&Max health: ~A~ACurrent health: ~A"
 			(player-max-health p) tab (player-health p))
 		(format t "~&Experience: ~A~AMoney: ~A"
-			(player-experience p) tab (player-money p))))
+			(player-experience p) tab (player-money p))
+		(format t "~&=====")
+		(format t "~&Weapon: ~A" (player-weapon p))
+		(format t "~&Items: ~A" (string-from-list (player-item p)
+									:line-length *max-line-items*))))
 
 (defun game-command (cmd player)
 	"Execute a typed-in game command"
@@ -185,7 +178,6 @@
 				(format t "~&You cannot enter this place unless you have: ~A" req)
 				(return-from goto))))
 	;; Change places
-	(setf location (string-capitalize location))
 	(let ((hook (place-exit-hook (get-game-object 'place (player-place player))))) ;exit hook
 		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(clear-screen)
@@ -213,7 +205,7 @@
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (o-name (fuzzy-match object-name (append (place-item place)
 												   (place-npc place)
-												   (place-monster place)
+												   (list-place-objects 'monster place)
 												   (player-item player))))
 			  (description (get-object-description o-name place)))
 		;; Don't forget items the player is carrying
@@ -240,21 +232,20 @@
 
 (defun talk (player &optional npc-name)
 	"Talk to the desired NPC"
-	;; TODO Insert fuzzy-match
 	(unless npc-name
 		(format t "~&Please specify an NPC to talk to!")
 		(return-from talk))
 	;; Allow for a bit of syntactic sugar
 	(let ((split-name (cut-string npc-name 3)))
-		(when (equalp (first split-name) "to ")
+		(when (and (< 2 (length split-name)) (equalp (first split-name) "to "))
 			(setf npc-name (second split-name))))
-	(let* ((npc-name (string-capitalize npc-name))
-			  (place (get-game-object 'place (player-place player)))
+	(let* ((place (get-game-object 'place (player-place player)))
+			  (npc-name (fuzzy-match npc-name (place-npc place)))
 			  (npc (when (member npc-name (place-npc place) :test #'equalp)
 					   (get-game-object 'npc npc-name))))
 		;; Check if the NPC is here
 		(unless npc
-			(format t "~&~A is not here!" npc-name)
+			(format t "~&This NPC is not here!")
 			(return-from talk))
 		;; The NPC says one of its lines
 		(when (npc-says npc)
@@ -362,9 +353,8 @@
 	(unless item-name
 		(format t "~&Please specify an item to pick up!")
 		(return-from take))
-	;; TODO Insert fuzzy-match
-	(let ((place (get-game-object 'place (player-place player)))
-			 (item-name (string-capitalize item-name))
+	(let* ((place (get-game-object 'place (player-place player)))
+			 (item-name (fuzzy-match item-name (place-item place)))
 			 (item (get-game-object 'item item-name)))
 		(if (member item-name (place-item place) :test #'equalp)
 			(if (item-fixed item)
@@ -388,9 +378,8 @@
 	(unless item
 		(format t "~&Please specify an item to drop!")
 		(return-from drop))
-	(setf item (string-capitalize item))
-	;; TODO Insert fuzzy-match
-	(if (member item (player-item player) :test #'equalp)
+	(setf item (fuzzy-match item (player-item player)))
+	(if item
 		(progn
 			(remove-object-attribute player 'item item)
 			(when (and (item-weapon (get-game-object 'item item))
@@ -408,7 +397,6 @@
 (defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
 	;;XXX Replace this with 'hold'? (Also possible for non-weapons.)
-	;; TODO Insert fuzzy-match
 	(unless new-weapon
 		(format t "~&Please specify a weapon to be equipped!")
 		(return-from equip))
@@ -416,9 +404,8 @@
 		(setf (player-weapon player) "")
 		(format t "~&You no longer have any weapon equipped.")
 		(return-from equip))
-	(setf new-weapon (string-capitalze new-weapon))
-	(if (and (member new-weapon (player-item player) :test #'equalp)
-			(item-weapon (get-game-object 'item new-weapon)))
+	(setf new-weapon (fuzzy-match new-weapon (player-item player)))
+	(if (and new-weapon (item-weapon (get-game-object 'item new-weapon)))
 		(progn
 			(setf (player-weapon player) new-weapon)
 			(format t "~&You have equipped: ~A" new-weapon))
@@ -430,11 +417,11 @@
 	(unless opponent
 		(format t "~&Please specify an opponent!")
 		(return-from attack))
-	;; TODO Insert fuzzy-match
-	(unless (member opponent
-				(list-place-objects 'monster
-					(get-game-object 'place (player-place player)))
-				:test #'equalp)
+	(setf opponent
+		(fuzzy-match opponent
+			(list-place-objects 'monster
+				(get-game-object 'place (player-place player)))))
+	(unless opponent
 		(format t "~&This monster is not here!")
 		(return-from attack))
 	;; Bind all relevant values to variables (saves typing later)

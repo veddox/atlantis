@@ -112,6 +112,7 @@
 ;; -> Appears to be a CLISP bug? Doesn't appear with SCBL...
 (defun string-from-list (lst &key (sep " - ") line-length line-sep)
 	"Put all elements of lst into a single string, separated by sep"
+	(unless lst (return-from string-from-list ""))
 	(unless line-sep ;; set the line separator to newline+tab
 		(setf line-sep (concatenate 'string
 						   (to-string #\Newline) (to-string #\Tab))))
@@ -202,13 +203,13 @@
 	;; An element whose start matches the pattern is a better fit than an element
 	;; with a match in the middle. If :strict is T, only starting matches are
 	;; considered. If there are multiple equally well-fitting elements, the search
-	;; is inconclusive and NIL is returned.
+	;; is inconclusive and NIL is returned (unless they are identical).
 	(do* ((result NIL) (multiple-matches NIL) (start-match NIL) (l lst (cdr l))
 			 (next (search pattern (first l) :test test)
 				 (search pattern (first l) :test test)))
 		((null l) (if multiple-matches NIL result))
 		(when (and next (or (not strict) (and strict (zerop next))))
-			(if result
+			(if (and result (not (equalp result (first l))))
 				(if (zerop next)
 					(if start-match
 						(return-from fuzzy-match)
