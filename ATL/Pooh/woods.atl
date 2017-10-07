@@ -167,25 +167,36 @@ define-place "Bridge"
 	command "play"
 
 define-place "Piglet's porch"
-	description "TODO"
+	description "Piglet lives in a very grand house in the middle of a beech tree.
+	Well, at least it's very grand for a little piglet. But he's happy
+	here, and that's what counts. He was always quite proud of it - 
+	and especially proud of the sign he had inherited from his grandfather."
 	neighbour "Western woods"
 	neighbour "Southern woods"
 	neighbour "Piglet's home"
 	item "Piglet's sign"
 
 define-place "Piglet's home"
-	description "TODO"
+	description "Inside, Piglet has a very comfy home. It has two storeys, a lower
+	one and an upper one - the latter being especially useful during 
+	floods or similar dangers."
 	neighbour "Piglet's porch"
 	npc "Piglet"
 	item "Grandfather's cane"
+	item "Lamp"
+	item "Bottle"
 
 define-place "Kanga's house"
-	description "TODO"
+	description "This is where Kanga lives with her son Roo. They caused quite a
+	stir when they first came to the forest, them being Strangers,
+	so to speak, but by now everybody loves them. And Kanga is the
+	dearest Mother in the world. Or at least in the woods..."
 	neighbour "Northern woods"
 	neighbour "Western woods"
 	neighbour "Sandy pit"
 	npc "Kanga"
 	item "Jacket"
+	item "Extract of Malt"
 
 define-place "Sandy pit"
 	description "The sandy pit is just that - a large pit full of sand somewhere

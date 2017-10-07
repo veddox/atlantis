@@ -27,6 +27,16 @@
 					(change-player-health player 10)
 					(remove-object-attribute player 'item "Hunny")
 					(set-object-attribute player 'item "Jar"))))
+		;; Extract of Malt is very healthy, so obviously it can't be tasty...
+		((and (or (equalp arg "extract of malt") (equalp arg "extract") (equalp arg "malt"))
+			 (member "Extract of Malt" (player-item player) :test #'equalp))
+			(progn (format t "~&You open the bottle and tip it over a spoon.") (sleep 1)
+				(format t "~&A big dollop of Extract flows out slowly.") (sleep 3)
+				(format t "~&The smell of it makes you wrinkle your nose.") (sleep 2)
+				(format t "~&Without thinking much longer, you shove it into your mouth.") (sleep 1)
+				(format t "~&That's bitter! You scrunch up your face and try to swallow.") (sleep 3)
+				(format t "~&Something that disgusting can only be healthy. +1 HP")
+				(change-player-health player 1)))
 		(T (format t "~&You can't eat that!"))))
 
 (defun jump (player &optional arg)

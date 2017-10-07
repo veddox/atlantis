@@ -37,6 +37,13 @@ define-item "Piglet's sign"
 	"
 	fixed
 
+define-item "Bottle"
+	description "This is the bottle that Piglet used to call for help when he was
+	entirely surrounded by water. It still contains his message,
+	scribbled on two sides of a scrap of paper:
+	HELP! PIGLET (ME)
+	IT'S ME PIGLET, HELP HELP."
+	
 define-item "North Pole"
 	description "
 	=============================
@@ -78,6 +85,13 @@ define-item "Sandcastle"
 define-item "Jacket"
 	description "This is a small, bright red rain jacket. It looks about the
 	right size to fit Roo."
+
+define-item "Extract of Malt"
+	description "This is a brown bottle full of some syrupy liquid. Roo has to
+	take it as his strengthening medicine and doesn't like it at all.
+	Tigger, on the other hand, discovered that this is the only thing
+	that tiggers like, and so he eats it every day."
+	command "eat"
 
 define-item "Mushrooms"
 	description "A bowl full of freshly picked mushrooms. I'm sure they'll make

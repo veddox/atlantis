@@ -171,6 +171,8 @@
 	(unless location
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
+	;; You can only enter a place if you have one of the requirements
+	;; FIXME Deal with multiple possible requirements
 	(let ((req (place-requires (get-game-object 'place location))))
 		(unless (equalp req "")
 			(unless (or (player-has-ability req player)
@@ -213,7 +215,7 @@
 			(setf description
 				(item-description (get-game-object 'item o-name))))
 		(if description
-			(format t "~&(~A) ~A" (string-capitalize o-name) description)
+			(format t "~&(~A) ~A" o-name description)
 			(format t "~&Could not find ~A!" object-name))))
 
 (defun seek (player &optional arg)
