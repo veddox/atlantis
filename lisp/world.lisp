@@ -53,6 +53,7 @@
 
 (defun name-world (name)
 	"Set the name of the *world*"
+	;;XXX Do we still need this?
 	(debugging "~&The name of the world is ~A." name)
 	(setf (world-name *world*) name)
 	NIL)

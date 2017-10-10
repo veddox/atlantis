@@ -1,0 +1,186 @@
+==========================
+|| PROGRAMMING ATLANTIS ||
+==========================
+
+So you want to create your own game worlds? Great! Here's what you need to know:
+
+The Atlantis framework itself is written in Common Lisp, a programming language
+with a long history that is nonetheless considered somewhat arcane by many
+programmers today. Fortunately, you do not need to know it in order to create a
+basic game (though it does help if you want to do more advanced stuff).
+
+The majority of coding for a game is done in a custom language called ATL. This
+is a simple descriptive language that should be very easy to pick up, especially
+if you have some previous programming experience. Looking at some of the
+existing game files (e.g. in the folder ATL/Pooh) will already give you a feel
+for the language. The full reference is found below.
+
+This guide is intended to get you started. It is not intended to be a full and
+exhaustive reference to the framework - you are still going to have to do some
+work on your own. But it should see you on your way to creating your very own
+game world. (And if you have questions, don't hesitate to contact me.)
+
+
+ATL SYNTAX
+
+ATL	is line-oriented, with each line being of the form '<keyword> <value>'.
+There must be whitespace between the keyword and the value, and string values
+must be enclosed by double quotes. (A "string" in programming jargon is a series
+of alphanumeric characters, what you might call a "text".) Strings spanning
+multiple lines are concatenated, with leading and trailing whitespace being
+trimmed. Comments begin with a semi-colon and continue to the end of the line.
+
+Most ATL code consists of define blocks. These describe one entity of the game,
+such as a player, an item or a room (for the full list, see below). A define
+block consists of a define command and one to several option commands. It is
+structured as follows:
+
+define-<object> "<object name>"
+	<option 1> <value 1>
+	<option n> <value n>
+
+Note that option commands must be indented. The block is terminated by an empty
+line. If the value of a given option is ommitted, it is set to T (the Common
+Lisp boolean "true" value). Some options can be passed several times, in which
+case each successive value is added to a list that forms the final value. (For
+example, a room can have many neighbours.)
+
+The special command "load-file" takes a string argument and will load the
+specified file. By default, the file will be treated as another ATL file and
+parsed accordingly. However, if the file name ends with ".lisp", it will be
+interpreted as a Lisp extension file. This is a powerful feature, as code loaded
+in this manner has access to the complete Atlantis engine. One can thus expand
+the framework to include custom commands or add special effects to certain game
+objects. More on this below.
+
+
+GAME OBJECTS
+
+The following is a list of all game object types (as given by their define
+commands) with the accompanying options and their default values. NIL denotes
+the empty list - these options may be passed several times (see above).
+
+(TODO - Describe options)
+
+define-player <name>
+	description ""
+	strength 0
+	dexterity 0
+	constitution 0
+	intelligence 0
+	money 0
+	max-health 50
+	health 50
+	item NIL
+	weapon ""
+	armour-class 0
+	place ""
+
+define-place <name>
+	description ""
+	neighbour NIL
+	item NIL
+	hidden NIL
+	monster NIL
+	npc NIL
+	command NIL
+	requires ""
+	entry-hook ""
+	exit-hook ""
+
+define-npc <name>
+	description ""
+	says NIL
+	sells NIL
+	buys NIL
+	quest ""
+	interaction-hook ""
+
+define-monster <name>
+	description ""
+	health 0
+	strength 0
+	dexterity 0
+	aggression 0
+	spawn 0
+	item NIL
+	weapon ""
+	armour-class 0
+	attack-hook ""
+	death-msg ""
+
+define-item <name>
+	description ""
+	cost 0
+	weapon FALSE
+	fixed FALSE
+	infinite FALSE
+	pickup-hook ""
+	drop-hook ""
+	command NIL
+
+define-weapon <name>
+	description ""
+	type ""
+	damage 0
+
+define-quest <name>
+	name ""
+	say-before ""
+	say-after ""
+	proof-item NIL
+	reward-item NIL
+	money 0
+	experience 0
+	infinite FALSE
+
+
+LISP EXPANSIONS
+
+If you are feeling adventurous and know a little Lisp, feel free to write a Lisp
+extension file and integrate it in your game. (You will find an example at
+ATL/Pooh/pooh-extensions.lisp.)
+
+The functions you write here may be used as hooks, or as extra commands for
+places and items. For this purpose, each function must take at least one
+argument, an instance of the current player object. Command functions must also
+take an optional string argument for any parameters found in the player input.
+
+As stated above, Lisp code loaded into the game has access to the full Atlantis
+framework and can call any function. This means that you can, in theory, modify
+anything you like. However, as the code architecture is somewhat complex and is
+subject to frequent, I will not give a full documentation here - if you need to
+know something, look at the examples and read the code ;-)
+
+However, I will provide a brief overview over the different modules and the most
+important functions contained therein. The following files are all to be found
+in the 'lisp' folder.
+
+atlantis.lisp - This is the main game module. It codes for the start menu. The
+			  only thing that concerns us here is the variable *games*, which is
+			  an association list of game names and their respective main ATL
+			  file. All new games must be registered here.
+
+creator.lisp - Not of interest to us.
+
+game-objects.lisp - Defines game object types. Most useful functions:
+				  set-object-attribute and remove-object-attribute, which deal
+				  with the nitty-gritty of manipulating all the different
+				  types.
+
+interpreter.lisp - Do not touch!
+
+player.lisp - Deals with the player object. Most useful functions:
+			change-player-health, add-player-experience and add-player-money
+
+ui.lisp - Defines the in-game commands. Not interesting except as an example for
+		how to implement command functions.
+
+util.lisp - Lots of useful utility functions. Browse at leisure.
+
+world.lisp - Administers the game world instance. Most useful function:
+		   get-game-object, a type-agnostic getter function.
+
+
+Daniel Vedder
+Last modified 10/10/2017

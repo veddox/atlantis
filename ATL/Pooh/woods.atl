@@ -15,7 +15,6 @@ define-place "Pooh's home"
 	item "Hunny"
 	item "Jar"
 	item "Map"
-	hidden "Lamp" ;XXX development
 
 define-place "Pooh's porch"
 	description "You are standing in front of your very own home - Pooh's home.
@@ -86,7 +85,7 @@ define-place "Southern woods"
 	description "You can feel the ground becoming soft underneath your feet as
 	you approach the marshes and bogs to the south of the
 	100 Acre wood. Plenty of moss grows around the roots of
-	the trees. Here and there, are willow bends its branches."
+	the trees. Here and there a willow bends its branches."
 	item "Stick"
 	neighbour "Central woods"
 	neighbour "Eastern woods"
@@ -155,6 +154,7 @@ define-place "Galleons lap"
 	the sky."
 	neighbour "Hill"
 	npc "Christopher Robin"
+	item "Card"
 	requires "Magic map"
 
 define-place "Bridge"
@@ -315,13 +315,3 @@ define-place "Misty forest"
 	neighbour "Sandy pit"
 	neighbour "Rapids"
 	exit-hook "misty-forest"
-
-define-place "The World"
-	description "Well, so you have dared it at last. With the 100 Acre Wood at
-	your back, you face the Great Unknown. Many adventures lie behind
-	you, but the greatest one is still to come. Will you brave it?
-
-	It is called: Life."
-	requires "Maturity"
-	neighbour "Bridge"
-	item "Life"

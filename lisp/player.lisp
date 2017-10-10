@@ -59,6 +59,7 @@
 		(funcall list-function object-type player)))
 
 (defun player-has-ability (ability player)
+	;;TODO Remove this
 	"Check whether a player has the given ability"
 	(or	(member ability (player-ability player) :test #'equalp)
 		(dolist (i (player-item player) NIL)

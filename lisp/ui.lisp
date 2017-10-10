@@ -239,7 +239,7 @@
 		(return-from talk))
 	;; Allow for a bit of syntactic sugar
 	(let ((split-name (cut-string npc-name 3)))
-		(when (and (< 2 (length split-name)) (equalp (first split-name) "to "))
+		(when (and (< 1 (length split-name)) (equalp (first split-name) "to "))
 			(setf npc-name (second split-name))))
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (npc-name (fuzzy-match npc-name (place-npc place)))

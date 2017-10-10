@@ -9,6 +9,7 @@
 
 (defun eat (player &optional arg)
 	"Allow the player to eat something."
+	;; XXX If any other edibles are added, split this function up
 	(cond ((null arg) (format t "~&What do you want to eat?"))
 		;; Berries can be eaten any time, but don't have any effect
 		((and (equalp arg "berries")

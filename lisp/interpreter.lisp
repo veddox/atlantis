@@ -13,6 +13,7 @@
 
 ;; A list of ATL language constructs
 ;; (Note: not complete - each (defcommand) appends to this list)
+;; FIXME name-world is currently superfluous
 (defvar *atl-commands* '(load-file name-world))
 
 (defun build-define-command (object-type)

@@ -6,7 +6,7 @@
 ; author: Daniel Vedder
 ; date: 07/06/2017
 
-name-world "100 Acre Wood"
+name-world "100 Acre Wood" ;TODO Remove this
 
 load-file "pooh-extensions.lisp"
 load-file "woodland-map.lisp"
@@ -22,7 +22,7 @@ define-player "Winnie the Pooh"
 	strength 1
 	dexterity 4
 	constitution 4
-
+	
 define-player "Christopher Robin"
 	description "Christopher Robin is my game dev character."
 	place "Piglet's porch" ;Development

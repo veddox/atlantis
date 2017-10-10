@@ -119,7 +119,7 @@ define-item "Map"
 	a good idea to carry this around with you..."
 	command "study"
 
-define-item "Life"
+define-item "Card"
 	description "
 	...................................
 	...................................
@@ -129,8 +129,7 @@ define-item "Life"
 	...................................
 	...................................
 	"
-	fixed
-
+	
 define-item "Magic map"
 	description "This is a strange map. It always seems to be changing. One
 	moment it will show you one thing, the next something completely
