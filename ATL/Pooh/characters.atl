@@ -88,6 +88,14 @@ define-npc "Henry Rush"
 	that all the fun is always over by the time he gets there..."
 	says "Where are you going? Is there something to see there?"
 
+define-npc "Blackbird"
+	description "A blackbird is perched on a branch here, busy singing its song."
+	says "Oh, hot sand on toes, cold sand in sleeping bags..."
+	says "As the old pine fell we sang - just to bless the morning..."
+	says "We slept like dogs, down by the fireside..."
+	says "... up to the fall, while all around us, the bloom of summertime..."
+	says "As the old pine fell we sang - just to bless the morning..."
+	
 define-npc "Mr Milne"
 	description "Alan Alexander Milne is sitting at the table, staring very
 	hard at a piece of paper before him and chewing on his pen.

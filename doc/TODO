@@ -1,7 +1,6 @@
 ATLANTIS TODO
 
 LISP
-* prevent illegal input characters from causing a crash -> PRIORITY
 * split ui.lisp into two modules (one for interaction functions)
 	
 ATL	

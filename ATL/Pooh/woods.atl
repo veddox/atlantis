@@ -310,8 +310,13 @@ define-place "Woozle hideout"
 	neighbour "Southern woods"
 
 define-place "Misty forest"
-	description "TODO"
-	item "Berries"
+	description "You are surrounded by pines, their dead needles thickly carpeting
+	the forest floor. This forest isn't actually part of the 100 Acre 
+	Wood anymore, and it seems somewhat mysterious, because you don't 
+	come here often. You remember that you have gotten lost here before 
+	on a foggy day, so take care that doesn't happen again!"
+	npc "Blackbird"
+	item "Pine cone"
 	neighbour "Sandy pit"
 	neighbour "Rapids"
 	exit-hook "misty-forest"

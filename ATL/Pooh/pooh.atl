@@ -6,10 +6,7 @@
 ; author: Daniel Vedder
 ; date: 07/06/2017
 
-name-world "100 Acre Wood" ;TODO Remove this
-
 load-file "pooh-extensions.lisp"
-load-file "woodland-map.lisp"
 load-file "items.atl"
 load-file "characters.atl"
 load-file "woods.atl"

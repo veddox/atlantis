@@ -40,6 +40,13 @@
 				(change-player-health player 1)))
 		(T (format t "~&You can't eat that!"))))
 
+(defun study (player &optional arg)
+	"Print out the map"
+	(unless (member 'map (extract-elements arg))
+		(format t "~&What do you want to study?")
+		(return-from study))
+	(print-text-file "../ATL/Pooh/woodland-map.txt"))
+
 (defun jump (player &optional arg)
 	"Jump off Pooh's branch onto his porch."
 	(format t "~&You look down nervously, then jump off the branch.")

@@ -69,7 +69,13 @@ define-item "Stick"
 	description "Just an ordinary sort of stick. Nothing special, but fun to
 	play around with."
 	infinite
-	
+
+define-item "Pine cone"
+	description "Pine cones are great fun for playing with. There's nothing quite
+	like a good pine cone battle in the woods with your friends!"
+	infinite
+	;command "throw" ;TODO
+		
 define-item "Berries"
 	description "Scrumptious, fresh wild berries: blueberries, blackberries,
 	strawberries... Just don't eat too many!"
