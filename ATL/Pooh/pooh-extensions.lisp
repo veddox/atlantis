@@ -56,7 +56,7 @@
 			(add-player-experience player 3))
 		(progn (format t "~&Ouch! That hurt! You take 2 HP fall damage.")
 			(change-player-health player -2)))
-	(read-line)
+	(sleep 4)
 	(goto player "Pooh's porch"))
 
 (defun kanga-healing (player)
@@ -177,7 +177,7 @@
 
 	(defun leave-bee-tree (player)
 		"Make sure you've climbed down before leaving the bee tree."
-		(when climbed (climb-down player) (read-line))))
+		(when climbed (climb-down player) (pause 4))))
 
 (let ((honey-found NIL))
 	(defun climb-rock (player &optional arg)

@@ -85,7 +85,7 @@ define-place "Southern woods"
 	description "You can feel the ground becoming soft underneath your feet as
 	you approach the marshes and bogs to the south of the
 	100 Acre wood. Plenty of moss grows around the roots of
-	the trees. Here and there a willow bends its branches."
+	the trees. A couple of willows bend their branches here."
 	item "Stick"
 	neighbour "Central woods"
 	neighbour "Eastern woods"

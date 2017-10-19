@@ -1,0 +1,37 @@
+Hi Daniel,
+
+mein bisheriger Bericht:
+
+  *   Erklärung gut, bis auf: Speichern und Laden des putty-Setups
+  	  (Namen eingeben, speichern und drauf klicken zum laden).
+	  -> TODO
+  *   Wäre es sinnvoll über ‚quit‘ putty nicht komplett zu beenden, sondern nur
+  	  aufs Atlantis-Hauptmenü zurückzuführen?
+	  -> Won't fix
+  *   Das Spiel ist zweimal abgestürzt, als ich vom Floody Place zu Eeyore’s
+  	  Gloomy Place gehen wollte und einmal, als ich vom Hill zu Galleons Lap
+	  gehen wollte. Das gleiche bei: Northern Woods -> Rapids. Eastern Woods ->
+	  Christopher Robin’s House. Beim Honig collecten ist es auch einmal
+	  abgestürzt. Jedesmal bei dem Versuch, etwas zu equippen. Beim Versuch,
+	  eine leere Nachricht (also nur ein . ) zu schreiben.
+	  -> movement bug: Could not reproduce
+	  -> equip bug: Could not reproduce
+	  -> empty message bug: FIXED
+  *   Der letzte Satz in der Beschreibung der Southern Woods ist glaube ich
+  	  nicht korrekt.
+	  -> FIXED
+  *   Kann man gewollt vom Stream zum Floody Place, aber nicht umgekehrt?
+  	  -> Won't fix
+  *   Beim Bee Tree wäre die Erwähnung von ‚climb down‘ ganz gut denke ich
+  	  (auch wenn der command nicht notwendig ist).
+	  -> Won't fix
+  *   Wenn ich von Pooh’s Branch springe, gelange ich erst nach einem weiteren
+  	  command zu Pooh’s Porch.
+	  -> FIXED
+  *   Gerade stürzt das Spiel bei jedem Versuch, von den Central Woods woanders
+  	  hin zu kommen, ab. Schade.
+	  -> Could not reproduce
+  *   Cool, was für schöne Details du eingebaut hast!
+
+Liebe Grüße,
+Chris

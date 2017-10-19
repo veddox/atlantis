@@ -1,6 +1,7 @@
 ATLANTIS TODO
 
 LISP
+* implement autosave?
 * split ui.lisp into two modules (one for interaction functions)
 	
 ATL	
@@ -21,6 +22,12 @@ Honey pots:
 	6. Kanga's quest
 	7. Eeyore's quest
 	8. Bee tree
-	9.
+	9. Cave (?)
 	10. 
-	
+
+Quests:
+	1. Find the tail
+	2. Bring jacket
+	3. Bring mushrooms
+	4. Reading material
+	5. Bring honey
