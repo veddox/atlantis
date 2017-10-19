@@ -16,7 +16,7 @@
 
 ;; TODO Split module in two
 
-;; XXX Change to 5 once the (string-from-list) bug is fixed
+;; TODO Change to 5 once the (string-from-list) bug is fixed
 (setf *max-line-items* 10)
 
 (defun play-game ()
@@ -32,13 +32,15 @@
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
 			(input-string command)
-			(while (or (zerop (length command))
-					   (eql (aref command 0) #\Escape))
-					   (input-string command))
+			;;FIXME Sometimes it still crashes on an empty line!
+			;;TODO Rewrite with 'do'
 			(while (not (and (or (equalp command "quit")
 								 (equalp command "exit"))
 							(y-or-n-p "~&Really quit?")))
-				(game-command command player)
+				(cond ((zerop (length command)))
+					((not (alpha-char-p (aref command 0)))
+						(format t "~&Invalid input."))
+					(T (game-command command player)))
 				(input-string command))
 			(format t "~&Goodbye!"))))
 
@@ -174,7 +176,7 @@
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
 	;; You can only enter a place if you have one of the requirements
-	;; FIXME Deal with multiple possible requirements
+	;; TODO Deal with multiple possible requirements
 	(let ((req (place-requires (get-game-object 'place location))))
 		(unless (equalp req "")
 			(unless (or (player-has-ability req player)

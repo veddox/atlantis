@@ -292,7 +292,7 @@ specified type in the container struct"
 				   (format t "$ "))))
 		(setf help-msg "
 Input your text below. When you are done, finish with a line that contains only
-a single fullstop. If you make a mistake, you can still edit your text later.")
+a single fullstop. If you make a mistake, you can reenter your text later.")
 		(format t help-msg)
 		(setf text (text-input))
 		(while (not (y-or-n-p "~&Save and exit?"))
