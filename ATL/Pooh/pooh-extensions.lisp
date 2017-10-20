@@ -182,16 +182,26 @@
 (let ((honey-found NIL))
 	(defun climb-rock (player &optional arg)
 		"Climb the rock at the rapids"
-		(if (> 25 (random 100))
+		(if (> 33 (random 100))
 			(progn (format t "~&You slip!")
-				(read-line)
+				(sleep 3)
 				(goto player "Stream"))
 			(progn (format t "~&You clamber up on the rock.")
-				(unless honey-found
+				(unless honey-found ;;FIXME fails when a saved game is loaded again
 					(format t "~&You find a pot of honey!")
 					(set-object-attribute (get-game-object 'place (player-place player))
 						'item "Hunny")
 					(setf honey-found T))))))
+
+(defun stream-current (player &optional arg)
+	"The stream sweeps the player on into the Floody place."
+	(when (> 75 (random 100))
+		(describe-place "Stream")
+		(format t "~&~%You struggle to get back to the banks.") (sleep 5)
+		(format t "~&You fight against the rushing water, but it's stronger than you.") (sleep 2)
+		(format t "~&The stream pulls you along.")  (sleep 3)
+		(format t "~&It finally deposits you in a floody place.") (sleep 2)
+		(goto player "Floody place") (clear-screen)))
 
 (defun play (player &optional arg)
 	"Let the player play a game"
@@ -212,8 +222,9 @@
 			(60 (format t "~&You pile up sand for a big strong keep in the center."))
 			(80 (format t "~&You decorate the castle, adding pretty little details."))
 			(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
-				(set-object-attribute (get-game-object 'place "Sandy pit") 'item "Sandcastle")))
-		(unless (= sandcastle 100) (incf sandcastle 20))))
+				(set-object-attribute (get-game-object 'place "Sandy pit") 'item "Sandcastle"))
+			(110 (format t "~&You've already built a sandcastle here! And a fine one it is too...")))
+		(unless (= sandcastle 110) (incf sandcastle 20))))
 
 (let ((score 0))
 	(defun poohsticks (player)
@@ -264,7 +275,8 @@
 	(if (member 'ring (extract-elements arg))
 		(progn
 			(format t "~&You slip the golden ring on your finger.") (sleep 1)
-			(format t "~&You feel something ought to happen.~&Nothing does."))
+			(format t "~&You feel something ought to happen.") (sleep 2)
+			(format t "~&Nothing does."))
 		(format t "~&What do you want to wear?")))
 
 (defun ring-of-destiny (player)
@@ -274,7 +286,9 @@
 (defun annoying-ring (player)
 	"The ring cannot be dropped!"
 	(format t "~&You feel a stab of pain in your heart as you watch the ring drop.")
+	(sleep 1)
 	(format t "~&On second thoughts, you pick it up again.~%~%")
+	(sleep 1)
 	(take player "Golden ring"))
 
 

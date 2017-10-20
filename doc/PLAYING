@@ -23,14 +23,17 @@ you. In a menu like this, you can choose an option by typing the relevant number
 and pressing ENTER. (Commands to the computer must always be terminated by
 pressing ENTER.)
 
-The first option, "Start a new game", drops you into a submenu in which you can
+## TODO Include autosave!
+	
+The first option, "Start a new game", will first ask you for your name. (This is
+needed to save the game.) It then drops you into a submenu in which you can
 choose which game world you want to play. As of Atlantis 0.3, only the "Winnie
 the Pooh" world is fully functional. (You can try the others, but they are far
 from complete.)
 
-The second option, "Load a game", is for returning users who have previously
-saved their game progress in one of the worlds. Again, you will be presented
-with a submenu that lists all currently saved games.
+The second option, "Load a saved game", is for players who have already started
+a game in one of the worlds. (Your game progress is saved automatically.) Again,
+you will be presented with a submenu that lists all currently saved games.
 
 The third option is for developers and need not concern us further.
 
@@ -53,7 +56,7 @@ Typing "help" (without the quotation marks) will bring up a list of the core
 commands, along with a short description. This is very useful!
 
 If you want to stop playing, you can use the commands "quit" or "exit". Don't
-forget to save your progress first, though!
+worry, your game progress will be saved when you leave.
 
 Note that although capitalization does not matter in Atlantis, spelling does.
 So if you get an error message telling you that a command is not available, make
@@ -136,11 +139,6 @@ clear - Sometimes, your screen can get rather cluttered up with the output of
         the various commands. With "clear" you delete all text except the place
         description.
 
-save - If you've made good progress in a game world but cannot finish the game
-       in one sitting, you will want to save your work. The "save" command will
-       ask you for a file name to save the game under, then store it for later
-       retrieval (via the "Load a game" option in the main menu).
-
 
 Daniel Vedder
-Last modified 10/10/2017
+Last modified 20/10/2017

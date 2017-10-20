@@ -21,7 +21,7 @@
 
 (defun play-game ()
 	"The main game loop"
-	(let ((player (get-game-object 'player (world-main-player *world*))))
+	(let ((player (get-game-object 'player (world-main-character *world*))))
 		;; If the player's starting position is not specified, choose at random
 		(when (zerop (length (player-place player)))
 			(format t "~&Choosing a random starting location.")
@@ -31,16 +31,19 @@
 		(clear-screen)
 		(let ((place (get-game-object 'place (player-place player))))
 			(describe-place place)
-			(input-string command)
-			(while (not (and (or (equalp command "quit")
-								 (equalp command "exit"))
-							(y-or-n-p "~&Really quit?")))
-				(cond ((zerop (length command)))
+			(format t "~&>>> ")
+			(do ((command (read-line) (read-line)))
+				((and (or (equalp command "quit") (equalp command "exit"))
+					 (y-or-n-p "~&Really quit?"))
+					(save-world)
+					(format t "~&Goodbye!")
+					(quit))
+				(cond ((zerop (length command)) NIL)
 					((not (alpha-char-p (aref command 0)))
 						(format t "~&Invalid input."))
-					(T (game-command command player)))
-				(input-string command))
-			(format t "~&Goodbye!"))))
+					(T (game-command command player)
+						(save-world)))
+				(format t "~&>>> ")))))
 
 (defun describe-place (p)
 	"Print out a complete description of place p"
@@ -121,7 +124,7 @@
 (defvar *commands*
 	'(help look goto take inventory
 		 drop talk equip attack
-		 seek save clear manual))
+		 seek clear manual))
 
 ;;; Command functions have to take two arguments (a player instance and
 ;;; an optional(!) argument to the function).
@@ -144,23 +147,6 @@
 	"A wrapper for 'look me'"
 	(look player "me"))
 
-(let ((last-save NIL))
-	(defun save (player &optional game-file)
-		"Save a game to file (wrapper method around save-world)"
-		(if (and last-save (not game-file))
-			(setf game-file last-save)
-			(progn
-				(when (not (or last-save game-file))
-					(format t "~&What do you want to call the save file?")
-					(input-string game-file))
-				(setf game-file (concatenate 'string "../saves/"
-									game-file ".world"))
-				(setf last-save game-file)))
-		(if (y-or-n-p "Save game to ~A?" game-file)
-			(progn (save-world game-file)
-				(format t "~&Game saved."))
-			(setf last-save NIL))))
-
 (defun goto (player &optional location)
 	"Go to the specified location"
 	;; Look before you leap ;-)
@@ -174,7 +160,7 @@
 		(format t "~&This place does not border your current location!")
 		(return-from goto))
 	;; You can only enter a place if you have one of the requirements
-	;; FIXME Deal with multiple possible requirements
+	;; TODO Deal with multiple possible requirements
 	(let ((req (place-requires (get-game-object 'place location))))
 		(unless (equalp req "")
 			(unless (or (player-has-ability req player)

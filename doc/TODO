@@ -1,7 +1,6 @@
 ATLANTIS TODO
 
 LISP
-* implement autosave?
 * split ui.lisp into two modules (one for interaction functions)
 	
 ATL	

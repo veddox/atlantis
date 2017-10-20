@@ -17,8 +17,8 @@
 ;; each object created in this game
 
 (defstruct world
-	(name "")
-	(main-player "")
+	(player-name "")
+	(main-character "")
 	(players NIL)
 	(places NIL)
 	(monsters NIL)
@@ -51,28 +51,30 @@
 		"Get a list of the names of all the world objects of this type."
 		(funcall list-function object-type *world*)))
 
-(defun name-world (name)
-	"Set the name of the *world*"
-	;;XXX Do we still need this?
-	(debugging "~&The name of the world is ~A." name)
-	(setf (world-name *world*) name)
-	NIL)
-
 (defun load-game (game-file)
 	"Load a saved game from disk"
+	;; If only the player name was passed, expand it into a file path
+	(unless (search ".world" game-file)
+		(setf game-file (concatenate 'string "../saves/" game-file ".world")))
 	(with-open-file (g game-file)
-		(let ((version-number (read g))
-				 (loaded-world (read g)))
-			(when (!= version-number ATLANTIS-VERSION :test equal)
-				(format t "~&WARNING: The loaded game was saved by a ")
-				(format t "different version of Atlantis!"))
+		;; Compare versions
+		(unless (equal (read g) ATLANTIS-VERSION)
+			(format t "~&WARNING: The loaded game was saved by a ")
+			(format t "different version of Atlantis!")
+			(format t "~&Press ENTER to continue.")
+			(read-line))
+		;; Read the actual world
+		(let ((loaded-world (read g)))
 			(if (world-p loaded-world)
 				(progn (setf *world* loaded-world)
 					(dolist (lisp-file (world-extension-files *world*))
 						(load lisp-file)))
 				(error "World file ~A is corrupted!" game-file)))))
 
-(defun save-world (game-file)
+(defun save-world (&optional game-file)
 	"Save a game to file"
+	(unless game-file
+		(setf game-file (concatenate 'string "../saves/"
+							(world-player-name *world*) ".world")))
 	(with-open-file (g game-file :direction :output)
 		(format g "~S~%~S~%" ATLANTIS-VERSION *world*)))

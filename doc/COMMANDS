@@ -14,7 +14,6 @@ talk [to] <npc>  -  Talk to an NPC
 seek             -  Search for hidden items
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
-save [<file>]    -  Save the game to file
 
 Arguments in square brackets are optional,
 arguments in angular brackets denote place fillers.

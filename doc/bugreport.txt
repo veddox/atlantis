@@ -21,7 +21,7 @@ mein bisheriger Bericht:
   	  nicht korrekt.
 	  -> FIXED
   *   Kann man gewollt vom Stream zum Floody Place, aber nicht umgekehrt?
-  	  -> Won't fix
+  	  -> FIXED
   *   Beim Bee Tree wäre die Erwähnung von ‚climb down‘ ganz gut denke ich
   	  (auch wenn der command nicht notwendig ist).
 	  -> Won't fix

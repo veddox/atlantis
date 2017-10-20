@@ -7,7 +7,7 @@
 ;;; date: 09/05/2015
 ;;;
 
-(defconstant ATLANTIS-VERSION '(0 2 3))
+(defconstant ATLANTIS-VERSION '(0 2 4))
 
 (load "util.lisp")
 (load "game-objects.lisp")
@@ -38,11 +38,20 @@
 	(clear-screen)
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
-	(setf options '("Start a new game" "Load a game"
+	(setf options '("Start a new game" "Load a saved game"
 					   "Advanced" "Help" "About" "Exit"))
 	(case (choose-number-option options)
-		(0 (format t "~&Which world do you want to play?")
+		(0 ;; ask the player for his/her name
+			(format t "~&What is your name? ")
+			(setf player-name (read-line))
+			(if (and (member player-name
+						 (mapcar #'pathname-name (directory "../saves/*"))
+						 :test #'equalp)
+					(not (yes-or-no-p "A game by this player already exists. Replace it?")))
+				(start-menu)
+				(setf (world-player-name *world*) player-name))
 			;; let the player choose one of the game worlds
+			(format t "~&Which world do you want to play?")
 			(let ((world (choose-option (append (keys *games*) '("Back")))))
 				(if (equalp world "Back") (start-menu)
 					(setf world-file (cassoc world *games*)))
@@ -55,7 +64,7 @@
 					(when (< 2 (length chars))
 						(format t "~&Which character do you want to play?")
 						(setf char-name (choose-option chars)))
-					(set-main-player char-name)
+					(setf (world-main-character *world*) char-name)
 					(if (equalp char-name "Cancel")
 						(start-menu)
 						(play-game)))))

@@ -273,8 +273,9 @@ define-place "Stream"
 	description "Whoops! You fell in! Brrr, this water is cold! Better get out
 	quickly. But that is easier said than done, the current here
 	is pretty strong..."
+	neighbour "Rapids"
 	neighbour "Floody place"
-	hidden "Golden ring"
+	entry-hook "stream-current"
 
 define-place "Christopher Robin's house"
 	description "TODO"
@@ -294,11 +295,17 @@ define-place "Owl's home"
 	neighbour "Owl's porch"
 
 define-place "Floody place"
-	description "TODO"
+	description "The stream that flows through the forest disappears here,
+	forming a marshy area before it reappears further on. The ground
+	is very boggy here, take care that you don't get stuck. There
+	are also a lot of flies and mosquitoes buzzing around - not
+	a particularly comfortable place to be!"
+	neighbour "Stream"
 	neighbour "Southern woods"
 	neighbour "Eeyore's gloomy place"
 	neighbour "Bridge"
-
+	hidden "Golden ring"
+	
 define-place "Eeyore's gloomy place"
 	description "TODO"
 	npc "Eeyore"
