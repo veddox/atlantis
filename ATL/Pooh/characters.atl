@@ -11,7 +11,9 @@
 define-npc "Piglet"
 	description "Piglet is Pooh's best friend. He is always cheerful (except
 	when he's scared) and always ready for a bit of fun."
-	says "Oh hello Pooh, good to see you!"
+	says "Hi there, Pooh, good to see you!"
+	says "I heard Tigger discovered a cave in the forest. Creepy, isn't it?"
+	quest "Find Woozle"
 
 define-npc "Kanga"
 	description "Kanga is Roo's mother. She is very responsible, but also
@@ -26,7 +28,8 @@ define-npc "Roo"
 	says "Hey Pooh, Tigger and I were going to go looking for Christopher Robin.
 	Do you want to come along?"
 	says "Hello Pooh, have you seen Christopher Robin anywhere?"
-	quest "Bring Mushrooms"
+	says "Pooh, Pooh, Tigger discovered a cave in the forest!"
+	quest "Bring mushrooms"
 
 define-npc "Tigger"
 	description "Tigger is the most hyperactive animal you could imagine. His
@@ -193,6 +196,18 @@ define-quest "Reading material"
 	proof-item "Letter"
 	experience 5
 
+define-quest "Find Woozle"
+	say-before "Oh Pooh, I found woozle tracks again! I'm pretty sure they
+	weren't mine this time... And now I'm scared to go anywhere
+	outdoors! You need to help me!"
+	say-after "Pooh, is that a woozle? Why, he's even smaller than me! And
+	isn't he cute? No need to be scared of him!
+
+	You must be tired after your hunt. Here, have some honey!"
+	proof-item "Woozle"
+	reward-item "Hunny"
+	experience 5
+	
 ; MONSTERS
 
 define-monster "Heffalump"

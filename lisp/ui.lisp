@@ -455,7 +455,7 @@
 				  (decf (monster-health monster) damage)
 				  (format t "~&You hit! ~A points damage." damage)
 				  (when (> 1 (monster-health monster))
-					  (let ((experience (round (average m-str m-dex))))
+					  (let ((experience (* (+ m-str m-dex) 5))) ;XXX magic numbers!
 						  (dolist (i (monster-item monster))
 							  (set-object-attribute place 'item i))
 						  (remove-object-attribute place

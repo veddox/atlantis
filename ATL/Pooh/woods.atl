@@ -124,6 +124,8 @@ define-place "Tunnel"
 	requires "Lamp"
 	neighbour "Deep forest"
 	neighbour "Cave"
+	hidden "Hunny"
+	exit-hook "smell-honey"
 
 define-place "Cave"
 	description "The tunnel suddenly opens out into a huge cavern. The walls are
@@ -163,7 +165,6 @@ define-place "Bridge"
 	neighbour "Southern woods"
 	neighbour "Eastern woods"
 	neighbour "Floody place"
-	neighbour "The World"
 	command "play"
 
 define-place "Piglet's porch"
@@ -313,8 +314,13 @@ define-place "Eeyore's gloomy place"
 	neighbour "Floody place"
 
 define-place "Woozle hideout"
-	description "TODO"
+	description "This is a small copse of larch trees, all standing tightly in a
+	circle. One fine winter day, you and Piglet went hunting here,
+	pursuing a Woozle. Only, the Woozle's footprints turned out to
+	be your own..."
 	neighbour "Southern woods"
+	item "Tracks"
+	hidden "Woozle"
 
 define-place "Misty forest"
 	description "You are surrounded by pines, their dead needles thickly carpeting

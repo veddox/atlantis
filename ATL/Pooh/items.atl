@@ -151,6 +151,20 @@ define-item "Golden ring"
 	pickup-hook "ring-of-destiny"
 	drop-hook "annoying-ring"
 
+define-item "Woozle"
+	description "The Woozle is a strange animal. It is no larger than a mouse,
+	but with feet almost as big as your own. It also has big eyes,
+	big ears and incredibly fluffy fur."
+	pickup-hook "woozle-scratch"
+	drop-hook "woozle-disappear"
+	infinite
+
+define-item "Tracks"
+	description "The tracks look a lot like bear tracks, but you know you haven't
+	been here for quite a long time. Maybe they are woozle tracks
+	after all?"
+	fixed
+	
 define-item "Grandfather's cane"
 	description "Piglet's grandfather used to carry this cane around with him.
 	And woe to any young animal who dared to be disrespectful!"

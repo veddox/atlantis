@@ -22,4 +22,4 @@ define-player "Winnie the Pooh"
 	
 define-player "Christopher Robin"
 	description "Christopher Robin is my game dev character."
-	place "Rapids" ;Development
+	place "Piglet's home" ;Development

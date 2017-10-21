@@ -8,37 +8,45 @@
 ; date: 20/07/2017
 
 (defun eat (player &optional arg)
-	"Allow the player to eat something."
-	;; XXX If any other edibles are added, split this function up
+	"Allow the player to eat something (dispatch function)."
 	(cond ((null arg) (format t "~&What do you want to eat?"))
-		;; Berries can be eaten any time, but don't have any effect
-		((and (equalp arg "berries")
-			 (member "berries" (player-item player) :test #'equalp))
-			(format t "~&Mmmh, these berries are really delicious!")
-			(remove-object-attribute player 'item "berries"))
-		;; Honey is reserved as medicine :-)
-		((and (or (equalp arg "hunny") (equalp arg "honey"))
-			 (member "Hunny" (player-item player) :test #'equalp))
-			(if (> (player-health player) 10)
-				(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later.")
-				(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.") (sleep 1)
-					(format t "~&You stick your paw deeply into the jar, then draw it out again.") (sleep 1)
-					(format t "~&Smooth golden honey runs into your mouth, making you feel much better.")
-					(format t "~&+10 HP")
-					(change-player-health player 10)
-					(remove-object-attribute player 'item "Hunny")
-					(set-object-attribute player 'item "Jar"))))
-		;; Extract of Malt is very healthy, so obviously it can't be tasty...
-		((and (or (equalp arg "extract of malt") (equalp arg "extract") (equalp arg "malt"))
-			 (member "Extract of Malt" (player-item player) :test #'equalp))
-			(progn (format t "~&You open the bottle and tip it over a spoon.") (sleep 1)
-				(format t "~&A big dollop of Extract flows out slowly.") (sleep 3)
-				(format t "~&The smell of it makes you wrinkle your nose.") (sleep 2)
-				(format t "~&Without thinking much longer, you shove it into your mouth.") (sleep 1)
-				(format t "~&That's bitter! You scrunch up your face and try to swallow.") (sleep 3)
-				(format t "~&Something that disgusting can only be healthy. +1 HP")
-				(change-player-health player 1)))
+		((equalp arg "berries") (eat-berries))
+		((or (equalp arg "hunny") (equalp arg "honey")) (eat-honey))			 
+		((member arg '("extract of malt" "extract" "malt") :test #'equalp) (eat-malt))
 		(T (format t "~&You can't eat that!"))))
+
+(defun eat-berries (player)
+	"Berries can be eaten any time, but don't have any effect"
+	(if (member "berries" (player-item player) :test #'equalp)
+		(progn (format t "~&Mmmh, these berries are really delicious!")
+			(remove-object-attribute player 'item "berries"))
+		(format t "~&You don't have any berries!")))
+
+(defun eat-honey (player)
+	"Honey is reserved as medicine :-)"
+	(if (member "Hunny" (player-item player) :test #'equalp)
+		(if (> (player-health player) 10)
+			(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later.")
+			(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.") (sleep 1)
+				(format t "~&You stick your paw deeply into the jar, then draw it out again.") (sleep 1)
+				(format t "~&Smooth golden honey runs into your mouth, making you feel much better.")
+				(format t "~&+10 HP")
+				(change-player-health player 10)
+				(remove-object-attribute player 'item "Hunny")
+				(set-object-attribute player 'item "Jar")))
+		(format t "~&You don't have any honey!")))
+
+(defun eat-malt (player)
+	"Extract of Malt is very healthy, so obviously it can't be tasty..."
+	(if (member "Extract of Malt" (player-item player) :test #'equalp)
+		(progn (format t "~&You open the bottle and tip it over a spoon.") (sleep 1)
+			(format t "~&A big dollop of Extract flows out slowly.") (sleep 3)
+			(format t "~&The smell of it makes you wrinkle your nose.") (sleep 2)
+			(format t "~&Without thinking much longer, you shove it into your mouth.") (sleep 1)
+			(format t "~&That's bitter! You scrunch up your face and try to swallow.") (sleep 3)
+			(format t "~&Something that disgusting can only be healthy. +1 HP")
+			(change-player-health player 1))
+		(format t "~&You don't have any Extract of Malt!")))
 
 (defun study (player &optional arg)
 	"Print out the map"
@@ -98,7 +106,7 @@
 			(format t "~&Suddenly, you are no longer sure you are walking in the right")
 			(format t "~&direction. Perhaps you should keep more to your left. Or to")
 			(format t "~&your right? The trees all look the same here...")
-			(format t "~&You are walking in circles!")
+			(format t "~&You are walking in circles!~%~%Please press ENTER")
 			(read-line)
 			(change-player-location player lost-in)
 			(spawn-monsters lost-in)
@@ -223,8 +231,8 @@
 			(80 (format t "~&You decorate the castle, adding pretty little details."))
 			(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
 				(set-object-attribute (get-game-object 'place "Sandy pit") 'item "Sandcastle"))
-			(110 (format t "~&You've already built a sandcastle here! And a fine one it is too...")))
-		(unless (= sandcastle 110) (incf sandcastle 20))))
+			(120 (format t "~&You've already built a sandcastle here! And a fine one it is too...")))
+		(unless (= sandcastle 120) (incf sandcastle 20))))
 
 (let ((score 0))
 	(defun poohsticks (player)
@@ -266,6 +274,28 @@
 							 "Nothing happens." "Nobody answers." "No reply.")))
 		(format t "~&~A" (random-elt consequences))))
 
+(defun smell-honey (player &optional arg)
+	"The player smells honey when leaving the tunnel"
+	(let ((place (get-game-object 'place (player-place player))))
+		(when (member "hunny" (place-hidden place) :test #'equalp)
+			(format t "~&For a brief second, the scent of honey wafts up to your nose.")
+			(sleep 2))))
+
+(defun woozle-scratch (player &optional arg)
+	"The Woozle scratches when you try to pick him up."
+	(change-player-health player -1)
+	(format t "~&The woozle scratches you! -1 HP")
+	(when (> 55 (random 100))
+		(sleep 1)
+		(format t "~&The woozle winds its way out of your arms.")
+		(sleep 1)
+		(drop player "Woozle")))
+
+(defun woozle-disappear (player &optional arg)
+	"If you drop him, the Woozle escapes."
+	(let ((place (get-game-object 'place (player-place player))))
+		(remove-object-attribute place 'item "Woozle")
+		(format t "~&The Woozle runs away!")))
 
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.
