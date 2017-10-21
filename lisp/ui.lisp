@@ -124,7 +124,7 @@
 (defvar *commands*
 	'(help look goto take inventory
 		 drop talk equip attack
-		 seek clear manual))
+		 seek clear manual archive))
 
 ;;; Command functions have to take two arguments (a player instance and
 ;;; an optional(!) argument to the function).
@@ -142,6 +142,13 @@
 	"Clear the screen (wrapper function)"
 	(clear-screen)
 	(describe-place (player-place player)))
+
+(defun archive (player &optional arg)
+	"Save a snapshot of the current game state (especially for debugging)"
+	(let ((archive-name (concatenate 'string "../"
+							(world-player-name *world*) "_archive.world")))
+		(save-world archive-name)
+		(format t "~&Archived game to ~A." archive-name)))
 
 (defun inventory (player &optional arg)
 	"A wrapper for 'look me'"
@@ -227,7 +234,7 @@
 		(return-from talk))
 	;; Allow for a bit of syntactic sugar
 	(let ((split-name (cut-string npc-name 3)))
-		(when (and (< 1 (length split-name)) (equalp (first split-name) "to "))
+		(when (and (listp split-name) (equalp (first split-name) "to "))
 			(setf npc-name (second split-name))))
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (npc-name (fuzzy-match npc-name (place-npc place)))

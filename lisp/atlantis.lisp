@@ -42,8 +42,10 @@
 					   "Advanced" "Help" "About" "Exit"))
 	(case (choose-number-option options)
 		(0 ;; ask the player for his/her name
-			(format t "~&What is your name? ")
-			(setf player-name (read-line))
+			(setf player-name "")
+			(while (zerop (length player-name))
+				(format t "~&What is your name? ")
+				(setf player-name (read-line)))
 			(if (and (member player-name
 						 (mapcar #'pathname-name (directory "../saves/*"))
 						 :test #'equalp)

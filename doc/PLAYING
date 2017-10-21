@@ -22,8 +22,6 @@ prompt" (>>>), which is the indication that the computer expects some input from
 you. In a menu like this, you can choose an option by typing the relevant number
 and pressing ENTER. (Commands to the computer must always be terminated by
 pressing ENTER.)
-
-## TODO Include autosave!
 	
 The first option, "Start a new game", will first ask you for your name. (This is
 needed to save the game.) It then drops you into a submenu in which you can
@@ -90,6 +88,9 @@ may offer additional commands that are available when you are in that place
 or in possession of the item. If any place/item provides commands, it is so
 indicated in the game.
 
+help - This will give a list of game commands with a concise description for
+	   quick reference.
+
 look - This is the most versatile command in the game. With it, you can inspect
        any item, NPC or monster (e.g. look cook). You can also bring up
        information about yourself with "look me" or about your current location
@@ -141,4 +142,4 @@ clear - Sometimes, your screen can get rather cluttered up with the output of
 
 
 Daniel Vedder
-Last modified 20/10/2017
+Last modified 21/10/2017

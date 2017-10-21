@@ -1,9 +1,12 @@
 ATLANTIS TODO
 
 LISP
+* update Helios guide (include bug reporting with 'archive')
 * split ui.lisp into two modules (one for interaction functions)
 	
-ATL	
+ATL
+* fix commands that break after reloading game
+* introduce honour roll
 * fill in missing place descriptions
 * hide 2 more pots of honey
 * think of more quests
