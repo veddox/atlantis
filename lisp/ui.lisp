@@ -14,8 +14,6 @@
 ;; (This module should be purely UI)
 ;; Yeah, probably not going to happen ;-)
 
-;; TODO Split module in two
-
 ;; TODO Change to 5 once the (string-from-list) bug is fixed
 (setf *max-line-items* 10)
 
@@ -198,7 +196,9 @@
 	(cond ((equalp object-name "me")
 			  (describe-player player) (return-from look))
 		((equalp object-name "here")
-			(describe-place (player-place player)) (return-from look)))
+			(describe-place (player-place player)) (return-from look))
+		((equalp object-name "around")
+			(seek player) (return-from look)))
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (o-name (fuzzy-match object-name (append (place-item place)
 												   (place-npc place)
@@ -217,12 +217,10 @@
 	"Search for hidden items in the current room"
 	(format t "~&You start hunting around.") (sleep (random 4))
 	(let* ((place (get-game-object 'place (player-place player)))
-			  (items (place-item place))
 			  (hidden (place-hidden place)))
 		(dolist (h hidden)
-			(when (> 50 (random 100))
-				(format t "~&You find: ~A"
-					(item-name (get-game-object 'item h)))
+			(when (> 67 (random 100))
+				(format t "~&You find: ~A" h)
 				(set-object-attribute place 'item h)
 				(remove-object-attribute place 'hidden h))))
 	(format t "~&You finish searching."))

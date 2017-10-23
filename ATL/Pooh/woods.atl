@@ -265,6 +265,7 @@ define-place "Rapids"
 	item "North Pole"
 	item "Rock"
 	item "Stone"
+	hidden "Hunny"
 	neighbour "Northern woods"
 	neighbour "Misty forest"
 	neighbour "Stream"
@@ -279,8 +280,13 @@ define-place "Stream"
 	entry-hook "stream-current"
 
 define-place "Christopher Robin's house"
-	description "TODO"
+	description "Christopher Robin is your best friend. What a shame he lives so
+	far away from your home! This is his house, built into an old
+	chestnut tree. It has a lovely green door, which unfortunately
+	appears to be shut just now. You wonder where he is?"
 	neighbour "Eastern woods"
+	item "Balloon"
+	item "Balloon"
 
 define-place "Owl's porch"
 	description "TODO"

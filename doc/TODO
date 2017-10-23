@@ -2,13 +2,10 @@ ATLANTIS TODO
 
 LISP
 * update Helios guide (include bug reporting with 'archive')
-* split ui.lisp into two modules (one for interaction functions)
+* fix (string-from-list) bug
 	
 ATL
-* fix commands that break after reloading game
-* introduce honour roll
 * fill in missing place descriptions
-* integrate the quests to lead the player through the game
 
 
 NOTES

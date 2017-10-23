@@ -87,7 +87,12 @@ define-item "Sandcastle"
 	for: a moat, four walls, strong towers - even small windows!
 	Somebody must have put a lot of effort into building this."
 	fixed
-	
+
+define-item "Balloon"
+	description "A bright red balloon, it must have been left over from our
+	last birthday party. Can you blow it up?"
+	command "blow"
+		
 define-item "Jacket"
 	description "This is a small, bright red rain jacket. It looks about the
 	right size to fit Roo."
@@ -162,7 +167,7 @@ define-item "Woozle"
 define-item "Tracks"
 	description "The tracks look a lot like bear tracks, but you know you haven't
 	been here for quite a long time. Maybe they are woozle tracks
-	after all?"
+	after all? Are there woozles nearby?"
 	fixed
 	
 define-item "Grandfather's cane"

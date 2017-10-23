@@ -10,9 +10,10 @@
 (defun eat (player &optional arg)
 	"Allow the player to eat something (dispatch function)."
 	(cond ((null arg) (format t "~&What do you want to eat?"))
-		((equalp arg "berries") (eat-berries))
-		((or (equalp arg "hunny") (equalp arg "honey")) (eat-honey))			 
-		((member arg '("extract of malt" "extract" "malt") :test #'equalp) (eat-malt))
+		((equalp arg "berries") (eat-berries player))
+		((or (equalp arg "hunny") (equalp arg "honey")) (eat-honey player))
+		((member arg '("extract of malt" "extract" "malt") :test #'equalp)
+			(eat-malt player))
 		(T (format t "~&You can't eat that!"))))
 
 (defun eat-berries (player)
@@ -71,8 +72,9 @@
 	"If the player is hurt, Kanga looks after him."
 	(when (< (player-health player) (player-max-health player))
 		(format t "~&KANGA: Oh my dear, you look hurt! Here, let me take care of you.")
-		(sleep 1)
+		(sleep 2)
 		(format t "~&~%Kanga bandages your wounds. You feel better.")
+		(sleep 2)
 		(setf (player-health player) (player-max-health player))))
 
 (defun bouncy-tigger (player)
@@ -187,19 +189,19 @@
 		"Make sure you've climbed down before leaving the bee tree."
 		(when climbed (climb-down player) (pause 4))))
 
-(let ((honey-found NIL))
-	(defun climb-rock (player &optional arg)
-		"Climb the rock at the rapids"
-		(if (> 33 (random 100))
-			(progn (format t "~&You slip!")
-				(sleep 3)
-				(goto player "Stream"))
-			(progn (format t "~&You clamber up on the rock.")
-				(unless honey-found ;;FIXME fails when a saved game is loaded again
+
+(defun climb-rock (player &optional arg)
+	"Climb the rock at the rapids"
+	(if (> 33 (random 100))
+		(progn (format t "~&You slip!")
+			(sleep 3)
+			(goto player "Stream"))
+		(progn (format t "~&You clamber up on the rock.")
+			(let ((place (get-game-object 'place (player-place player))))
+				(when (member "Hunny" (place-hidden place) :test #'equalp)
 					(format t "~&You find a pot of honey!")
-					(set-object-attribute (get-game-object 'place (player-place player))
-						'item "Hunny")
-					(setf honey-found T))))))
+					(set-object-attribute place	'item "Hunny")
+					(remove-object-attribute place 'hidden "Hunny"))))))
 
 (defun stream-current (player &optional arg)
 	"The stream sweeps the player on into the Floody place."
@@ -220,19 +222,22 @@
 (let ((sandcastle 0))
 	(defun build-sandcastle ()
 		"The player builds a sandcastle at the sandy pit."
-		(case sandcastle
-			(0 (format t "~&You decide to build a sandcastle!")
-				(symbol-macrolet ((description (place-description (get-game-object 'place "Sandy pit"))))
-					(setf description (string-from-list (list description "Somebody has been building a sandcastle here.")
-										  :sep #\newline))))
-			(20 (format t "~&You dig a large moat and erect the walls."))
-			(40 (format t "~&You build four towers, one at each corner."))
-			(60 (format t "~&You pile up sand for a big strong keep in the center."))
-			(80 (format t "~&You decorate the castle, adding pretty little details."))
-			(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
-				(set-object-attribute (get-game-object 'place "Sandy pit") 'item "Sandcastle"))
-			(120 (format t "~&You've already built a sandcastle here! And a fine one it is too...")))
-		(unless (= sandcastle 120) (incf sandcastle 20))))
+		(let ((place (get-game-object 'place "Sandy pit")))
+			(when (member "Sandcastle" (place-item place) :test #'equalp)
+				(format t "~&You've already built a sandcastle here! And a fine one it is too...")
+				(return-from build-sandcastle))
+			(case sandcastle
+				(0 (format t "~&You decide to build a sandcastle!")
+					(setf (place-description place)
+						(concatenate 'string (place-description place)
+							"Somebody has been building a sandcastle here." #\newline)))
+				(20 (format t "~&You dig a large moat and erect the walls."))
+				(40 (format t "~&You build four towers, one at each corner."))
+				(60 (format t "~&You pile up sand for a big strong keep in the center."))
+				(80 (format t "~&You decorate the castle, adding pretty little details."))
+				(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
+					(set-object-attribute place 'item "Sandcastle")))
+			(unless (= sandcastle 100) (incf sandcastle 20)))))
 
 (let ((score 0))
 	(defun poohsticks (player)
@@ -250,6 +255,32 @@
 				(if (= winner choice)
 					(progn (incf score) (format t "~&You win! Your score is now ~A." score))
 					(progn (decf score) (format t "~&You lose! Your score is now ~A." score)))))))
+
+(defun blow (player &optional arg)
+	"Blow up a balloon."
+	(setf msg '("You take a deep breath and put the balloon between your lips."
+				   "You blow as hard as you can."
+				   "The balloon starts to fill up."
+				   "You take another breath and blow again."
+				   "Your lungs are going to burst any minute now, but you keep blowing."
+				   "The balloon is already pretty big, but you want it even larger."
+				   "Your eyes feel as if they're about to pop out, but you keep blowing."
+				   "The balloon is huge. You struggle to keep hold of it."
+				   "You blow just a little bit more."
+				   "The balloon lifts you up! Your feet leave the ground."
+				   "This is fun!"
+				   "You rise up into the sky, free as a bird."
+				   "There's a branch above you!"
+				   "The balloon flies into the branch."
+				   "KER-BOOM!"
+				   "You fall back down to the ground."
+				   "Ouch, that hurt! -3 HP"))
+	(dolist (m msg)
+		(format t "~&~A" m)
+		(sleep 2))
+	(remove-object-attribute player 'item "Balloon")
+	(add-player-experience player 5)
+	(change-player-health player -3))
 
 (defun nap (player &optional arg)
 	"Take a nap in front of Pooh's house"

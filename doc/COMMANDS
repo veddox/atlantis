@@ -5,13 +5,14 @@ quit/exit        -  Exit the game
 clear            -  Clear the screen
 look [here]      -  Describe the current location
 look <object>    -  Show a description of this entity
+look around      -  Search for hidden items
 look me          -  Describe your character
 inventory        -  Same as 'look me'
 goto <place>     -  Go to a neighbouring location
 take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 talk [to] <npc>  -  Talk to an NPC
-seek             -  Search for hidden items
+seek             -  Same as 'look around'
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
 
