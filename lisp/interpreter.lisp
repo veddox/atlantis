@@ -1,10 +1,10 @@
 ;;;
-;;; Atlantis is a framework for creating multi-user dungeon worlds.
+;;; Atlantis is a framework for creating text-adventure worlds.
 ;;; This is the Common Lisp implementation.
 ;;;
 ;;; The interpreter file loads an ATL source file and parses it.
 ;;;
-;;; Licensed under the terms of the MIT license
+;;; Licensed under the terms of the GNU GPLv3.
 ;;; author: Daniel Vedder
 ;;; date: 09/05/2015
 ;;;
@@ -13,8 +13,7 @@
 
 ;; A list of ATL language constructs
 ;; (Note: not complete - each (defcommand) appends to this list)
-;; FIXME name-world is currently superfluous
-(defvar *atl-commands* '(load-file name-world))
+(defvar *atl-commands* '(load-file))
 
 (defun build-define-command (object-type)
 	"Build a new define command function for the specified object type"

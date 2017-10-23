@@ -1,10 +1,10 @@
 ;;;
-;;; Atlantis is a framework for creating multi-user dungeon worlds.
+;;; Atlantis is a framework for creating text-adventure worlds.
 ;;; This is the Common Lisp implementation.
 ;;;
 ;;; This file provides commonly used utility functions and macros.
 ;;;
-;;; Licensed under the terms of the MIT license.
+;;; Licensed under the terms of the GNU GPLv3.
 ;;; author: Daniel Vedder
 ;;; date: 09/05/2015
 ;;;
@@ -23,13 +23,6 @@
 (defmacro debugging (str &rest format-args)
 	"If *debugging* is true, print str"
 	`(when *debugging* (format t ,str ,@format-args)))
-
-;; TODO DEPRECATED - Needs to be replaced in the current code
-(defmacro simple-input (var &optional (prompt ">>>"))
-	"Take input from terminal and store it in var"
-	`(progn
-		 (format t "~&~A " ,prompt)
-		 (setf ,var (read))))
 
 ;; XXX potentially inefficient if called often
 (defmacro set-list (value &rest var-list)
@@ -268,12 +261,17 @@ specified type in the container struct"
 	"The user chooses one out of a list of options, the index is returned"
 	(dotimes (i (length option-list))
 		(format t "~&~S) ~A" (1+ i) (nth i option-list)))
-	(simple-input choice)
-	(while (or (not (numberp choice)) (< choice 1)
-			   (> choice (length option-list)))
+	(format t "~&>>> ")
+	(setf choice (read-line))
+	(while (or (zerop (length choice))
+			   (not (alphanumericp (aref choice 0)))
+			   (not (numberp (read-from-string choice)))
+			   (< (read-from-string choice) 1)
+			   (> (read-from-string choice) (length option-list)))
 		(format t "~&Invalid choice! Please choose again:")
-		(simple-input choice))
-	(1- choice))
+		(format t "~&>>> ")
+		(setf choice (read-line)))
+	(1- (read-from-string choice)))
 
 (defun choose-option (option-list)
 	"Like choose-number-option, but return the value of the choice"

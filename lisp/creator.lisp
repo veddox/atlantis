@@ -1,12 +1,12 @@
 ;;;
-;;; Atlantis is a framework for creating multi-user dungeon worlds.
+;;; Atlantis is a framework for creating text-adventure worlds.
 ;;; This is the Common Lisp implementation.
 ;;;
 ;;; This is an ATL code-generating module to ease the world creation
 ;;; process for non-coders (and those too lazy to write more than
 ;;; necessary...).
 ;;;
-;;; Licensed under the terms of the MIT license.
+;;; Licensed under the terms of the GNU GPLv3.
 ;;; author: Daniel Vedder
 ;;; date: 20/06/2015
 ;;;
