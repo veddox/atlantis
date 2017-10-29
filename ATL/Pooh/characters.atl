@@ -111,7 +111,7 @@ define-npc "Mr Milne"
 	says "Hello Pooh, how very good to see you! I heard you are looking for my
 	son, Christopher Robin? You are a brave bear to be looking all the way
 	down here! Perhaps we can help you."
-	interaction-hook "cheating"
+	interaction-hook "clueless"
 
 define-npc "Mr Shepard"
 	description "Ernest H. Shepard looks like a man with plenty of humour.

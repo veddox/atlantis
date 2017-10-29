@@ -347,8 +347,37 @@
 
 (defun craft (player &optional arg)
 	"The player can craft various items in Christopher Robin's workshop."
-										;TODO
-	)
+	(format t "~&What would you like to make?")
+	(case (choose-number-option '("Wooden sword" "Picture frame" "Nothing"))
+		(0 (craft-item player "Wooden sword" '("Stick" "Stick" "String")
+			   "../ATL/Pooh/dialogue/sword.txt"))
+		(1 (craft-item player "Picture frame"
+			   '("Stick" "Stick" "Stick" "Stick" "String")
+			   "../ATL/Pooh/dialogue/pictureframe.txt"))
+		(2 NIL)))
+
+(defun craft-item (player item-name requirements dialogue-file)
+	"A generic crafting function - helper function for (craft)"
+	(dolist (r1 requirements)
+		(unless (member r1 (player-item player) :test #'equalp)
+			(format t "~&To craft this, you need: ~A" requirements)
+			(return-from craft-item)))
+	(dolist (r2 requirements)
+		(remove-object-attribute player 'item r2))
+	(set-object-attribute player 'item item-name)
+	(narrate dialogue-file))
+
+(defun clueless (player &optional arg)
+	"A.A. Milne gives clues to the player in exchange for berries."
+	(if (member "berries" (player-item player) :test #'equalp)
+		(when (y-or-n-p "~%Give Mr Milne some berries?")
+			(format t "~&~%MR MILNE:~%Thank you very much, Pooh!")
+			(format t "~&Here's a clue for you in return:")
+			(format t "~&~A" (random-elt (load-text-file "../ATL/Pooh/dialogue/clues.txt"))))
+		(progn
+			(format t "~&~%I'd love to eat some berries just now. If you bring me some,")
+			(format t "~&I'll get even by giving you a little clue for the game.") (sleep 3)
+			(format t "~&How about that?"))))
 
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.

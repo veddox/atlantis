@@ -330,7 +330,9 @@ define-place "Floody place"
 	hidden "Golden ring"
 	
 define-place "Eeyore's gloomy place"
-	description "TODO"
+	description "This is where Eeyore lives. It is indeed rather gloomy - perhaps
+	that is why he is always so grumpy. A cold wind blows through the
+	hedges and makes the scraggly pasture even more uncomfortable."
 	npc "Eeyore"
 	neighbour "Southern woods"
 	neighbour "Floody place"

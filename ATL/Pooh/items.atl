@@ -117,7 +117,11 @@ define-item "Balloon"
 	description "A bright red balloon, it must have been left over from our
 	last birthday party. Can you blow it up?"
 	command "blow"
-		
+
+define-item "Picture frame"
+	description "You made this picture frame from four sticks and some string.
+	Not very good perhaps, but it will do."
+				
 define-item "Jacket"
 	description "This is a small, bright red rain jacket. It looks about the
 	right size to fit Roo."
@@ -204,4 +208,17 @@ define-weapon "Grandfather's cane"
 	And woe to any young animal who dared to be disrespectful!"
 	type "Cane"
 	damage 4
-	
+
+define-item "Wooden sword"
+	description "This is a wooden sword that you made all by yourself! It has
+	a long blade, a cross guard to protect your hands, and a
+	comfortable grip."
+	weapon
+
+define-weapon "Wooden sword"
+	description "This is a wooden sword that you made all by yourself! It has
+	a long blade, a cross guard to protect your hands, and a
+	comfortable grip."
+	type "Sword"
+	damage 5
+			
