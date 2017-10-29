@@ -28,10 +28,8 @@
 	(if (member "Hunny" (player-item player) :test #'equalp)
 		(if (> (player-health player) 10)
 			(format t "~&The honey looks incredibly tempting, but perhaps you should save it for later.")
-			(progn (format t "~&You really shouldn't, but you are feeling sore enough to eat some anyway.") (sleep 1)
-				(format t "~&You stick your paw deeply into the jar, then draw it out again.") (sleep 1)
-				(format t "~&Smooth golden honey runs into your mouth, making you feel much better.")
-				(format t "~&+10 HP")
+			(progn
+				(narrate "../ATL/Pooh/dialogue/honey.txt")
 				(change-player-health player 10)
 				(remove-object-attribute player 'item "Hunny")
 				(set-object-attribute player 'item "Jar")))
@@ -40,12 +38,8 @@
 (defun eat-malt (player)
 	"Extract of Malt is very healthy, so obviously it can't be tasty..."
 	(if (member "Extract of Malt" (player-item player) :test #'equalp)
-		(progn (format t "~&You open the bottle and tip it over a spoon.") (sleep 1)
-			(format t "~&A big dollop of Extract flows out slowly.") (sleep 3)
-			(format t "~&The smell of it makes you wrinkle your nose.") (sleep 2)
-			(format t "~&Without thinking much longer, you shove it into your mouth.") (sleep 1)
-			(format t "~&That's bitter! You scrunch up your face and try to swallow.") (sleep 3)
-			(format t "~&Something that disgusting can only be healthy. +1 HP")
+		(progn
+			(narrate "../ATL/Pooh/dialoge/extract-of-malt.txt" '(1 3 2 1 3 1))
 			(change-player-health player 1))
 		(format t "~&You don't have any Extract of Malt!")))
 
@@ -54,14 +48,11 @@
 	(unless (member 'map (extract-elements arg))
 		(format t "~&What do you want to study?")
 		(return-from study))
-	(print-text-file "../ATL/Pooh/woodland-map.txt"))
+	(print-text-file "../ATL/Pooh/dialogue/woodland-map.txt"))
 
 (defun think (player &optional arg)
 	"Play the intro text."
-	(let ((intro (load-text-file "../ATL/Pooh/intro.txt")))
-		(dolist (line intro)
-			(when line (format t "~&~A" line))
-			(sleep 3))))
+	(narrate "../ATL/Pooh/dialogue/intro.txt" 3))
 
 (defun store (player &optional arg)
 	"Store a jar of honey in the larder."
@@ -237,12 +228,9 @@
 (defun stream-current (player &optional arg)
 	"The stream sweeps the player on into the Floody place."
 	(when (> 75 (random 100))
-		(describe-place "Stream")
-		(format t "~&~%You struggle to get back to the banks.") (sleep 5)
-		(format t "~&You fight against the rushing water, but it's stronger than you.") (sleep 2)
-		(format t "~&The stream pulls you along.")  (sleep 3)
-		(format t "~&It finally deposits you in a floody place.") (sleep 2)
-		(goto player "Floody place") (clear-screen)))
+		(narrate "../ATL/Pooh/dialogue/stream-current.txt" '(5 2 3 2))
+		(goto player "Floody place")
+		(clear-screen)))
 
 (defun play (player &optional arg)
 	"Let the player play a game"
@@ -289,26 +277,7 @@
 
 (defun blow (player &optional arg)
 	"Blow up a balloon."
-	(setf msg '("You take a deep breath and put the balloon between your lips."
-				   "You blow as hard as you can."
-				   "The balloon starts to fill up."
-				   "You take another breath and blow again."
-				   "Your lungs are going to burst any minute now, but you keep blowing."
-				   "The balloon is already pretty big, but you want it even larger."
-				   "Your eyes feel as if they're about to pop out, but you keep blowing."
-				   "The balloon is huge. You struggle to keep hold of it."
-				   "You blow just a little bit more."
-				   "The balloon lifts you up! Your feet leave the ground."
-				   "This is fun!"
-				   "You rise up into the sky, free as a bird."
-				   "There's a branch above you!"
-				   "The balloon flies into the branch."
-				   "KER-BOOM!"
-				   "You fall back down to the ground."
-				   "Ouch, that hurt! -3 HP"))
-	(dolist (m msg)
-		(format t "~&~A" m)
-		(sleep 2))
+	(narrate "../ATL/Pooh/dialogue/balloon.txt")
 	(remove-object-attribute player 'item "Balloon")
 	(add-player-experience player 5)
 	(change-player-health player -3))
@@ -350,14 +319,9 @@
 	(let ((place (get-game-object 'place "Owl's home")))
 		(when (or (member "Letter" (place-item place) :test #'equalp)
 				  (member "Letter" (place-hidden place) :test #'equalp))
-			(sleep 2)
-			(format t "~&~%OWL:~%I have received a letter! Let me read it to you:") (sleep 3)
-			(format t "~&Hrrmpf, 'Dear Pooh,'") (sleep 2)
-			(format t "~&Wait, this letter isn't to me at all? Oh well, no matter.") (sleep 3)
-			(format t "~&Ahem. 'I need to meet you urgently.") (sleep 2)
-			(format t "~&Come to see me at Galleon's Lap.") (sleep 2)
-			(format t "~&Sincerely, Christopher Robin'"))))
-
+			(narrate "../ATL/Pooh/dialogue/letter.txt"
+				'(0 1 2 2 3 2 3 2 2 2 3 1)))))
+			
 (defun smell-honey (player &optional arg)
 	"The player smells honey when leaving the tunnel"
 	(let ((place (get-game-object 'place (player-place player))))

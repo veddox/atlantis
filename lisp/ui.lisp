@@ -179,10 +179,10 @@
 	(debugging "~&~A is going to ~A." (player-name player) location)
 	(change-player-location player location)
 	(spawn-monsters location)
-	(let ((hook (place-entry-hook (get-game-object 'place location)))) ;entry hook
-		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	(add-player-experience player 1)
 	(describe-place (player-place player))
+	(let ((hook (place-entry-hook (get-game-object 'place location)))) ;entry hook
+		(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 	;; Aggressive monsters attack
 	(dolist (m (place-monster (get-game-object 'place (player-place player))))
 		(when (> (monster-aggression m) (random 100))

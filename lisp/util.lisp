@@ -222,6 +222,18 @@
 				 (file-lines (list line) (append file-lines (list line))))
 			((null line) file-lines))))
 
+(defun narrate (file-name &optional (pauses 2))
+	"Print out the given file, pausing between each line."
+	;;'pauses' is a list of numbers, giving the sleep time in seconds between
+	;; each line. When the end of the list is reached, (narrate) wraps around.
+	(when (numberp pauses) (setf pauses (list pauses)))
+	(do ((lines (load-text-file file-name) (cdr lines)) (p 0 (1+ p)))
+		((null lines))
+		(when (= p (length pauses)) (setf p 0))
+		(unless (null (first lines))
+			(format t "~&~A" (first lines))
+			(sleep (nth p pauses)))))
+
 (defun print-text-file (file-name)
 	"Print out the contents of this text file"
 	(dolist (line (load-text-file file-name))
