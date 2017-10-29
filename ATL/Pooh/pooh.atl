@@ -23,4 +23,5 @@ define-player "Winnie the Pooh"
 ;TODO development - remove before release
 define-player "Christopher Robin"
 	description "Christopher Robin is my game dev character."
-	place "Piglet's home"
+	place "Owl's porch"
+	item "Letter" ;FIXME gives problems

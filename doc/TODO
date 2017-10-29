@@ -5,6 +5,10 @@ LISP
 * fix (string-from-list) bug
 	
 ATL
+* hide 2 more pots of honey
+* write the 'craft' command
+* delete cave quests
+* add Owl's quest
 * fill in missing place descriptions
 
 
@@ -19,13 +23,15 @@ Honey pots:
 	6. Kanga's quest
 	7. Eeyore's quest
 	8. Piglet's quest
-	9. Bee tree
-	10. Cave
+	9. Owl's quest (?)
+	10. Mr. Shepard (?)
+	11. Bee tree
+	12. Cave
 
 Quests:
 	1. Find the tail
 	2. Bring jacket
 	3. Bring mushrooms
-	4. Reading material
+	4. Reading material -> replace with "Grandfather's picture"
 	5. Find Woozle
 	6. Bring honey

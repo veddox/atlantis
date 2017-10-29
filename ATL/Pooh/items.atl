@@ -15,10 +15,30 @@ define-item "Jar"
 	might, you can't get any more out of it now. What a shame.
 	Perhaps you should refill it."
 
+define-item "Shelf"
+	description "This is your larder, a wooden shelf with 12 compartments for your honey jars.
+	All the slots are empty!"
+	fixed
+
+define-item "Storage object"
+	; This is a special item that I need to store state about the player's progress.
+	; It never appears in the game.
+	description "0"
+
+define-item "Key"
+	description "This is the key to your larder. You smile. Life is good when you
+	have plenty of honey!"
+		
 define-item "Letter"
 	description "A closed letter, addressed to Somebody in Christopher Robin's
 	handwriting. You think it's a letter to you, but as you are just
 	a Bear of Very Little Brain, you have no way of reading it..."
+
+define-item "Clock"
+	description "This is a wall clock Christopher Robin once gave you. It's very
+	useful, especially as it's stuck to five-to-eleven. So surely it's
+	time for a little something now, isn't it?"
+	fixed
 	
 define-item "Pooh's sign"
 	description "
@@ -70,6 +90,11 @@ define-item "Stick"
 	play around with."
 	infinite
 
+define-item "String"
+	description "A roll of string, neatly wrapped up. This is the kind of string
+	you can fix almost anything with."
+	infinite
+	
 define-item "Pine cone"
 	description "Pine cones are great fun for playing with. There's nothing quite
 	like a good pine cone battle in the woods with your friends!"
@@ -113,6 +138,12 @@ define-item "Bellrope"
 	even tried to give it a natural flair by shaping it like a
 	tail. Hm, that does look very much like a tail!"
 
+define-item "Letterbox"
+	description "Nobody in the Forest can read as well as Owl. He loves it, and
+	he loves getting letters. Unfortunately, he has to write most
+	of them himself."
+	fixed	
+	
 define-item "Lamp"
 	description "This lamp has a bowl at the bottom for the oil, a glass casing 
 	to protect the wick and a metal grip by which to carry it. It's
@@ -140,13 +171,6 @@ define-item "Card"
 	...................................
 	...................................
 	"
-	
-define-item "Magic map"
-	description "This is a strange map. It always seems to be changing. One
-	moment it will show you one thing, the next something completely
-	different. Yet, looking at it, you have the very distinct
-	impression that it wants you to walk up a hill."
-	cost 50
 
 define-item "Golden ring"
 	description "A beautiful golden ring that lies heavily in your hand.

@@ -47,8 +47,11 @@ define-npc "Owl"
 	precipitation tonight, don't you agree?"
 	says "Christopher Robin appears to be Absent Without Leave. You would not,
 	perchance, happen to be aware of his current location?"
+	says "I do love to get letters! If I get one some time soon, I shall read
+	it to you. Improve your education."
 	says "TODO - something about his grandfather"
-	quest "Reading material"
+	quest "Grandfather's picture"
+	interaction-hook "read-letter"
 
 ;TODO Christopher Robin needs to say something else
 ; (he's on Galleon's Lap now, not in his home)
@@ -108,17 +111,14 @@ define-npc "Mr Milne"
 	says "Hello Pooh, how very good to see you! I heard you are looking for my
 	son, Christopher Robin? You are a brave bear to be looking all the way
 	down here! Perhaps we can help you."
-	quest "Bring honey"
+	interaction-hook "cheating"
 
 define-npc "Mr Shepard"
 	description "Ernest H. Shepard looks like a man with plenty of humour.
 	Right now he is holding a pencil and scribbling around on
 	what would appear to be a map of some sort. Every now and again
 	he laughs quietly to himself, as if enjoying a good joke."
-	says "Well well well, Pooh the Bear! Hello there, my young friend! 
-	Welcome to our little club! You look rather lost. I think I 
-	know just what you need..."
-	sells "Magic map"
+	says "TODO"
 
 define-npc "Daniel"
 	description "You really can't tell how old this boy is. Sometimes he looks
@@ -145,18 +145,6 @@ define-quest "Find the tail"
 	reward-item "Hunny"
 	experience 10
 
-define-quest "Bring honey"
-	say-before "The three of us are really hungry. Perhaps you could bring us
-	some of that delicious honey of yours? We'll reward you well.
-	And if you bring us enough, perhaps you can even persuade Mr
-	Shepard to give you his map."
-	say-after "Wow, thank you very much, Pooh! That honey was very good! I
-	appreciate your sacrifice. Here, take this."
-	proof-item "Hunny"
-	experience 5
-	money 5
-	infinite
-
 define-quest "Bring jacket"
 	say-before "Roo forgot to take his jacket with him, but I'm afraid it's going
 	to start raining soon. Could you take it to him? And while you're
@@ -180,22 +168,14 @@ define-quest "Bring mushrooms"
 	proof-item "Jacket"
 	reward-item "Mushrooms"
 	experience 5
-	
-define-quest "Reading material"
-	say-before "I feel in dire need of intellectual stimulation, yet I fear that
-	my library has few novelties left. If you bring me something
-	new to read, I shall thank you by reading it to you - after
-	all, you do not always wish to remain a Bear of Very Little
-	Brain, do you?"
-	say-after "Well, you actually found something for me to read! Let's see, 
-	what have we here? A letter? Let's see what it says:
-	Hmm, harrumph. 'Dear Pooh', hm, this is bad handwriting,
-	'Dear Pooh, I have something Very Important to tell you. Come
-	and meet me quickly at the Galleon's Lap. Your's sinsirly,
-	Christopher Robin.'"
-	proof-item "Letter"
-	experience 5
 
+define-quest "Grandfather's picture"
+	say-before "TODO"
+	say-after "TODO"
+	proof-item "Picture frame"
+	reward-item "Hunny"
+	experience 5
+	
 define-quest "Find Woozle"
 	say-before "Oh Pooh, I found woozle tracks again! I'm pretty sure they
 	weren't mine this time... And now I'm scared to go anywhere

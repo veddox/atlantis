@@ -56,6 +56,37 @@
 		(return-from study))
 	(print-text-file "../ATL/Pooh/woodland-map.txt"))
 
+(defun think (player &optional arg)
+	"Play the intro text."
+	(let ((intro (load-text-file "../ATL/Pooh/intro.txt")))
+		(dolist (line intro)
+			(when line (format t "~&~A" line))
+			(sleep 3))))
+
+(defun store (player &optional arg)
+	"Store a jar of honey in the larder."
+	(let ((base-descr "This is your larder, a wooden shelf with 12 compartments for your honey jars.")
+			 (num-list '("one jar" "two jars" "three jars" "four jars" "five jars"
+							"six jars" "seven jars" "eight jars" "nine jars"
+							"ten jars" "eleven jars" "twelve jars"))
+			 (current-jars (read-from-string (item-description (get-game-object 'item "Storage object")))))
+		(if (member "Hunny" (player-item player) :test #'equalp)
+			(unless (= current-jars 12)
+				(format t "~&You deposit one jar of honey in your larder.")
+				(remove-object-attribute player 'item "Hunny")
+				(incf current-jars)
+				(setf (item-description (get-game-object 'item "Storage object"))
+						  (to-string current-jars))
+				(setf (item-description (get-game-object 'item "Shelf"))
+					(concatenate 'string base-descr (string #\Newline) "It contains "
+						(nth (1- current-jars) num-list) " of honey."))
+				(when (= current-jars 12) (sleep 2)
+					(format t "~&Your larder is now full!") (sleep 2)
+					(format t "~&You lock it and put the key in your pocket.") (sleep 2)
+					(format t "~&Now, how about visiting Christopher Robin?") (sleep 1)
+					(set-object-attribute player 'item "Key")))					
+			(format t "~&You don't have any honey to store in your larder!"))))
+
 (defun jump (player &optional arg)
 	"Jump off Pooh's branch onto his porch."
 	(format t "~&You look down nervously, then jump off the branch.")
@@ -305,6 +336,28 @@
 							 "Nothing happens." "Nobody answers." "No reply.")))
 		(format t "~&~A" (random-elt consequences))))
 
+(defun deposit (player &optional arg)
+	"Deposit a letter for Owl"
+	(if (member "Letter" (player-item player) :test #'equalp)
+		(when (y-or-n-p "Deposit the letter for Owl?")
+			(remove-object-attribute player 'item "Letter")
+			(set-object-attribute (get-game-object 'place "Owl's home")
+				'hidden "Letter")
+			(format t "~&You throw the letter into the letter box."))
+		(format t "~&You don't have a letter to deposit here!")))
+
+(defun read-letter (player &optional arg)
+	(let ((place (get-game-object 'place "Owl's home")))
+		(when (or (member "Letter" (place-item place) :test #'equalp)
+				  (member "Letter" (place-hidden place) :test #'equalp))
+			(sleep 2)
+			(format t "~&~%OWL:~%I have received a letter! Let me read it to you:") (sleep 3)
+			(format t "~&Hrrmpf, 'Dear Pooh,'") (sleep 2)
+			(format t "~&Wait, this letter isn't to me at all? Oh well, no matter.") (sleep 3)
+			(format t "~&Ahem. 'I need to meet you urgently.") (sleep 2)
+			(format t "~&Come to see me at Galleon's Lap.") (sleep 2)
+			(format t "~&Sincerely, Christopher Robin'"))))
+
 (defun smell-honey (player &optional arg)
 	"The player smells honey when leaving the tunnel"
 	(let ((place (get-game-object 'place (player-place player))))
@@ -327,6 +380,11 @@
 	(let ((place (get-game-object 'place (player-place player))))
 		(remove-object-attribute place 'item "Woozle")
 		(format t "~&The Woozle runs away!")))
+
+(defun craft (player &optional arg)
+	"The player can craft various items in Christopher Robin's workshop."
+										;TODO
+	)
 
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.

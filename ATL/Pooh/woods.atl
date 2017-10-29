@@ -12,9 +12,12 @@ define-place "Pooh's home"
 	delicious honey..."
 	neighbour "Pooh's porch"
 	neighbour "Pooh's branch"
+	item "Shelf"
 	item "Hunny"
 	item "Jar"
-	item "Map"
+	item "Clock"
+	command "think"
+	command "store"
 
 define-place "Pooh's porch"
 	description "You are standing in front of your very own home - Pooh's home.
@@ -33,9 +36,9 @@ define-place "Pooh's branch"
 	blustery day, you had to escape to up here - since then,
 	you always keep an emergency ration of honey handy."
 	neighbour "Pooh's home"
-	neighbour "Pooh's porch"
-	command "jump"
+	item "Map"
 	item "Hunny"
+	command "jump"
 
 define-place "Western woods"
 	description "The western forest is dominated by tall coniferous trees,
@@ -157,7 +160,7 @@ define-place "Galleons lap"
 	neighbour "Hill"
 	npc "Christopher Robin"
 	item "Card"
-	requires "Magic map"
+	requires "Key"
 
 define-place "Bridge"
 	description "A simple wooden bridge spans the stream that marks the edge of
@@ -285,16 +288,29 @@ define-place "Christopher Robin's house"
 	chestnut tree. It has a lovely green door, which unfortunately
 	appears to be shut just now. You wonder where he is?"
 	neighbour "Eastern woods"
+	neighbour "Workshop"
 	item "Balloon"
 	item "Balloon"
 
+define-place "Workshop"
+	description "This is Christopher Robin's little workshop. It's a rickety
+	wooden shack, but contains everything a real boy needs: hammer
+	and nails, a saw, a chisel and so forth. He has taught you to
+	use some of the tools yourself, but you are not yet very good
+	at it."
+	neighbour "Christopher Robin's house"
+	item "String"
+	command "craft"
+	
 define-place "Owl's porch"
 	description "TODO"
 	item "Bellrope"
+	item "Letter box"
 	neighbour "Owl's home"
 	neighbour "Eastern woods"
 	neighbour "Central woods"
 	command "ring"
+	command "deposit"
 
 define-place "Owl's home"
 	description "TODO"
