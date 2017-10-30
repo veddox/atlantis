@@ -165,6 +165,7 @@ define-place "Galleons lap"
 	requires "Key"
 
 define-place "Bridge"
+	;;TODO Expand description to include Poohsticks
 	description "A simple wooden bridge spans the stream that marks the edge of
 	the 100 Acre Wood. For all practical purposes, the world ends here."
 	neighbour "Southern woods"
@@ -281,7 +282,6 @@ define-place "Rapids"
 	item "North Pole"
 	item "Rock"
 	item "Stone"
-	hidden "Hunny"
 	neighbour "Northern woods"
 	neighbour "Misty forest"
 	neighbour "Stream"

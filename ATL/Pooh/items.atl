@@ -20,11 +20,6 @@ define-item "Shelf"
 	All the slots are empty!"
 	fixed
 
-define-item "Storage object"
-	; This is a special item that I need to store state about the player's progress.
-	; It never appears in the game.
-	description "0"
-
 define-item "Key"
 	description "This is the key to your larder. You smile. Life is good when you
 	have plenty of honey!"

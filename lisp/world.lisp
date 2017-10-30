@@ -78,3 +78,26 @@
 							(world-player-name *world*) ".world")))
 	(with-open-file (g game-file :direction :output)
 		(format g "~S~%~S~%" ATLANTIS-VERSION *world*)))
+
+(defun save-state (var &optional (value T))
+	"Save the value of a game variable in a special game item."
+	;; This is intended for game developers who need to save
+	;; state between game sessions.
+	(let ((aso (get-game-object 'item "Atlantis Storage Object")))
+		(when (null aso)
+			(setf aso (make-item :name "Atlantis Storage Object"
+						  :description '()))
+			(add-game-object aso))
+		(if (member var (keys (item-description aso)))
+			(setf (cassoc var (item-description aso)) value)
+			(setf (item-description aso)
+				(append (item-description aso) (list (list var value)))))))
+
+(defun get-state (var)
+	"Return the saved value of the given variable."
+	;; This is intended for game developers who need to save
+	;; state between game sessions.
+	(let ((aso (get-game-object 'item "Atlantis Storage Object")))
+		(unless (or (null aso) (not (member var (keys (item-description aso)))))
+			(cassoc var (item-description aso)))))
+

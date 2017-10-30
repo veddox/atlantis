@@ -12,6 +12,7 @@ Cave
 Hill
 Galleons lap
 Bridge
+Thoughtful spot
 Piglet's porch
 Piglet's home
 Kanga's house
@@ -24,10 +25,10 @@ Rabbit's friends and relations
 Rapids
 Stream
 Christopher Robin's house
+Workshop
 Owl's porch
 Owl's home
 Floody place
 Eeyore's gloomy place
 Woozle hideout
 Misty forest
-The World

@@ -69,7 +69,9 @@
 				 (line (nth line-nr source) (nth line-nr source))
 				 (trimmed-line (trim-whitespace line) (trim-whitespace line))
 				 (current-object NIL))
-			((= line-nr (length source)) NIL)
+			((= line-nr (length source))
+				(when current-object (add-game-object current-object))
+				NIL)
 			;; concatenate string arguments spanning several lines
 			(while (= (count-instances #\" line) 1)
 				(incf line-nr)

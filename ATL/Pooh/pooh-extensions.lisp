@@ -60,14 +60,14 @@
 			 (num-list '("one jar" "two jars" "three jars" "four jars" "five jars"
 							"six jars" "seven jars" "eight jars" "nine jars"
 							"ten jars" "eleven jars" "twelve jars"))
-			 (current-jars (read-from-string (item-description (get-game-object 'item "Storage object")))))
+			 (current-jars (get-state 'HONEY-JARS)))
+		(unless current-jars (setf current-jars 0))
 		(if (member "Hunny" (player-item player) :test #'equalp)
 			(unless (= current-jars 12)
 				(format t "~&You deposit one jar of honey in your larder.")
 				(remove-object-attribute player 'item "Hunny")
 				(incf current-jars)
-				(setf (item-description (get-game-object 'item "Storage object"))
-						  (to-string current-jars))
+				(save-state 'HONEY-JARS current-jars)
 				(setf (item-description (get-game-object 'item "Shelf"))
 					(concatenate 'string base-descr (string #\Newline) "It contains "
 						(nth (1- current-jars) num-list) " of honey."))
@@ -220,10 +220,10 @@
 			(goto player "Stream"))
 		(progn (format t "~&You clamber up on the rock.")
 			(let ((place (get-game-object 'place (player-place player))))
-				(when (member "Hunny" (place-hidden place) :test #'equalp)
+				(unless (get-state 'ROCK-HONEY-FOUND)
 					(format t "~&You find a pot of honey!")
 					(set-object-attribute place	'item "Hunny")
-					(remove-object-attribute place 'hidden "Hunny"))))))
+					(save-state 'ROCK-HONEY-FOUND))))))
 
 (defun stream-current (player &optional arg)
 	"The stream sweeps the player on into the Floody place."
@@ -238,42 +238,43 @@
 		(cond ((equalp place "Sandy pit") (build-sandcastle))
 			((equalp place "Bridge") (poohsticks player)))))
 
-(let ((sandcastle 0))
-	(defun build-sandcastle ()
-		"The player builds a sandcastle at the sandy pit."
-		(let ((place (get-game-object 'place "Sandy pit")))
-			(when (member "Sandcastle" (place-item place) :test #'equalp)
-				(format t "~&You've already built a sandcastle here! And a fine one it is too...")
-				(return-from build-sandcastle))
-			(case sandcastle
-				(0 (format t "~&You decide to build a sandcastle!")
-					(setf (place-description place)
-						(concatenate 'string (place-description place)
-							"Somebody has been building a sandcastle here." #\newline)))
-				(20 (format t "~&You dig a large moat and erect the walls."))
-				(40 (format t "~&You build four towers, one at each corner."))
-				(60 (format t "~&You pile up sand for a big strong keep in the center."))
-				(80 (format t "~&You decorate the castle, adding pretty little details."))
-				(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
-					(set-object-attribute place 'item "Sandcastle")))
-			(unless (= sandcastle 100) (incf sandcastle 20)))))
+(defun build-sandcastle ()
+	"The player builds a sandcastle at the sandy pit."
+	(let ((place (get-game-object 'place "Sandy pit"))
+			 (sandcastle (get-state 'SANDCASTLE)))
+		(unless sandcastle (setf sandcastle 0))
+		(case sandcastle
+			(0 (format t "~&You decide to build a sandcastle!")
+				(setf (place-description place)
+					(concatenate 'string (place-description place) (list #\newline)
+						"Somebody has been building a sandcastle here.")))
+			(20 (format t "~&You dig a large moat and erect the walls."))
+			(40 (format t "~&You build four towers, one at each corner."))
+			(60 (format t "~&You pile up sand for a big strong keep in the center."))
+			(80 (format t "~&You decorate the castle, adding pretty little details."))
+			(100 (format t "~&You stand back and admire your handiwork. What a fine castle!")
+				(set-object-attribute place 'item "Sandcastle"))
+			(120 (format t "~&You've already built a sandcastle here! And a fine one it is too...")))
+		(unless (= sandcastle 120) (save-state 'SANDCASTLE (+ sandcastle 20)))))
 
-(let ((score 0))
-	(defun poohsticks (player)
-		"Play Poohsticks"
-		(if (< (count-instances "Stick" (player-item player) :test #'equalp) 2)
-			(format t "~&You need at least two sticks to play Poohsticks!")
-			(progn (remove-object-attribute player 'item "Stick")
-				(remove-object-attribute player 'item "Stick")
-				(format t "~&Which stick do you think will win?")
-				(setf choice (choose-number-option '("Stick A" "Stick B")))
-				(setf winner (random 2))
-				(format t "~&You throw both sticks into the stream on one side of the bridge.") (sleep 1)
-				(format t "~&You run to the other side and lean over the railing.") (sleep (random 4))
-				(format t "~&~A comes out first!" (nth winner '("Stick A" "Stick B"))) (sleep 1)
-				(if (= winner choice)
-					(progn (incf score) (format t "~&You win! Your score is now ~A." score))
-					(progn (decf score) (format t "~&You lose! Your score is now ~A." score)))))))
+(defun poohsticks (player)
+	"Play Poohsticks"
+	(unless (get-state 'POOHSTICKS) (save-state 'POOHSTICKS 0))
+	(if (< (count-instances "Stick" (player-item player) :test #'equalp) 2)
+		(format t "~&You need at least two sticks to play Poohsticks!")
+		(progn (remove-object-attribute player 'item "Stick")
+			(remove-object-attribute player 'item "Stick")
+			(format t "~&Which stick do you think will win?")
+			(setf choice (choose-number-option '("Stick A" "Stick B")))
+			(setf winner (random 2))
+			(format t "~&You throw both sticks into the stream on one side of the bridge.") (sleep 1)
+			(format t "~&You run to the other side and lean over the railing.") (sleep (random 4))
+			(format t "~&~A comes out first!" (nth winner '("Stick A" "Stick B"))) (sleep 1)
+			(if (= winner choice)
+				(progn (save-state 'POOHSTICKS (1+ (get-state 'POOHSTICKS)))
+					(format t "~&You win! Your score is now ~A." (get-state 'POOHSTICKS)))
+				(progn (save-state 'POOHSTICKS (1- (get-state 'POOHSTICKS)))
+					(format t "~&You lose! Your score is now ~A." (get-state 'POOHSTICKS)))))))
 
 (defun blow (player &optional arg)
 	"Blow up a balloon."
@@ -311,15 +312,13 @@
 	(if (member "Letter" (player-item player) :test #'equalp)
 		(when (y-or-n-p "Deposit the letter for Owl?")
 			(remove-object-attribute player 'item "Letter")
-			(set-object-attribute (get-game-object 'place "Owl's home")
-				'hidden "Letter")
+			(save-state 'LETTER-DEPOSITED)
 			(format t "~&You throw the letter into the letter box."))
 		(format t "~&You don't have a letter to deposit here!")))
 
 (defun read-letter (player &optional arg)
 	(let ((place (get-game-object 'place "Owl's home")))
-		(when (or (member "Letter" (place-item place) :test #'equalp)
-				  (member "Letter" (place-hidden place) :test #'equalp))
+		(when (get-state 'LETTER-DEPOSITED)
 			(narrate "../ATL/Pooh/dialogue/letter.txt"
 				'(0 1 2 2 3 2 3 2 2 2 3 1)))))
 			
@@ -409,6 +408,7 @@
 
 (defun daniel-says (player)
 	"Leave a message for the real me"
+	;;XXX Figure out how to read the host name
 	(unless (y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?")
 		(return-from daniel-says))
 	(setf msg "~%DANIEL:
@@ -427,3 +427,4 @@ appreciate any feedback!")
 			(write-to-file message
 				(string-from-list (list "../" name ".msg") "") T)
 			(format t "~&Thank you very much :-)"))))
+
