@@ -49,8 +49,9 @@ define-npc "Owl"
 	perchance, happen to be aware of his current location?"
 	says "I do love to get letters! If I get one some time soon, I shall read
 	it to you. Improve your education."
-	says "TODO - something about his grandfather"
-	quest "Grandfather's picture"
+	says "Have I ever told you the story of my Uncle Robert? He became famous
+	when, on a very blustery day... Wait, don't go yet!"
+	quest "Uncle's picture"
 	interaction-hook "read-letter"
 
 ;TODO Christopher Robin needs to say something else
@@ -118,7 +119,10 @@ define-npc "Mr Shepard"
 	Right now he is holding a pencil and scribbling around on
 	what would appear to be a map of some sort. Every now and again
 	he laughs quietly to himself, as if enjoying a good joke."
-	says "TODO"
+	says "Did you know that Owl spells his name all wrong? It's O-W-L, not W-O-L."
+	says "Have you explored the whole Forest yet? Maps don't show everything,
+	you know. You never know what might be hiding someplace else."
+	says "When was the last time you played Poohsticks, Pooh?"
 
 define-npc "Daniel"
 	description "You really can't tell how old this boy is. Sometimes he looks
@@ -126,7 +130,7 @@ define-npc "Daniel"
 	boyish. What you can say is that he has red hair, freckles, and
 	rather big ears. His fingers are drumming around on some strange
 	black box that is lying open in front of him."
-	says "Hi Pooh, pleased to meet you at last!"
+	says "Hi Pooh, pleased to meet you at last! I'm a big fan of you, you know."
 	interaction-hook "daniel-says"
 
 ; QUESTS
@@ -169,9 +173,13 @@ define-quest "Bring mushrooms"
 	reward-item "Mushrooms"
 	experience 5
 
-define-quest "Grandfather's picture"
-	say-before "TODO"
-	say-after "TODO"
+define-quest "Uncle's picture"
+	say-before "Pooh, I have been severely inconvenienced. The portrait of my
+	late Uncle Robert fell down during the recent storm, and now
+	its frame is no longer suitable for its purpose. Could you
+	organize a replacement?"
+	say-after "What a talented and resourceful bear! Thank you very much, Pooh!
+	Here, take a little something as a token of my gratitude."
 	proof-item "Picture frame"
 	reward-item "Hunny"
 	experience 5

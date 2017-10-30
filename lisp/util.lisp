@@ -217,10 +217,9 @@
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"
 	(with-open-file (f file-name)
-		(do* ((line (read-line f nil nil)
-				  (read-line f nil nil))
-				 (file-lines (list line) (append file-lines (list line))))
-			((null line) file-lines))))
+		(do* ((line (read-line f nil nil) (read-line f nil nil)) (file-lines NIL))
+			((null line) file-lines)
+			(setf file-lines (append file-lines (list line))))))
 
 (defun narrate (file-name &optional (pauses 2))
 	"Print out the given file, pausing between each line."
@@ -231,7 +230,7 @@
 		((null lines))
 		(when (= p (length pauses)) (setf p 0))
 		(unless (null (first lines))
-			(format t "~&~A" (first lines))
+			(format t "~%~A" (first lines))
 			(sleep (nth p pauses)))))
 
 (defun print-text-file (file-name)

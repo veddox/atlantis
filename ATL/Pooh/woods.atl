@@ -29,6 +29,7 @@ define-place "Pooh's porch"
 	item "Bench"
 	neighbour "Pooh's home"
 	neighbour "Western woods"
+	neighbour "Thoughtful spot"
 	command "nap"
 
 define-place "Pooh's branch"
@@ -49,6 +50,7 @@ define-place "Western woods"
 	neighbour "Central woods"
 	neighbour "Northern woods"
 	neighbour "Southern woods"
+	neighbour "Thoughtful spot"
 	neighbour "Piglet's porch"
 	neighbour "Six pine trees"
 	neighbour "Kanga's house"
@@ -170,6 +172,16 @@ define-place "Bridge"
 	neighbour "Floody place"
 	command "play"
 
+define-place "Thoughtful spot"
+	description "This is a cozy little spot between some bushes, warm and out of
+	the wind. It is exactly half way between your house and Piglet's
+	house, so you sometimes meet here when you decide to visit each 
+	other. It's not a bad spot for a picknick, either."
+	neighbour "Pooh's porch"
+	neighbour "Piglet's porch"
+	hidden "Hunny"
+	command "hum"
+	
 define-place "Piglet's porch"
 	description "Piglet lives in a very grand house in the middle of a beech tree.
 	Well, at least it's very grand for a little piglet. But he's happy
@@ -177,6 +189,7 @@ define-place "Piglet's porch"
 	and especially proud of the sign he had inherited from his grandfather."
 	neighbour "Western woods"
 	neighbour "Southern woods"
+	neighbour "Thoughtful spot"
 	neighbour "Piglet's home"
 	item "Piglet's sign"
 

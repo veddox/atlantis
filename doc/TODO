@@ -1,13 +1,11 @@
 ATLANTIS TODO
 
 LISP
+* add (save-state) and (get-state) functions
 * update Helios guide (include bug reporting with 'archive')
 * fix (string-from-list) bug
 	
 ATL
-* hide 2 more pots of honey
-* add Owl's quest
-* add "Thoughtful Spot"
 * fill in missing place descriptions
 
 
@@ -22,7 +20,7 @@ Honey pots:
 	6. Kanga's quest
 	7. Eeyore's quest
 	8. Piglet's quest
-	9. Owl's quest (?)
+	9. Owl's quest
 	10. Thoughtful spot
 	11. Bee tree
 	12. Cave
@@ -31,6 +29,5 @@ Quests:
 	1. Find the tail
 	2. Bring jacket
 	3. Bring mushrooms
-	4. Reading material -> replace with "Grandfather's picture"
+	4. Uncle's picture
 	5. Find Woozle
-	6. Bring honey

@@ -284,13 +284,14 @@
 
 (defun nap (player &optional arg)
 	"Take a nap in front of Pooh's house"
-	(format t "~&You lie down on the bench and close your eyes.") (sleep 1)
-	(format t "~&Slowly, you start drifting off to dream land...")  (sleep 1)
-	(format t "~&~%Zzzzz Zzzzz Zzzzz")  (sleep 3)
-	(format t "~&~%You wake up again.")
+	(narrate "../ATL/Pooh/dialogue/nap.txt" '(2 2 1 1 1 1 1 2))
 	(when (< (player-health player) (player-max-health player))
 		(format t "~&You feel better. +1 HP")
 		(change-player-health player 1)))
+
+(defun hum (player &optional arg)
+	"The Thoughtful-Spot-Hum"
+	(narrate "../ATL/Pooh/dialogue/hum.txt"))
 
 (defun ring (player &optional arg)
 	"Ring the bell at Owl's porch"
