@@ -11,6 +11,10 @@
 ;;; date: 20/06/2015
 ;;;
 
+;; To avoid confused players, I have diked this out of the Atlantis main menu.
+;; To use the spreadsheet import function, load this file from inside a Lisp
+;; interpreter and call the (world-creator) function.
+
 (defun import-spreadsheet (spreadsheet atl-file)
 	"Import and convert a spreadsheet (requires LibreOffice)"
 	(let* ((ods-pathname (parse-namestring spreadsheet))

@@ -286,6 +286,8 @@
 					(quest-money quest) (quest-experience quest)
 					(string-from-list (quest-reward-item quest)
 						:line-length *max-line-items*))
+				(let ((hook (quest-completed-hook quest)))
+					(unless (zerop (length hook)) (funcall (read-from-string hook) player)))
 				(unless (quest-infinite quest)
 					(remove-object-attribute npc 'quest npc))))))		
 

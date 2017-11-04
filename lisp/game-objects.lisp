@@ -75,6 +75,7 @@
 	(reward-item NIL)
 	(money 0)
 	(experience 0)
+	(completed-hook "")
 	(infinite))
 
 

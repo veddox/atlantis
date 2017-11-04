@@ -4,8 +4,6 @@ LISP
 * update Helios guide (include bug reporting with 'archive')
 * update documentation
 * fix (string-from-list) bug
-* remove point 3 from the start menu
-* add quest-completed-hook
 	
 ATL
 * fill in missing place descriptions

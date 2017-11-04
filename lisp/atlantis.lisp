@@ -15,7 +15,6 @@
 (load "world.lisp")
 (load "interpreter.lisp")
 (load "ui.lisp")
-(load "creator.lisp")
 
 (defvar *debugging* NIL)
 
@@ -39,39 +38,11 @@
 	(print-text-file "banner.txt")
 	(format t "~&~%Welcome! What do you want to do?")
 	(setf options '("Start a new game" "Load a saved game"
-					   "Advanced" "Help" "About" "Exit"))
+					   "Help" "About" "Exit"))
 	(case (choose-number-option options)
-		(0 ;; ask the player for his/her name
-			(setf player-name "")
-			(while (zerop (length player-name))
-				(format t "~&What is your name? ")
-				(setf player-name (read-line)))
-			(if (and (member player-name
-						 (mapcar #'pathname-name (directory "../saves/*"))
-						 :test #'equalp)
-					(not (yes-or-no-p "A game by this player already exists. Replace it?")))
-				(start-menu)
-				(setf (world-player-name *world*) player-name))
-			;; let the player choose one of the game worlds
-			(format t "~&Which world do you want to play?")
-			(let ((world (choose-option (append (keys *games*) '("Back")))))
-				(if (equalp world "Back") (start-menu)
-					(setf world-file (cassoc world *games*)))
-				(setf world-file (concatenate 'string "../ATL/" world-file))
-				(load-file world-file)
-				;; let the player choose a character
-				(let* ((chars (append (list-world-objects 'player)
-								  (list "Cancel")))
-						  (char-name (first chars)))
-					(when (< 2 (length chars))
-						(format t "~&Which character do you want to play?")
-						(setf char-name (choose-option chars)))
-					(setf (world-main-character *world*) char-name)
-					(if (equalp char-name "Cancel")
-						(start-menu)
-						(play-game)))))
-		;; choose a previously saved game
+		(0 (new-game))
 		(1 (format t "~&What game file do you want to load?")
+			;; choose a previously saved game
 			(let ((game (choose-option (append (mapcar #'pathname-name
 												   (directory "../saves/*"))
 										   '("Back")))))
@@ -80,17 +51,48 @@
 										   game ".world"))
 							   (load-game game)
 							   (play-game)))))
-		(2 (world-creator)) ;;XXX Remove this from the main menu?
-		(3 (clear-screen)
+		(2 (clear-screen)
 			(pager "../doc/PLAYING" T)
 			(start-menu))
-		(4 (print-version)
+		(3 (print-version)
 			(when (y-or-n-p "~&~%Show the license text?")
 				(pager "../doc/COPYING" T))
 			(start-menu))
-		(5 (format t "~&Goodbye!")
+		(4 (format t "~&Goodbye!")
 			(quit))))
- 
+
+(defun new-game ()
+	"Set up a new game."
+	;; ask the player for his/her name
+	(setf player-name "")
+	(while (zerop (length player-name))
+		(format t "~&What is your name? ")
+		(setf player-name (read-line)))
+	(if (and (member player-name
+				 (mapcar #'pathname-name (directory "../saves/*"))
+				 :test #'equalp)
+			(not (yes-or-no-p "A game by this player already exists. Replace it?")))
+		(start-menu)
+		(setf (world-player-name *world*) player-name))
+	;; let the player choose one of the game worlds
+	(format t "~&Which world do you want to play?")
+	(let ((world (choose-option (append (keys *games*) '("Back")))))
+		(if (equalp world "Back") (start-menu)
+			(setf world-file (cassoc world *games*)))
+		(setf world-file (concatenate 'string "../ATL/" world-file))
+		(load-file world-file)
+		;; let the player choose a character
+		(let* ((chars (append (list-world-objects 'player)
+						  (list "Cancel")))
+				  (char-name (first chars)))
+			(when (< 2 (length chars))
+				(format t "~&Which character do you want to play?")
+				(setf char-name (choose-option chars)))
+			(setf (world-main-character *world*) char-name)
+			(if (equalp char-name "Cancel")
+				(start-menu)
+				(play-game)))))
+	
 (defun cmd-parameter (name &optional truth-value)
 	"Return the value of the parameter 'name'. Or T for present if truth-value."
 	(let ((argument (member name *args* :test #'equalp)))
