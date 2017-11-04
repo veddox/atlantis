@@ -15,8 +15,8 @@ define-item "Jar"
 	might, you can't get any more out of it now. What a shame.
 	Perhaps you should refill it."
 
-define-item "Shelf" ;TODO rename cupboard
-	description "This is your larder, a wooden shelf with 12 compartments for your honey jars.
+define-item "Cupboard"
+	description "This is your larder, a wooden cupboard with 12 compartments for your honey jars.
 	All the slots are empty!"
 	fixed
 
@@ -93,8 +93,8 @@ define-item "String"
 define-item "Pine cone"
 	description "Pine cones are great fun for playing with. There's nothing quite
 	like a good pine cone battle in the woods with your friends!"
+	command "chuck"
 	infinite
-	;command "throw" ;TODO
 		
 define-item "Berries"
 	description "Scrumptious, fresh wild berries: blueberries, blackberries,

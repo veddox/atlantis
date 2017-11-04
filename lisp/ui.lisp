@@ -365,9 +365,11 @@
 						(format t "~&This item provides commands: ~A"
 							(string-from-list (item-command item)
 								:line-length *max-line-items*)))
+					(when (item-weapon item)
+						(format t "~&This item is a weapon."))
 					(unless (zerop (length (item-pickup-hook item)))
-						(funcall (read-from-string
-									 (item-pickup-hook item)) player))))
+						(funcall (read-from-string (item-pickup-hook item))
+							player))))
 			(format t "~&Sorry, this item is not here!"))))
 
 (defun drop (player &optional item)
@@ -393,7 +395,7 @@
 
 (defun equip (player &optional new-weapon)
 	"The player sets another item to be his weapon"
-	;;XXX Replace this with 'hold'? (Also possible for non-weapons.)
+	;;TODO Replace this with 'hold'? (Also possible for non-weapons.)
 	(unless new-weapon
 		(format t "~&Please specify a weapon to be equipped!")
 		(return-from equip))

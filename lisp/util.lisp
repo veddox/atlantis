@@ -216,7 +216,8 @@
 
 (defun load-text-file (file-name)
 	"Load a text file into a list of strings (representing the lines)"
-	(with-open-file (f file-name)
+	(with-open-file (f file-name :if-does-not-exist NIL)
+		(unless f (return-from load-text-file))
 		(do* ((line (read-line f nil nil) (read-line f nil nil)) (file-lines NIL))
 			((null line) file-lines)
 			(setf file-lines (append file-lines (list line))))))

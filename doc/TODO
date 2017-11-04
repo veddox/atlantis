@@ -4,10 +4,12 @@ LISP
 * update Helios guide (include bug reporting with 'archive')
 * update documentation
 * fix (string-from-list) bug
+* replace 'equip' with 'hold'
 	
 ATL
-* fill in missing place descriptions
-
+* add game end sequence
+* add 'throw' command for fir cones
+	
 
 NOTES
 	

@@ -33,10 +33,8 @@ The second option, "Load a saved game", is for players who have already started
 a game in one of the worlds. (Your game progress is saved automatically.) Again,
 you will be presented with a submenu that lists all currently saved games.
 
-The third option is for developers and need not concern us further.
-
-The fourth option displays this help text; the fifth option shows a copyright
-notice and the Atlantis software license. The sixth option quits the game.
+The third option displays this help text; the fourth option shows a copyright
+notice and the Atlantis software license. The fifth option quits the game.
 
 
 BASIC GAME PLAY
@@ -111,16 +109,18 @@ drop - This, obviously, is the opposite to take. If you no longer require an
        item, just drop it.
 
 talk - This command allows you to interact with NPCs. Almost all NPCs will have
-       something to say to you, and occasionally, it's important! Some NPCs also
-       offer further options, such as buying or selling items, or quests.
-       (Quests are tasks that you can undertake for the NPC. You prove that you
-       have completed the task by returning a certain, quest-specific item to
-       the NPC, upon which you will of course receive a reward.)
+       something to say to you, and occasionally, it's important! It's worth
+       talking to NPCs more than once, because some will have more than one
+       thing to say. Some NPCs also offer further options, such as buying or
+       selling items, or quests. (Quests are tasks that you can undertake for
+       the NPC. You prove that you have completed the task by returning a
+       certain, quest-specific item to the NPC, upon which you will of course
+       receive a reward.)
 
 equip - Some items can be used as weapons. If you ever find yourself in a fight
         with a monster, you will want to have a weapon on you. However, just
         owning a weapon isn't enough. Before you can use it, you have to equip
-        it with this command.
+        it with this command. 'equip none' will unequip your current weapon.
 
 attack - Some places contain monsters. (In Atlantis, a "monster" is any hostile
          non-playing character.) While some monsters attack you first, you also
@@ -142,4 +142,4 @@ clear - Sometimes, your screen can get rather cluttered up with the output of
 
 
 Daniel Vedder
-Last modified 21/10/2017
+Last modified 04/11/2017

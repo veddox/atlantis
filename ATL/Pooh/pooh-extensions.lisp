@@ -56,7 +56,7 @@
 
 (defun store (player &optional arg)
 	"Store a jar of honey in the larder."
-	(let ((base-descr "This is your larder, a wooden shelf with 12 compartments for your honey jars.")
+	(let ((base-descr "This is your larder, a wooden cupboard with 12 compartments for your honey jars.")
 			 (num-list '("one jar" "two jars" "three jars" "four jars" "five jars"
 							"six jars" "seven jars" "eight jars" "nine jars"
 							"ten jars" "eleven jars" "twelve jars"))
@@ -68,7 +68,7 @@
 				(remove-object-attribute player 'item "Hunny")
 				(incf current-jars)
 				(save-state 'HONEY-JARS current-jars)
-				(setf (item-description (get-game-object 'item "Shelf"))
+				(setf (item-description (get-game-object 'item "Cupboard"))
 					(concatenate 'string base-descr (string #\Newline) "It contains "
 						(nth (1- current-jars) num-list) " of honey."))
 				(when (= current-jars 12) (sleep 2)
@@ -127,23 +127,22 @@
 	(defun is-lost (player)
 		"Return the player to where he started from"
 		(when lost-in
+			(clear-screen)
 			(format t "~&Suddenly, you are no longer sure you are walking in the right")
 			(format t "~&direction. Perhaps you should keep more to your left. Or to")
 			(format t "~&your right? The trees all look the same here...")
 			(format t "~&You are walking in circles!~%~%Please press ENTER")
 			(read-line)
-			(change-player-location player lost-in)
-			(spawn-monsters lost-in)
-			(clear-screen)
+			(goto player lost-in)
 			(setf lost-in NIL))))
 	
 (defun misty-forest (player)
 	"A wrapper function for lost-in-the-forest for the misty forest location"
-	(lost-in-the-forest player "Misty forest" 67))
+	(lost-in-the-forest player "Misty forest" 40))
 
 (defun deep-forest (player)
 	"A wrapper function for lost-in-the-forest for the deep forest location"
-	(lost-in-the-forest player "Deep forest" 40))
+	(lost-in-the-forest player "Deep forest" 50))
 
 (defun climb (player &optional arg)
 	"Climb something - currently either the bee tree or the rock at the rapids"
@@ -274,6 +273,29 @@
 					(format t "~&You win! Your score is now ~A." (get-state 'POOHSTICKS)))
 				(progn (save-state 'POOHSTICKS (1- (get-state 'POOHSTICKS)))
 					(format t "~&You lose! Your score is now ~A." (get-state 'POOHSTICKS)))))))
+
+(defun chuck (player &optional arg)
+	"Engage in a pine cone battle with Tigger"
+	(let ((place (get-game-object 'place (player-place player)))
+			 (winner (random-elt '(POOH TIGGER BOTH NONE))))
+		(unless (member "Tigger" (place-npc place) :test #'equalp)
+			(format t "~&Tigger is always up for a pine cone fight.")
+			(format t "~&Why don't you go and look for him?")
+			(return-from chuck))
+		(unless (get-state 'PINECONE) (save-state 'PINECONE 0))
+		(remove-object-attribute player 'item "Pine cone")
+		(format t "~&You grab your pine cone, take aim quickly and throw it at Tigger.")
+		(sleep 2)
+		(format t "~&Tigger ducks, laughs, and throws one back at you.")
+		(sleep 1)
+		(case winner
+			('POOH (format t "~&You hit Tigger!")
+				(save-state 'PINECONE (1+ (get-state 'PINECONE))))
+			('TIGGER (format t "~&You miss. Tigger hits!")
+				(save-state 'PINECONE (1- (get-state 'PINECONE))))
+			('BOTH (format t "~&You hit! So does Tigger."))
+			('NONE (format t "~&You miss. Tigger does too.")))
+		(format t "~&Your score is now ~A." (get-state 'PINECONE))))
 
 (defun blow (player &optional arg)
 	"Blow up a balloon."
@@ -414,8 +436,9 @@
 
 (defun daniel-says (player)
 	"Leave a message for the real me"
-	;;XXX Figure out how to read the host name
-	(unless (y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?")
+	;;Make sure we're on my server
+	(unless (or (equalp (first (load-text-file "/etc/hostname")) "Helios")
+				(y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?"))
 		(return-from daniel-says))
 	(setf msg "~%DANIEL:
 Hi there! This is the 'real' Daniel speaking now... Great to see that you've 
