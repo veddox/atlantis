@@ -15,7 +15,7 @@ define-item "Jar"
 	might, you can't get any more out of it now. What a shame.
 	Perhaps you should refill it."
 
-define-item "Shelf"
+define-item "Shelf" ;TODO rename cupboard
 	description "This is your larder, a wooden shelf with 12 compartments for your honey jars.
 	All the slots are empty!"
 	fixed
@@ -137,11 +137,30 @@ define-item "Bellrope"
 	even tried to give it a natural flair by shaping it like a
 	tail. Hm, that does look very much like a tail!"
 
+define-item "Notices"
+	description "Owl had Christopher Robin put up two notices for him at his
+	porch. The first, underneath the knocker, said:
+	PLES RING IF AN RNSR IS REQIRD.
+	The second, underneath the bellrope, said:
+	PLEZ CNOKE IF AN RNSR IS NOT REQID."
+	fixed
+
 define-item "Letterbox"
 	description "Nobody in the Forest can read as well as Owl. He loves it, and
 	he loves getting letters. Unfortunately, he has to write most
 	of them himself."
-	fixed	
+	fixed
+
+define-item "Armchair"
+	description "This is Owl's favourite armchair. He says he inherited it from
+	his grandfather. But despite its age, it still looks very comfy."
+	fixed
+
+define-item "Portrait"
+	description "This is a portrait of an owl even older than Owl, wearing
+	spectacles and looking very wise and clever indeed. From the
+	many stories Owl has told, you know that this is his Uncle Robert."
+	fixed
 	
 define-item "Lamp"
 	description "This lamp has a bowl at the bottom for the oil, a glass casing 

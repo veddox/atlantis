@@ -165,9 +165,10 @@ define-place "Galleons lap"
 	requires "Key"
 
 define-place "Bridge"
-	;;TODO Expand description to include Poohsticks
 	description "A simple wooden bridge spans the stream that marks the edge of
-	the 100 Acre Wood. For all practical purposes, the world ends here."
+	the 100 Acre Wood. For all practical purposes, the world ends here.
+	You love to lie here and watch the water flow by beneath you. 
+	This, incidentally, led to the invention of the game Poohsticks."
 	neighbour "Southern woods"
 	neighbour "Eastern woods"
 	neighbour "Floody place"
@@ -243,7 +244,7 @@ define-place "Heffalump trap"
 	monster "Heffalump"
 
 define-place "Bee tree"
-	description "In an open place in the middle of the forest, a large oak stands
+	description "In an open place in the middle of the forest, a large fir stands
 	all by itself. A loud buzzing fills the air. Looking up, you see
 	a lot of bees flying in and out of a hole far up the tree trunk.
 	If you could get up there, there's sure to be some honey there!"
@@ -298,7 +299,7 @@ define-place "Stream"
 define-place "Christopher Robin's house"
 	description "Christopher Robin is your best friend. What a shame he lives so
 	far away from your home! This is his house, built into an old
-	chestnut tree. It has a lovely green door, which unfortunately
+	oak tree. It has a lovely green door, which unfortunately
 	appears to be shut just now. You wonder where he is?"
 	neighbour "Eastern woods"
 	neighbour "Workshop"
@@ -316,9 +317,12 @@ define-place "Workshop"
 	command "craft"
 	
 define-place "Owl's porch"
-	description "TODO"
+	description "Owl's house is perched on the boughs of an ancient chestnut tree
+	and is called, appropriately, The Chestnuts. It is grander than
+	anybody else' residence in the Forest."
 	item "Bellrope"
-	item "Letter box"
+	item "Letterbox"
+	item "Notices"
 	neighbour "Owl's home"
 	neighbour "Eastern woods"
 	neighbour "Central woods"
@@ -326,8 +330,11 @@ define-place "Owl's porch"
 	command "deposit"
 
 define-place "Owl's home"
-	description "TODO"
+	description "The Chestnuts is spacious inside, with thick carpet on the floor
+	and paintings on the wall. Owl's favourite armchair sits in a
+	corner, with him in it."
 	npc "Owl"
+	item "Armchair"
 	neighbour "Owl's porch"
 
 define-place "Floody place"

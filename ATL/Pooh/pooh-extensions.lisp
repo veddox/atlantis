@@ -225,7 +225,7 @@
 					(set-object-attribute place	'item "Hunny")
 					(save-state 'ROCK-HONEY-FOUND))))))
 
-(defun stream-current (player &optional arg)
+(defun stream-current (player &optional arg) ;;TODO TESTME
 	"The stream sweeps the player on into the Floody place."
 	(when (> 75 (random 100))
 		(narrate "../ATL/Pooh/dialogue/stream-current.txt" '(5 2 3 2))
@@ -317,11 +317,17 @@
 		(format t "~&You don't have a letter to deposit here!")))
 
 (defun read-letter (player &optional arg)
+	"Owl reads a deposited letter to the player"
 	(let ((place (get-game-object 'place "Owl's home")))
 		(when (get-state 'LETTER-DEPOSITED)
 			(narrate "../ATL/Pooh/dialogue/letter.txt"
 				'(0 1 2 2 3 2 3 2 2 2 3 1)))))
-			
+
+(defun add-portrait (player &optional arg)
+	"Once Owl has the picture frame, he can hang up the portrait again."
+	(set-object-attribute (get-game-object 'place (player-place player))
+		'item "Portrait"))
+
 (defun smell-honey (player &optional arg)
 	"The player smells honey when leaving the tunnel"
 	(let ((place (get-game-object 'place (player-place player))))

@@ -180,6 +180,7 @@ define-quest "Uncle's picture"
 	organize a replacement?"
 	say-after "What a talented and resourceful bear! Thank you very much, Pooh!
 	Here, take a little something as a token of my gratitude."
+	;quest-completed-hook "add-portrait"
 	proof-item "Picture frame"
 	reward-item "Hunny"
 	experience 5
