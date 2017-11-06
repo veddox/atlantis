@@ -88,6 +88,7 @@
 		(progn (format t "~&Ouch! That hurt! You take 2 HP fall damage.")
 			(change-player-health player -2)))
 	(sleep 4)
+	;;FIXME Doesn't work - not neighbours
 	(goto player "Pooh's porch"))
 
 (defun kanga-healing (player)
@@ -273,6 +274,8 @@
 					(format t "~&You win! Your score is now ~A." (get-state 'POOHSTICKS)))
 				(progn (save-state 'POOHSTICKS (1- (get-state 'POOHSTICKS)))
 					(format t "~&You lose! Your score is now ~A." (get-state 'POOHSTICKS)))))))
+
+(add-alias 'throw 'chuck)
 
 (defun chuck (player &optional arg)
 	"Engage in a pine cone battle with Tigger"

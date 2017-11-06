@@ -12,7 +12,7 @@ goto <place>     -  Go to a neighbouring location
 take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 talk [to] <npc>  -  Talk to an NPC
-seek             -  Same as 'look around'
+search           -  Same as 'look around'
 equip <weapon>   -  Equip this item as your weapon
 attack <monster> -  Fight a monster
 

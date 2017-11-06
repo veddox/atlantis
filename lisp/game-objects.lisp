@@ -61,6 +61,7 @@
 	(command NIL)
 	(ability NIL)) ;TODO Remove abilities again
 
+;;TODO Remove weapons altogether? (Fold 'damage' into 'item')
 (defstruct weapon
 	(name "")
 	(description "")

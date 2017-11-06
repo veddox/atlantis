@@ -132,6 +132,7 @@ define-quest <name>
 	reward-item NIL
 	money 0
 	experience 0
+	completed-hook ""
 	infinite FALSE
 
 
@@ -173,14 +174,20 @@ interpreter.lisp - Do not touch!
 player.lisp - Deals with the player object. Most useful functions:
 			change-player-health, add-player-experience and add-player-money
 
-ui.lisp - Defines the in-game commands. Not interesting except as an example for
-		how to implement command functions.
+ui.lisp - Defines the in-game commands. If you have a game command function
+		  whose name conflicts with a CLisp inbuilt function, you can use
+		  add-alias to get around that. (For example, the Atlantis command
+		  'search' is remapped to 'seek' for that reason.) Otherwise, this
+		  module is of little interest except as an example of how to implement
+		  command functions.
 
 util.lisp - Lots of useful utility functions. Browse at leisure.
 
 world.lisp - Administers the game world instance. Most useful function:
-		   get-game-object, a type-agnostic getter function.
+		   get-game-object, a type-agnostic getter function. Also useful:
+		   save-state and get-state, which can be used to store game state
+		   between game sessions (e.g. keeping score on an in-world minigame).
 
 
 Daniel Vedder
-Last modified 10/10/2017
+Last modified 06/11/2017

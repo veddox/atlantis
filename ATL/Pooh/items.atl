@@ -93,7 +93,7 @@ define-item "String"
 define-item "Pine cone"
 	description "Pine cones are great fun for playing with. There's nothing quite
 	like a good pine cone battle in the woods with your friends!"
-	command "chuck"
+	command "throw"
 	infinite
 		
 define-item "Berries"

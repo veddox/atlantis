@@ -1,16 +1,20 @@
 ATLANTIS TODO
 
 LISP
-* update Helios guide (include bug reporting with 'archive')
-* update documentation
 * fix (string-from-list) bug
 * replace 'equip' with 'hold'
+* indicate weapon strength
 	
 ATL
 * add game end sequence
-* add 'throw' command for fir cones
-	
+* fix Daniel's interaction hook
+* add more clues
 
+		
+Game crashed when moving from Deep Forest -> Central woods, with message
+'<player object> is not a number'
+
+		
 NOTES
 	
 Honey pots:

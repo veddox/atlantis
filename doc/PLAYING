@@ -98,9 +98,9 @@ goto - The second most important command in Atlantis. With "goto" you can change
        your location to a neighbouring place. Enter the name of the place you
        wish to go to after the actual command (e.g. goto Kitchen).
 
-seek - Some rooms contain hidden items. To find them, you first need to search
-       the room. When you do so, you have a 66% chance of finding a hidden
-       object. Don't forget to do this once in a while!
+search - Some rooms contain hidden items. To find them, you first need to search
+         the room. When you do so, you have a 66% chance of finding a hidden
+         object. Don't forget to do this once in a while!
 
 take - This command is used to pick up an item. Most items in the game can be
        picked up, many are useful.
@@ -140,6 +140,13 @@ clear - Sometimes, your screen can get rather cluttered up with the output of
         the various commands. With "clear" you delete all text except the place
         description.
 
+archive - This is intended for debugging purposes for games on my server. If
+          Atlantis crashes, do the following: Restart Atlantis and reload your
+          game. Then, *immediately* execute this command. Finally, send me a
+          short bug report with your player name and the command that caused
+          the crash. This will help me track down the problem. After that you
+          can continue playing.
+
 
 Daniel Vedder
-Last modified 04/11/2017
+Last modified 06/11/2017

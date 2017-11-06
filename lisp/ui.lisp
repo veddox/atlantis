@@ -109,8 +109,11 @@
 				(when item-cmd (setf cmd-fn (read-from-string item-cmd)) (return))))
 		;; If found, execute the command
 		(if cmd-fn
-			(if space (funcall cmd-fn player arg)
-				(funcall cmd-fn player))
+			(progn 
+				(when (member cmd-fn (keys *aliases*))
+					(setf cmd-fn (cassoc cmd-fn *aliases*)))
+				(if space (funcall cmd-fn player arg)
+					(funcall cmd-fn player)))
 			(progn (format t "~&Sorry, this command is not available!")
 				(format t "~&Type 'help' for a list of commands.")))))
 
@@ -122,7 +125,15 @@
 (defvar *commands*
 	'(help look goto take inventory
 		 drop talk equip attack
-		 seek clear manual archive))
+		 search clear manual archive))
+
+;; A list of aliases (used to avoid naming conflicts with inbuilt functions)
+(defvar *aliases*
+	'((search seek)))
+
+(defun add-alias (alias fn)
+	"Add an alias to the list"
+	(setf *aliases* (append *aliases* (list (list alias fn)))))
 
 ;;; Command functions have to take two arguments (a player instance and
 ;;; an optional(!) argument to the function).
