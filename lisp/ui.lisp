@@ -83,7 +83,7 @@
 		(format t "~&Experience: ~A~AMoney: ~A"
 			(player-experience p) tab (player-money p))
 		(format t "~&=====")
-		(format t "~&Weapon: ~A" (player-weapon p))
+		(format t "~&Holding: ~A" (player-tool p))
 		(format t "~&Items: ~A" (string-from-list (player-item p)
 									:line-length *max-line-items*))))
 
@@ -124,7 +124,7 @@
 ;; A list of all in-game commands. Each new command must be registered here.
 (defvar *commands*
 	'(help look goto take inventory
-		 drop talk equip attack
+		 drop talk hold attack
 		 search clear manual archive))
 
 ;; A list of aliases (used to avoid naming conflicts with inbuilt functions)
@@ -221,7 +221,13 @@
 			(setf description
 				(item-description (get-game-object 'item o-name))))
 		(if description
-			(format t "~&(~A) ~A" o-name description)
+			(progn
+				(format t "~&(~A) ~A" o-name description)
+				(when (and (get-game-object 'item o-name)
+						  (plusp (item-weapon-damage
+									 (get-game-object 'item o-name))))
+					(format t "~&~%This item has a weapon strength of ~S."
+						(item-weapon-damage (get-game-object 'item o-name)))))
 			(format t "~&Could not find ~A!" object-name))))
 
 (defun seek (player &optional arg)
@@ -376,8 +382,6 @@
 						(format t "~&This item provides commands: ~A"
 							(string-from-list (item-command item)
 								:line-length *max-line-items*)))
-					(when (item-weapon item)
-						(format t "~&This item is a weapon."))
 					(unless (zerop (length (item-pickup-hook item)))
 						(funcall (read-from-string (item-pickup-hook item))
 							player))))
@@ -392,9 +396,8 @@
 	(if item
 		(progn
 			(remove-object-attribute player 'item item)
-			(when (and (item-weapon (get-game-object 'item item))
-					  (equalp (player-weapon player) item))
-				(set-object-attribute player 'weapon ""))
+			(when (equalp (player-tool player) item)
+				(set-object-attribute player 'tool ""))
 			(set-object-attribute
 				(get-game-object 'place (player-place player)) 'item item)
 			(format t "~&You have dropped: ~A" item)
@@ -404,22 +407,21 @@
 					player)))
 		(format t "~&You do not possess this item!")))
 
-(defun equip (player &optional new-weapon)
-	"The player sets another item to be his weapon"
-	;;TODO Replace this with 'hold'? (Also possible for non-weapons.)
-	(unless new-weapon
-		(format t "~&Please specify a weapon to be equipped!")
-		(return-from equip))
-	(when (equalp new-weapon "none")
-		(setf (player-weapon player) "")
-		(format t "~&You no longer have any weapon equipped.")
-		(return-from equip))
-	(setf new-weapon (fuzzy-match new-weapon (player-item player)))
-	(if (and new-weapon (item-weapon (get-game-object 'item new-weapon)))
+(defun hold (player &optional new-item)
+	"The player chooses another item to hold as a tool/weapon"
+	(unless new-item
+		(format t "~&Please specify an item to hold!")
+		(return-from hold))
+	(when (equalp new-item "none")
+		(setf (player-tool player) "")
+		(format t "~&You are no longer holding anything.")
+		(return-from hold))
+	(setf new-item (fuzzy-match new-item (player-item player)))
+	(if new-item
 		(progn
-			(setf (player-weapon player) new-weapon)
-			(format t "~&You have equipped: ~A" new-weapon))
-		(format t "~&Sorry, this item is not available as a weapon!")))
+			(setf (player-tool player) new-item)
+			(format t "~&You are now holding: ~A" new-item))
+		(format t "~&You do not possess this item!")))
 
 (defun attack (player &optional opponent)
 	"The player launches an attack at a monster"
@@ -443,22 +445,19 @@
 			  (m-dex (monster-dexterity monster))
 			  (m-ac (monster-armour-class monster))
 			  (m-weapon (if (not (equalp (monster-weapon monster) "")) ;lbyl
-							(get-game-object 'weapon (monster-weapon monster))
-							(make-weapon :name "Fists" :damage 0)))
+							(get-game-object 'item (monster-weapon monster))
+							(make-item :name "Fists" :weapon-damage 1)))
 			  (p-str (player-strength player))
 			  (p-dex (player-dexterity player))
 			  (p-ac (player-armour-class player))
-			  (p-weapon (if (not (equalp (player-weapon player) "")) ;lbyl
-							(get-game-object 'weapon (player-weapon player))
-							(make-weapon :name "Fists" :damage 0)))
+			  (p-weapon (if (not (equalp (player-tool player) "")) ;lbyl
+							(get-game-object 'item (player-tool player))
+							(make-item :name "Fists" :weapon-damage 1)))
 			  (monster-hook (monster-attack-hook monster))
 			  (damage 0))
 		;; Call the monster's attack hook
 		(unless (zerop (length monster-hook))
 			(funcall (read-from-string monster-hook) player))
-		;; Print information about the combattants
-		(format t "~&Health ~A: ~A    Health ~A: ~A" (player-name player)
-			(player-health player) opponent (monster-health monster))
 		;; Determine whether the player or the monster strikes
 		(if (> (+ (random 10) p-dex) (+ (random 10) m-dex)) ;XXX magic numbers!
 			(setf damage (calculate-damage p-str p-weapon m-dex m-ac))
@@ -466,29 +465,33 @@
 		;; Negative damage denotes that the player has been hit
 		(cond ((plusp damage)
 				  (decf (monster-health monster) damage)
-				  (format t "~&You hit! ~A points damage." damage)
-				  (when (> 1 (monster-health monster))
-					  (let ((experience (* (+ m-str m-dex) 5))) ;XXX magic numbers!
-						  (dolist (i (monster-item monster))
-							  (set-object-attribute place 'item i))
-						  (remove-object-attribute place
-							  'monster monster)
-						  (add-player-experience player experience)
-						  (if (monster-death-msg monster)
-							  (format t "~&~A" (monster-death-msg monster))
-							  (format t "~&You killed the monster!"))
-						  (format t "~&~A points experience." experience))))
+				  (format t "~&You hit! ~A points damage." damage))
 			((minusp damage)
-				(change-player-health player damage)
 				(format t "~&You missed. Your opponent hit! ")
-				(format t "~A points damage." damage))
-			(t (format t "~&You missed. Your opponent missed.")))))
+				(format t "~A points damage." damage)
+				(change-player-health player damage))
+			(t (format t "~&You missed. Your opponent missed.")))
+		;; Print information about the combattants
+		(format t "~&Health ~A: ~A    Health ~A: ~A" (player-name player)
+			(player-health player) opponent (monster-health monster))
+		;;When the monster is killed
+		(when (> 1 (monster-health monster))
+			(let ((experience (* (+ m-str m-dex) 5))) ;XXX magic numbers!
+				(dolist (i (monster-item monster))
+					(set-object-attribute place 'item i))
+				(remove-object-attribute place
+					'monster monster)
+				(add-player-experience player experience)
+				(if (monster-death-msg monster)
+					(format t "~&~%~A" (monster-death-msg monster))
+					(format t "~&You killed the monster!"))
+				(format t "~&~A points experience." experience)))))
 
 (defun calculate-damage (att-str att-weapon def-dex def-ac)
 	"A private function to calculate the damage caused by an attack"
 	(let ((damage 0))
 		(incf damage (if (zerop att-str) 0 (random att-str)))
-		(incf damage (weapon-damage att-weapon))
+		(incf damage (item-weapon-damage att-weapon))
 		(decf damage (if (zerop def-dex) 0 (random def-dex)))
 		(decf damage def-ac)
 		(if (minusp damage) 0 damage)))

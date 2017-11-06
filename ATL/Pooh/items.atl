@@ -215,24 +215,11 @@ define-item "Tracks"
 define-item "Grandfather's cane"
 	description "Piglet's grandfather used to carry this cane around with him.
 	And woe to any young animal who dared to be disrespectful!"
-	weapon
-
-define-weapon "Grandfather's cane"
-	description "Piglet's grandfather used to carry this cane around with him.
-	And woe to any young animal who dared to be disrespectful!"
-	type "Cane"
-	damage 4
+	weapon-damage 4
 
 define-item "Wooden sword"
 	description "This is a wooden sword that you made all by yourself! It has
 	a long blade, a cross guard to protect your hands, and a
 	comfortable grip."
-	weapon
-
-define-weapon "Wooden sword"
-	description "This is a wooden sword that you made all by yourself! It has
-	a long blade, a cross guard to protect your hands, and a
-	comfortable grip."
-	type "Sword"
-	damage 5
+	weapon-damage 5
 			

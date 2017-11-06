@@ -53,20 +53,13 @@
 	(name "")
 	(description "")
 	(cost 0)
-	(weapon)
+	(weapon-damage 0)
 	(fixed)
 	(infinite)
 	(pickup-hook "")
 	(drop-hook "")
 	(command NIL)
 	(ability NIL)) ;TODO Remove abilities again
-
-;;TODO Remove weapons altogether? (Fold 'damage' into 'item')
-(defstruct weapon
-	(name "")
-	(description "")
-	(type "")
-	(damage 0))
 
 (defstruct quest
 	(name "")

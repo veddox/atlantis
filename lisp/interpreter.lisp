@@ -34,7 +34,6 @@
 (defcommand define-place place)
 (defcommand define-player player)
 (defcommand define-monster monster)
-(defcommand define-weapon weapon)
 (defcommand define-item item)
 (defcommand define-npc npc)
 (defcommand define-quest quest)

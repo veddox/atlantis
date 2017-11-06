@@ -112,17 +112,12 @@ define-monster <name>
 define-item <name>
 	description ""
 	cost 0
-	weapon FALSE
+	weapon-damage 0
 	fixed FALSE
 	infinite FALSE
 	pickup-hook ""
 	drop-hook ""
 	command NIL
-
-define-weapon <name>
-	description ""
-	type ""
-	damage 0
 
 define-quest <name>
 	name ""

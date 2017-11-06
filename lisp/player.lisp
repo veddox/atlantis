@@ -21,7 +21,7 @@
 	;TODO Remove abilities again
 	(ability NIL)
 	(item NIL)
-	(weapon "")
+	(tool "")
 	(armour-class 0)
 	(place "")
 	(experience 0)

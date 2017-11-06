@@ -13,7 +13,7 @@ take <item>      -  Pick up an item lying around
 drop <item>      -  Drop the item
 talk [to] <npc>  -  Talk to an NPC
 search           -  Same as 'look around'
-equip <weapon>   -  Equip this item as your weapon
+hold <item>      -  Equip this item as your weapon or tool
 attack <monster> -  Fight a monster
 
 Arguments in square brackets are optional,

@@ -117,10 +117,10 @@ talk - This command allows you to interact with NPCs. Almost all NPCs will have
        certain, quest-specific item to the NPC, upon which you will of course
        receive a reward.)
 
-equip - Some items can be used as weapons. If you ever find yourself in a fight
-        with a monster, you will want to have a weapon on you. However, just
-        owning a weapon isn't enough. Before you can use it, you have to equip
-        it with this command. 'equip none' will unequip your current weapon.
+hold - Some items can be used as weapons or tools. These need to be held in
+       order to be usable and can be equipped with this command. If you ever
+       find yourself in a fight with a monster, you will want to have a weapon
+       on you! 'hold none' removes whatever item you currently have equipped.
 
 attack - Some places contain monsters. (In Atlantis, a "monster" is any hostile
          non-playing character.) While some monsters attack you first, you also
