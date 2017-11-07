@@ -2,38 +2,6 @@ ATLANTIS TODO
 
 LISP
 * fix (string-from-list) bug
-* replace 'equip' with 'hold'
-* indicate weapon strength
 	
 ATL
 * add game end sequence
-* fix Daniel's interaction hook
-* add more clues
-
-		
-Game crashed when moving from Deep Forest -> Central woods, with message
-'<player object> is not a number'
-
-		
-NOTES
-	
-Honey pots:
-	1. Pooh's home
-	2. Pooh's branch
-	3. Rabbit's house
-	4. Rock by the Rapids
-	5. Heffalump
-	6. Kanga's quest
-	7. Eeyore's quest
-	8. Piglet's quest
-	9. Owl's quest
-	10. Thoughtful spot
-	11. Bee tree
-	12. Cave
-
-Quests:
-	1. Find the tail
-	2. Bring jacket
-	3. Bring mushrooms
-	4. Uncle's picture
-	5. Find Woozle

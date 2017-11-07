@@ -100,8 +100,9 @@
 		(cons (car (car assoc-list)) (keys (cdr assoc-list)))))
 
 ;; FIXME If (string-from-list) produces a string with linebreaks and is
-;; used in conjunction with a (format t "~A") call, (format) will insert
+;; used in conjunction with a (format t "~&xxx~A") call, (format) will insert
 ;; an additional newline before the returned string. WTH?!
+;; (format) does this with any newline-containing string passed to it.
 ;; -> Appears to be a CLISP bug? Doesn't appear with SCBL...
 (defun string-from-list (lst &key (sep " - ") line-length line-sep)
 	"Put all elements of lst into a single string, separated by sep"

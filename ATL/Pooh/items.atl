@@ -16,7 +16,7 @@ define-item "Jar"
 	Perhaps you should refill it."
 
 define-item "Cupboard"
-	description "This is your larder, a wooden cupboard with 12 compartments for your honey jars.
+	description "This is your larder, a wooden cupboard with twelve compartments for your honey jars.
 	All the slots are empty!"
 	fixed
 

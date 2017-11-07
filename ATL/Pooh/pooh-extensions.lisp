@@ -56,10 +56,7 @@
 
 (defun store (player &optional arg)
 	"Store a jar of honey in the larder."
-	(let ((base-descr "This is your larder, a wooden cupboard with 12 compartments for your honey jars.")
-			 (num-list '("one jar" "two jars" "three jars" "four jars" "five jars"
-							"six jars" "seven jars" "eight jars" "nine jars"
-							"ten jars" "eleven jars" "twelve jars"))
+	(let ((base-descr "This is your larder, a wooden cupboard with twelve compartments for your honey jars.")
 			 (current-jars (get-state 'HONEY-JARS)))
 		(unless current-jars (setf current-jars 0))
 		(if (member "Hunny" (player-item player) :test #'equalp)
@@ -69,8 +66,8 @@
 				(incf current-jars)
 				(save-state 'HONEY-JARS current-jars)
 				(setf (item-description (get-game-object 'item "Cupboard"))
-					(concatenate 'string base-descr (string #\Newline) "It contains "
-						(nth (1- current-jars) num-list) " of honey."))
+					(format nil "~A~AIt contains ~D jar~:P of honey."
+						base-descr #\newline current-jars))
 				(when (= current-jars 12) (sleep 2)
 					(format t "~&Your larder is now full!") (sleep 2)
 					(format t "~&You lock it and put the key in your pocket.") (sleep 2)
@@ -113,29 +110,28 @@
 		(remove-object-attribute place 'npc "Tigger")
 		(set-object-attribute neighbour 'npc "Tigger")))
 
-(let ((lost-in NIL))
-	(defun lost-in-the-forest (player place prob)
-		"Walking through a forest, it's easy to end up going in circles..."
-		(when (> prob (random 100))
-			;; Make sure all neighbouring places have the is-lost hook
-			(dolist (p (place-neighbour (get-game-object 'place place)))
-				(let ((p (get-game-object 'place p)))
-					(when (zerop (length (place-entry-hook p)))
-						(set-object-attribute p 'entry-hook "is-lost"))))
-			;; Set the lost-in variable to the current place
-			(setf lost-in place)))
+(defun lost-in-the-forest (player place prob)
+	"Walking through a forest, it's easy to end up going in circles..."
+	(when (> prob (random 100))
+		;; Make sure all neighbouring places have the is-lost hook
+		(dolist (p (place-neighbour (get-game-object 'place place)))
+			(let ((p (get-game-object 'place p)))
+				(when (zerop (length (place-entry-hook p)))
+					(set-object-attribute p 'entry-hook "is-lost"))))
+		;; Set the lost-in variable to the current place
+		(save-state 'LOST-IN place)))
 
-	(defun is-lost (player)
-		"Return the player to where he started from"
-		(when lost-in
-			(clear-screen)
-			(format t "~&Suddenly, you are no longer sure you are walking in the right")
-			(format t "~&direction. Perhaps you should keep more to your left. Or to")
-			(format t "~&your right? The trees all look the same here...")
-			(format t "~&You are walking in circles!~%~%Please press ENTER")
-			(read-line)
-			(goto player lost-in)
-			(setf lost-in NIL))))
+(defun is-lost (player)
+	"Return the player to where he started from"
+	(when (get-state 'LOST-IN)
+		(clear-screen)
+		(format t "~&Suddenly, you are no longer sure you are walking in the right")
+		(format t "~&direction. Perhaps you should keep more to your left. Or to")
+		(format t "~&your right? The trees all look the same here...")
+		(format t "~&You are walking in circles!~%~%Please press ENTER")
+		(read-line)
+		(goto player (get-state 'LOST-IN))
+		(save-state 'LOST-IN NIL)))
 	
 (defun misty-forest (player)
 	"A wrapper function for lost-in-the-forest for the misty forest location"
@@ -440,23 +436,22 @@
 (defun daniel-says (player)
 	"Leave a message for the real me"
 	;;Make sure we're on my server
-	(unless (or (equalp (first (load-text-file "/etc/hostname")) "Helios")
+	(unless (and (equalp (first (load-text-file "/etc/hostname")) "Turing")
 				(y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?"))
 		(return-from daniel-says))
 	(setf msg "~%DANIEL:
 Hi there! This is the 'real' Daniel speaking now... Great to see that you've 
 gotten so far in the game! I've spent two years and many, many hours getting 
 it into shape, so I'm very happy to have other people actually using it :-)
-~%If you happen to be playing on my server at the moment, you can actually
+~%Since you happen to be playing on my server at the moment, you can actually
 leave me a message if you like. I'll definitely read it, and would very much
 appreciate any feedback!")
 	(format t msg)
 	(when (y-or-n-p "~&~%Leave Daniel a message?")
-		(format t "~&~%What is your name?")
-		(input-string name)
 		(setf message (lisp-ed))
 		(unless (null message)
 			(write-to-file message
-				(string-from-list (list "../" name ".msg") "") T)
+				(string-from-list (list "../" (world-player-name *world*)
+									  ".msg") :sep "") T)
 			(format t "~&Thank you very much :-)"))))
 

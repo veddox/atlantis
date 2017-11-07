@@ -4,7 +4,7 @@ mein bisheriger Bericht:
 
   *   Erklärung gut, bis auf: Speichern und Laden des putty-Setups
   	  (Namen eingeben, speichern und drauf klicken zum laden).
-	  -> TODO
+	  -> FIXED
   *   Wäre es sinnvoll über ‚quit‘ putty nicht komplett zu beenden, sondern nur
   	  aufs Atlantis-Hauptmenü zurückzuführen?
 	  -> Won't fix
@@ -35,3 +35,10 @@ mein bisheriger Bericht:
 
 Liebe Grüße,
 Chris
+
+
+06/11/2017:
+Game crashed when moving from Deep Forest to Central woods, with message
+'<player object> is not a number'
+-> Could not reproduce
+-> but see above! (Heisenbug?)

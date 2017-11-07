@@ -24,7 +24,6 @@
 	(monsters NIL)
 	(npcs NIL)
 	(items NIL)
-	(weapons NIL)
 	(quests NIL)
 	(extension-files NIL))
 
