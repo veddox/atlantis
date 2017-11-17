@@ -43,12 +43,16 @@
 			(change-player-health player 1))
 		(format t "~&You don't have any Extract of Malt!")))
 
-(defun study (player &optional arg)
-	"Print out the map"
-	(unless (member 'map (extract-elements arg))
-		(format t "~&What do you want to study?")
-		(return-from study))
-	(print-text-file "../ATL/Pooh/dialogue/woodland-map.txt"))
+(add-alias 'read 'read-item)
+
+(defun read-item (player &optional arg)
+	"Print out what the player wants to read"
+	(let ((text-item (fuzzy-match arg '("map" "card"))))
+		(cond ((equalp text-item "map")
+				  (print-text-file "../ATL/Pooh/dialogue/woodland-map.txt"))
+			((equalp text-item "card")
+				(print-text-file "../ATL/Pooh/dialogue/poem.txt"))
+			(T (format t "~&What do you want to read?")))))
 
 (defun think (player &optional arg)
 	"Play the intro text."
@@ -405,6 +409,17 @@
 			(format t "~&~%I'd love to eat some berries just now. If you bring me some,")
 			(format t "~&I'll get even by giving you a little clue for the game.") (sleep 3)
 			(format t "~&How about that?"))))
+
+(defun game-finale (player)
+	"When the player finds Christopher Robin at Galleon's Lap, the game ends."
+	(narrate "../ATL/Pooh/dialogue/finale.txt"
+		'(3 1 1 0 3 2 2 4 3 2 0 3 3 5 3 5 3 3 2 3 2 1 0 2 4 0))
+	(let ((npc (get-game-object 'npc "Christopher Robin")))
+		(remove-object-attribute npc 'interaction-hook)
+		(remove-object-attribute npc 'says "Pooh, you found me!")
+		(set-object-attribute npc 'says
+			"There's a whole world waiting out there, Pooh. 
+Shall we go and explore it?")))
 
 ;; The golden ring is an easter egg referencing, of course,
 ;; The Lord of the Rings.

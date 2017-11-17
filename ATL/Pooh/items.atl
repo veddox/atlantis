@@ -177,7 +177,7 @@ define-item "Map"
 	description "This is a map of the 100 Acre Wood. The woods may not be that
 	large, but it's still easy to get lost in them. So it may be
 	a good idea to carry this around with you..."
-	command "study"
+	command "read"
 
 define-item "Card"
 	description "
@@ -189,6 +189,7 @@ define-item "Card"
 	...................................
 	...................................
 	"
+	command "read"
 
 define-item "Golden ring"
 	description "A beautiful golden ring that lies heavily in your hand.

@@ -54,13 +54,12 @@ define-npc "Owl"
 	quest "Uncle's picture"
 	interaction-hook "read-letter"
 
-;TODO Christopher Robin needs to say something else
-; (he's on Galleon's Lap now, not in his home)
 define-npc "Christopher Robin"
-	description "Christopher Robin is Pooh's oldest friend. He's known him for
-	as long as he can remember. If you need advice or help, 
-	Christopher Robin is sure to be of service."
-	says "Hey Pooh, remember that time we went on an expedition together?"
+	description "Christopher Robin is your oldest friend. You've known him for
+	as long as you can remember, and you've really missed
+	him these past few days!"
+	says "Pooh, you found me!"
+	interaction-hook "game-finale"
 
 define-npc "Eeyore"
 	description "Eeyore the Donkey is always feeling blue. Somehow he got the

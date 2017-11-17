@@ -85,7 +85,7 @@
 					   (append (,command ,game-object) '(,value)))
 				   (setf (,command ,game-object) ,value)))))
 
-(defun remove-object-attribute (game-object property value)
+(defun remove-object-attribute (game-object property &optional value)
 	"Remove 'value' from the attribute 'property' in 'game-object'"
 	;; Same comment applies as above
 	(let ((command (build-symbol (type-of game-object) "-" property)))

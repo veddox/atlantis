@@ -4,4 +4,4 @@ LISP
 * fix (string-from-list) bug
 	
 ATL
-* add game end sequence
+* fix bugs
