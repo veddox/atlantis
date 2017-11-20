@@ -9,12 +9,12 @@
 
 (defun eat (player &optional arg)
 	"Allow the player to eat something (dispatch function)."
-	(cond ((null arg) (format t "~&What do you want to eat?"))
-		((equalp arg "berries") (eat-berries player))
-		((or (equalp arg "hunny") (equalp arg "honey")) (eat-honey player))
-		((member arg '("extract of malt" "extract" "malt") :test #'equalp)
-			(eat-malt player))
-		(T (format t "~&You can't eat that!"))))
+	(let ((food (fuzzy-match arg '("berries" "hunny" "honey" "extract of malt"))))
+		(cond ((null arg) (format t "~&What do you want to eat?"))
+			((equalp food "berries") (eat-berries player))
+			((or (equalp food "hunny") (equalp food "honey")) (eat-honey player))
+			((equalp food "extract of malt") (eat-malt player))
+			(T (format t "~&You can't eat that!")))))
 
 (defun eat-berries (player)
 	"Berries can be eaten any time, but don't have any effect"
@@ -39,7 +39,7 @@
 	"Extract of Malt is very healthy, so obviously it can't be tasty..."
 	(if (member "Extract of Malt" (player-item player) :test #'equalp)
 		(progn
-			(narrate "../ATL/Pooh/dialoge/extract-of-malt.txt" '(1 3 2 1 3 1))
+			(narrate "../ATL/Pooh/dialogue/extract-of-malt.txt" '(1 3 2 1 3 1))
 			(change-player-health player 1))
 		(format t "~&You don't have any Extract of Malt!")))
 
@@ -89,7 +89,7 @@
 		(progn (format t "~&Ouch! That hurt! You take 2 HP fall damage.")
 			(change-player-health player -2)))
 	(sleep 4)
-	;;FIXME Doesn't work - not neighbours
+	(goto player "Pooh's home")
 	(goto player "Pooh's porch"))
 
 (defun kanga-healing (player)
@@ -111,6 +111,12 @@
 		(format t "~&and knocks you over. When you sit up again, you see Tigger")
 		(format t "~&grinning widely at you.") (sleep 4)
 		(format t "~&~%Tigger bounces away toward ~A." (place-name neighbour))
+		(if (get-state 'TIGGER-BOUNCES)
+			(save-state 'TIGGER-BOUNCES (1+ (get-state 'TIGGER-BOUNCES)))
+			(save-state 'TIGGER-BOUNCES 1))
+		(when (= 5 (get-state 'TIGGER-BOUNCES))
+			(format t "~&As he disappears, he drops a pot of honey.")
+			(set-object-attribute place 'item "Hunny"))
 		(remove-object-attribute place 'npc "Tigger")
 		(set-object-attribute neighbour 'npc "Tigger")))
 
@@ -344,8 +350,11 @@
 	"Owl reads a deposited letter to the player"
 	(let ((place (get-game-object 'place "Owl's home")))
 		(when (get-state 'LETTER-DEPOSITED)
+			(sleep 2)
 			(narrate "../ATL/Pooh/dialogue/letter.txt"
-				'(0 1 2 2 3 2 3 2 2 2 3 1)))))
+				'(0 1 2 2 3 2 3 2 2 2 3 1))
+			(save-state 'LETTER-DEPOSITED NIL)
+			(set-object-attribute place 'item "Letter"))))
 
 (defun add-portrait (player &optional arg)
 	"Once Owl has the picture frame, he can hang up the portrait again."

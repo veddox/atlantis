@@ -2,6 +2,8 @@ ATLANTIS TODO
 
 LISP
 * fix (string-from-list) bug
+* infinite items are destroyed when dropped?
 	
 ATL
-* fix bugs
+* remove Christopher Robin character
+* fix Deep Forest bug

@@ -203,6 +203,8 @@
 				 (search pattern (first l) :test test)))
 		((null l) (if multiple-matches NIL result))
 		(when (and next (or (not strict) (and strict (zerop next))))
+			(when (equalp pattern (first l))
+				(return-from fuzzy-match (first l)))
 			(if (and result (not (equalp result (first l))))
 				(if (zerop next)
 					(if start-match

@@ -284,7 +284,7 @@
 		(if (dolist (i (quest-proof-item quest))
 				(unless (member i (player-item player) :test #'equalp)
 					(return T)))
-			(when (y-or-n-p "~%~A has a quest. Accept it?" npc-name)
+			(when (y-or-n-p "~%~A has a quest. Do you want to hear about it?" npc-name)
 				(format t "~&~A: ~A" (string-upcase npc-name)
 					(quest-say-before quest)))
 			(when (y-or-n-p "~%Give to ~A: ~A?" npc-name

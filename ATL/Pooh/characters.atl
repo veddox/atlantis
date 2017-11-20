@@ -187,7 +187,7 @@ define-quest "Uncle's picture"
 define-quest "Find Woozle"
 	say-before "Oh Pooh, I found woozle tracks again! I'm pretty sure they
 	weren't mine this time... And now I'm scared to go anywhere
-	outdoors! You need to help me!"
+	outdoors! You need to help me! Can you catch it for me?"
 	say-after "Pooh, is that a woozle? Why, he's even smaller than me! And
 	isn't he cute? No need to be scared of him!
 
