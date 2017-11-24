@@ -17,13 +17,8 @@ define-item "Quill"
 
 define-item "Dagger"
 	description "A long, sharp knife, useful for self defence."
-	weapon
+	weapon-damage 3
 	cost 20
-
-define-weapon "Dagger"
-	description "A long, sharp knife, useful for self defence."
-	type "Knife"
-	damage 3
 
 define-item "Signet ring"
 	description "A heavy gold ring, bearing the seal of the Monastery of Lugwey."
@@ -31,13 +26,8 @@ define-item "Signet ring"
 
 define-item "Whip"
 	description "A horse-whip."
-	weapon
+	weapon-damage 1
 	cost 10
-
-define-weapon "Whip"
-	description "A plain old leather horse-whip."
-	type "Whip"
-	damage 1
 
 define-item "Saddle"
 	description "If you want to ride a horse, a saddle certainly helps."
@@ -103,10 +93,9 @@ define-monster "Fox"
 	item "Foxhide"
 	armour-class 0
 
-define-weapon "Teeth"
+define-item "Teeth"
 	description "A carnivore's teeth can do quite a bit of damage!"
-	type "body"
-	damage 2
+	weapon-damage 2
 
 define-item "Foxhide"
 	description "The hide of a red fox - looks good on your wall!"

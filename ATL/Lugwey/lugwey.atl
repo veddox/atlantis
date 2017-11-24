@@ -7,8 +7,6 @@
 ; @author Daniel Vedder
 ; @date 09/07/2015
 
-name-world "Lugwey"
-
 load-file "places.atl"
 load-file "items.atl"
 load-file "npcs.atl"

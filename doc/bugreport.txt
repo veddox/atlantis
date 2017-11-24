@@ -31,7 +31,9 @@ mein bisheriger Bericht:
   *   Gerade stürzt das Spiel bei jedem Versuch, von den Central Woods woanders
   	  hin zu kommen, ab. Schade.
 	  -> Reproducible on server, but not on laptop?!
+	  -> FIXED
   *   Cool, was für schöne Details du eingebaut hast!
+  	  -> Won't fix ;-) :D
 
 Liebe Grüße,
 Chris
@@ -42,3 +44,4 @@ Game crashed when moving from Deep Forest to Central woods, with message
 '<player object> is not a number' (on server)
 -> Could not reproduce
 -> but see above! (Heisenbug?)
+-> FIXED (bug when incrementing character level)

@@ -74,7 +74,7 @@
 	"The player gains experience points"
 	(incf (player-experience player) amount)
 	(when (zerop (rem (player-experience player) *level-experience*))
-		(incf (player-level player) player)))
+		(incf (player-level player))))
 
 (defun add-player-money (player amount)
 	"Increase the player's money by amount"
