@@ -373,7 +373,7 @@
 	"The Woozle scratches when you try to pick him up."
 	(change-player-health player -1)
 	(format t "~&The woozle scratches you! -1 HP")
-	(when (> 55 (random 100))
+	(when (> 75 (random 100))
 		(sleep 1)
 		(format t "~&The woozle winds its way out of your arms.")
 		(sleep 1)
@@ -396,6 +396,7 @@
 			   "../ATL/Pooh/dialogue/pictureframe.txt"))
 		(2 NIL)))
 
+;;XXX Transfer this function to the main framework?
 (defun craft-item (player item-name requirements dialogue-file)
 	"A generic crafting function - helper function for (craft)"
 	(dolist (r1 requirements)
@@ -460,7 +461,7 @@ Shall we go and explore it?")))
 (defun daniel-says (player)
 	"Leave a message for the real me"
 	;;Make sure we're on my server
-	(unless (and (equalp (first (load-text-file "/etc/hostname")) "Turing")
+	(unless (and (equalp (first (load-text-file "/etc/hostname")) "Helios")
 				(y-or-n-p "~&~%Daniel has more to say to you. Do you want to hear it?"))
 		(return-from daniel-says))
 	(setf msg "~%DANIEL:

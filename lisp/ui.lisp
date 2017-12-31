@@ -236,7 +236,7 @@
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (hidden (place-hidden place)))
 		(dolist (h hidden)
-			(when (> 67 (random 100))
+			(when (> 80 (random 100))
 				(format t "~&You find: ~A" h)
 				(set-object-attribute place 'item h)
 				(remove-object-attribute place 'hidden h))))
@@ -398,8 +398,11 @@
 			(remove-object-attribute player 'item item)
 			(when (equalp (player-tool player) item)
 				(set-object-attribute player 'tool ""))
-			(set-object-attribute
-				(get-game-object 'place (player-place player)) 'item item)
+			(unless (item-infinite (get-game-object 'item item))
+				;; Infinite items are destroyed when dropped
+				;; (otherwise they create new "spawn points")
+				(set-object-attribute (get-game-object 'place
+										  (player-place player)) 'item item))
 			(format t "~&You have dropped: ~A" item)
 			(unless (zerop (length (item-drop-hook (get-game-object 'item item))))
 				(funcall (read-from-string

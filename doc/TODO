@@ -2,7 +2,7 @@ ATLANTIS TODO
 
 LISP
 * fix (string-from-list) bug
-* infinite items are destroyed when dropped?
 	
 ATL
-* remove Christopher Robin character
+* simplify game
+	

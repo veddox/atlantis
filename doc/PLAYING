@@ -99,7 +99,7 @@ goto - The second most important command in Atlantis. With "goto" you can change
        wish to go to after the actual command (e.g. goto Kitchen).
 
 search - Some rooms contain hidden items. To find them, you first need to search
-         the room. When you do so, you have a 66% chance of finding a hidden
+         the room. When you do so, you have an 80% chance of finding a hidden
          object. Don't forget to do this once in a while!
 
 take - This command is used to pick up an item. Most items in the game can be
@@ -149,4 +149,4 @@ archive - This is intended for debugging purposes for games on my server. If
 
 
 Daniel Vedder
-Last modified 06/11/2017
+Last modified 20/12/2017

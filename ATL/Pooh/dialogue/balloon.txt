@@ -8,10 +8,10 @@ Your eyes feel as if they're about to pop out, but you keep blowing.
 The balloon is huge. You struggle to keep hold of it.
 You blow just a little bit more.
 The balloon lifts you up! Your feet leave the ground.
-This is fun!
+This is fun! (+5 XP)
 You rise up into the sky, free as a bird.
 There's a branch above you!
 The balloon flies into the branch.
 KER-BOOM!
 You fall back down to the ground.
-Ouch, that hurt! -3 HP
+Ouch, that hurt! (-3 HP)
