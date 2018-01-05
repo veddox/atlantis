@@ -116,7 +116,20 @@ define-item "Balloon"
 define-item "Picture frame"
 	description "You made this picture frame from four sticks and some string.
 	Not very good perhaps, but it will do."
-				
+
+define-item "Ship"
+	description "A small wooden ship that Christopher Robin has been working on.
+	It's not quite finished yet, but it looks very fancy and
+	ever so delicate. You seem to remember that Christopher Robin
+	called it a galleon or something like that. He was always
+	going on about galleons..."
+
+define-item "Notice"
+	description "A tattered piece of paper is stuck to the door. It's badly torn
+	and you can't really read anyway, but you can make out a few letters:
+	G?N? T? G?LL??N? L??"
+	fixed
+	
 define-item "Jacket"
 	description "This is a small, bright red rain jacket. It looks about the
 	right size to fit Roo."
@@ -179,6 +192,12 @@ define-item "Map"
 	a good idea to carry this around with you..."
 	command "read"
 
+define-item "Foot prints"
+	description "These foot prints look as if they were made by a pair of gum
+	boots going up the hill towards Galleons Lap. Now, why would a
+	pair of boots go there?"
+	fixed
+	
 define-item "Card"
 	description "
 	...................................

@@ -1,8 +1,13 @@
 ATLANTIS TODO
 
+* complete walk-through
+	
 LISP
 * fix (string-from-list) bug
+* adjust main menu to accomodate many users
 	
 ATL
-* simplify game
+* make instructions more explicit
+* add track/foot prints leading to CR
+* add another empty jar in Kanga's house
 	

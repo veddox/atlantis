@@ -151,6 +151,7 @@ define-place "Hill"
 	home and the stream that marks the edge of the woods."
 	neighbour "Central woods"
 	neighbour "Galleons lap"
+	item "Foot prints"
 	hidden "berries"
 
 define-place "Galleons lap"
@@ -303,6 +304,7 @@ define-place "Christopher Robin's house"
 	appears to be shut just now. You wonder where he is?"
 	neighbour "Eastern woods"
 	neighbour "Workshop"
+	item "Notice"
 	item "Balloon"
 	item "Balloon"
 
@@ -313,6 +315,7 @@ define-place "Workshop"
 	use some of the tools yourself, but you are not yet very good
 	at it."
 	neighbour "Christopher Robin's house"
+	item "Ship"
 	item "String"
 	command "craft"
 	

@@ -9,7 +9,7 @@
 ; NPCs
 
 define-npc "Piglet"
-	description "Piglet is Pooh's best friend. He is always cheerful (except
+	description "Piglet is your best friend. He is always cheerful (except
 	when he's scared) and always ready for a bit of fun."
 	says "Hi there, Pooh, good to see you!"
 	says "I heard Tigger discovered a cave in the forest. Creepy, isn't it?"
@@ -23,7 +23,7 @@ define-npc "Kanga"
 	quest "Bring jacket"
 
 define-npc "Roo"
-	description "Roo is Pooh's youngest friend. He loves a good romp, especially
+	description "Roo is your youngest friend. He loves a good romp, especially
 	with his friend Tigger."
 	says "Hey Pooh, Tigger and I were going to go looking for Christopher Robin.
 	Do you want to come along?"
@@ -86,6 +86,8 @@ define-npc "Small"
 	doesn't happen to be lost, he's quite a nice fellow to have
 	around."
 	says "Bzzzzz..."
+	says "I saw Christopher Robin at Galleon's Lap. Do you know what he is
+	doing there?"
 
 define-npc "Henry Rush"
 	description "Henry Rush is one of Small's brothers. Or cousins. Or something
