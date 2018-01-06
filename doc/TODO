@@ -4,8 +4,8 @@ ATLANTIS TODO
 	
 LISP
 * fix (string-from-list) bug
-* adjust main menu to accomodate many users
-	
+* update manual to reflect new main menu
+		
 ATL
 * make instructions more explicit
 * add track/foot prints leading to CR
