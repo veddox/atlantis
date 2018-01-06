@@ -34,6 +34,13 @@ define-item "Clock"
 	useful, especially as it's stuck to five-to-eleven. So surely it's
 	time for a little something now, isn't it?"
 	fixed
+
+define-item "Birthday card"
+	description "A friend gave this to you on your last birthday and you pinned
+	it to your wall. It shows the statue of a man deep in thought, with
+	the caption (added by your friend):
+	DON'T FORGET TO THINK!"
+	fixed
 	
 define-item "Pooh's sign"
 	description "
@@ -191,6 +198,23 @@ define-item "Map"
 	large, but it's still easy to get lost in them. So it may be
 	a good idea to carry this around with you..."
 	command "read"
+
+define-item "Foot path"
+	description "A worn-out path snakes its way from Christopher Robin's front
+	door towards the eastern woods. He must be going that way regularly."
+	fixed
+
+define-item "Flattened undergrowth"
+	description "Looking closely, you see that somebody has been pushing
+	through the undergrowth here, flattening it and breaking
+	some twigs. Whoever it was seems to have been on his way
+	to the central woods."
+	fixed
+
+define-item "Boot print"
+	description "On a particularly soft piece of ground, somebody has left his
+	mark. A solitary boot print, pointing towards the hill..."
+	fixed
 
 define-item "Foot prints"
 	description "These foot prints look as if they were made by a pair of gum

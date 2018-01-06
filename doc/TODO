@@ -5,9 +5,8 @@ ATLANTIS TODO
 LISP
 * fix (string-from-list) bug
 * update manual to reflect new main menu
+* remove find probability?
 		
 ATL
 * make instructions more explicit
-* add track/foot prints leading to CR
-* add another empty jar in Kanga's house
-	
+* do something with the Six Pine Trees?

@@ -40,7 +40,7 @@
 	(print-text-file "banner.txt")
 	(print-text-file "../motd.txt")
 	;; The actual menu
-	(format t "~&~%Greetings! Please choose an option:")
+	(format t "~&~%Greetings! Please choose an option number:")
 	(case (choose-number-option '("Start playing" "Show player list"
 									 "Read the help file"
 									 "About Atlantis" "Exit"))

@@ -65,7 +65,7 @@
 		(unless current-jars (setf current-jars 0))
 		(if (member "Hunny" (player-item player) :test #'equalp)
 			(unless (= current-jars 12)
-				(format t "~&You deposit one jar of honey in your larder.")
+				(format t "~&You deposit one jar of honey in your cupboard.")
 				(remove-object-attribute player 'item "Hunny")
 				(incf current-jars)
 				(save-state 'HONEY-JARS current-jars)
@@ -373,7 +373,7 @@
 	"The Woozle scratches when you try to pick him up."
 	(change-player-health player -1)
 	(format t "~&The woozle scratches you! -1 HP")
-	(when (> 75 (random 100))
+	(when (> 80 (random 100))
 		(sleep 1)
 		(format t "~&The woozle winds its way out of your arms.")
 		(sleep 1)
@@ -382,7 +382,8 @@
 (defun woozle-disappear (player &optional arg)
 	"If you drop him, the Woozle escapes."
 	(let ((place (get-game-object 'place (player-place player))))
-		(remove-object-attribute place 'item "Woozle")
+		(unless (equalp (place-name place) "Woozle hideout")
+			(remove-object-attribute place 'item "Woozle"))
 		(format t "~&The Woozle runs away!")))
 
 (defun craft (player &optional arg)
