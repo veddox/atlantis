@@ -1,8 +1,8 @@
 ..............................[  100 ACRE WOODS  ]..............................
 :                                                                              :
-:                          Misty forest                      Rapids            :
-:                                                                              :
-:                                               Bee tree                       :
+:                          Misty forest                                        :
+:                                                   Bee tree                   :
+:                                       Rapids                                 :
 :               Sandy pit                                                      :
 :                                                                              :
 :                                                 Rabbit                       :

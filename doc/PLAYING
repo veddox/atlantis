@@ -23,15 +23,17 @@ you. In a menu like this, you can choose an option by typing the relevant number
 and pressing ENTER. (Commands to the computer must always be terminated by
 pressing ENTER.)
 	
-The first option, "Start a new game", will first ask you for your name. (This is
-needed to save the game.) It then drops you into a submenu in which you can
-choose which game world you want to play. As of Atlantis 0.3, only the "Winnie
-the Pooh" world is fully functional. (You can try the others, but they are far
-from complete.)
+The first option, "Start playing", will first ask you for your name. (This is
+needed to save the game.) If you've played before, you will then have the choice
+of whether you want to continue where you left off, or if you want to start a
+new game. If this is your first time, you'll be taken straight to the setup
+for new games. Here, you can choose which game world you want to play. (At the
+moment, only the "Winnie the Pooh" world is fully functional. You may peruse
+the other one, but it's far from complete.)
 
-The second option, "Load a saved game", is for players who have already started
-a game in one of the worlds. (Your game progress is saved automatically.) Again,
-you will be presented with a submenu that lists all currently saved games.
+Going back to the main menu, the second option prints out a list of players on
+this computer. (Apart from being interesting, this can be useful if you've
+forgotten your player name...)
 
 The third option displays this help text; the fourth option shows a copyright
 notice and the Atlantis software license. The fifth option quits the game.
@@ -92,15 +94,15 @@ help - This will give a list of game commands with a concise description for
 look - This is the most versatile command in the game. With it, you can inspect
        any item, NPC or monster (e.g. look cook). You can also bring up
        information about yourself with "look me" or about your current location
-       with "look here". Finally, "look around" is an alias for "seek".
+       with "look here". Finally, "look around" is an alias for "search".
 
 goto - The second most important command in Atlantis. With "goto" you can change
        your location to a neighbouring place. Enter the name of the place you
-       wish to go to after the actual command (e.g. goto Kitchen).
+       wish to go to after the actual command (e.g. goto Kitchen). Note that
+	   there is no space in the word: it's "goto", not "go to".
 
 search - Some rooms contain hidden items. To find them, you first need to search
-         the room. When you do so, you have an 80% chance of finding a hidden
-         object. Don't forget to do this once in a while!
+         the room. Don't forget to do this regularly!
 
 take - This command is used to pick up an item. Most items in the game can be
        picked up, many are useful.
@@ -125,8 +127,8 @@ hold - Some items can be used as weapons or tools. These need to be held in
 attack - Some places contain monsters. (In Atlantis, a "monster" is any hostile
          non-playing character.) While some monsters attack you first, you also
          have the choice of attacking them. After all, there may be rich
-         treasure in store for the brave adventurer... (Make sure you have a
-         weapon equipped, though!) When you attack a monster, or vice versa,
+         treasure in store for the brave adventurer... (Make sure you are
+		 holding a weapon, though!) When you attack a monster, or vice versa,
          the computer calculates the amount of damage you both take based on
          your various strengths and weapons. Make sure that your health doesn't
          drop too low! If it ever reaches 0, you're dead... (You can check up
@@ -149,4 +151,4 @@ archive - This is intended for debugging purposes for games on my server. If
 
 
 Daniel Vedder
-Last modified 20/12/2017
+Last modified 07/01/2018

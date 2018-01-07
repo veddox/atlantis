@@ -215,7 +215,7 @@
 
 	(defun leave-bee-tree (player)
 		"Make sure you've climbed down before leaving the bee tree."
-		(when climbed (climb-down player) (pause 4))))
+		(when climbed (climb-down player) (sleep 4))))
 
 
 (defun climb-rock (player &optional arg)
@@ -413,6 +413,7 @@
 	"A.A. Milne gives clues to the player in exchange for berries."
 	(if (member "berries" (player-item player) :test #'equalp)
 		(when (y-or-n-p "~%Give Mr Milne some berries?")
+			(remove-object-attribute player 'item "berries")
 			(format t "~&~%MR MILNE:~%Thank you very much, Pooh!")
 			(format t "~&Here's a clue for you in return:")
 			(format t "~&~A" (random-elt (load-text-file "../ATL/Pooh/dialogue/clues.txt"))))

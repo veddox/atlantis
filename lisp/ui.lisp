@@ -14,12 +14,21 @@
 ;; (This module should be purely UI)
 ;; Yeah, probably not going to happen ;-)
 
+;; The number of items/places/characters/etc. to display per line
 ;; TODO Change to 5 once the (string-from-list) bug is fixed
 (setf *max-line-items* 10)
+
+;; The probability of finding a hidden item
+;; XXX 100% is cheating somehow, but I fear anything might prove a
+;; stumbling block for new players who only search once (if at all)...
+(setf *find-probability* 100)
 
 (defun play-game ()
 	"The main game loop"
 	(let ((player (get-game-object 'player (world-main-character *world*))))
+		;; Don't let dead characters resurrect
+		(unless (plusp (player-health player))
+			(error "You are dead! You cannot continue this game."))
 		;; If the player's starting position is not specified, choose at random
 		(when (zerop (length (player-place player)))
 			(format t "~&Choosing a random starting location.")
@@ -236,7 +245,7 @@
 	(let* ((place (get-game-object 'place (player-place player)))
 			  (hidden (place-hidden place)))
 		(dolist (h hidden)
-			(when (> 80 (random 100))
+			(when (> *find-probability* (random 100))
 				(format t "~&You find: ~A" h)
 				(set-object-attribute place 'item h)
 				(remove-object-attribute place 'hidden h))))

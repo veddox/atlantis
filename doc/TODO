@@ -1,12 +1,8 @@
 ATLANTIS TODO
-
-* complete walk-through
 	
 LISP
 * fix (string-from-list) bug
-* update manual to reflect new main menu
-* remove find probability?
+* skip "bad command" after denying "quit"
 		
 ATL
-* make instructions more explicit
-* do something with the Six Pine Trees?
+*

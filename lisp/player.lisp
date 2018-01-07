@@ -68,7 +68,8 @@
 	(when (> (player-health player) (player-max-health player))
 		(setf (player-health player) (player-max-health player)))
 	(when (> 1 (player-health player))
-		(error "You died!"))) ;; TODO adjust this
+		(save-world)
+		(error "You died!"))) ;; XXX adjust this?
 
 (defun add-player-experience (player amount)
 	"The player gains experience points"
